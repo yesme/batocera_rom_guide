@@ -104,7 +104,35 @@
 - **原创改版内容：15 款。** 仅统计含全新战役、地区或主要地图的改版；纯汉化、平衡调整和便利增强不重复增加游戏数。
 - **官方库预留：231.39 GB。** 中文化与精选改版若与原版全部并存，另建议预留 16 GB；**合计预算 247.39 GB**，系统、BIOS、刮削和存档另算。
 
-> 容量是安装预算，不是实测文件总量；合集拆分、CHD／CSO、多盘与保留多个地区版都会改变占用。
+> 容量是安装预算，不是实测文件总量；合集拆分、CHD／CSO、多盘与保留多个地区版都会改变占用。表内按 1024 MiB 汇总，严格说是 GiB；下面用 GiB 与硬盘厂商的十进制 GB 区分。
+
+#### 256＋64 GB 双盘容量结论
+
+**不建议把当前全量库同时装入 256＋64 GB。** 两块盘的标称合计是 320 GB，换算约 298.02 GiB；游戏与改版已占 247.39 GiB，只剩 50.64 GiB 给系统、Wine、存档、刮削、缓存和空闲余量。全量安全预算约 310–344 GiB，视频刮削还要再加 10–25 GiB，因此应按“首装库＋候补库”使用，或把 SSD 升到 512 GB。
+
+| 项目 | 规划预留 | 位置与说明 |
+|---|---:|---|
+| Batocera 系统、启动与升级周转 | 8 GiB | eMMC；是规划预算，不是当前镜像的实测占用 |
+| Wine prefix、字体与自定义 runner | 12–25 GiB | SSD；49 作独立 prefix 的额外环境开销，游戏本体已计入 73.87 GiB，不重复计算 |
+| 存档、记忆卡与即时存档 | 4–10 GiB | SSD；即时存档数量和 PSP／PS1 使用习惯是主要变量 |
+| 图片刮削 | 3–6 GiB | SSD；截图、封面、标题图等按全部条目预留 |
+| 视频刮削 | 额外 10–25 GiB | SSD；首装默认关闭，只给常玩游戏保留 |
+| 缓存、临时文件与升级周转 | 4–8 GiB | SSD；安装 Windows 游戏和转换镜像时尤其需要 |
+| 最低空闲空间 | eMMC 8–10 GiB；SSD 24–30 GiB | 不把盘写满，避免升级、存档和临时文件失败 |
+
+以上是非实测的规划上限与下限，不应把某一项的最低值当成保证。安装后以 `df -h` 和 `du -sh` 实测；视频、Wine prefix 与即时存档是最需要复核的三项。
+
+##### 两种可执行方案
+
+| 方案 | 游戏与改版预算 | 建议 |
+|---|---:|---|
+| 全量收藏 | 247.39 GiB | 选 **512 GB SSD＋64 GB eMMC**；可保留完整 Windows 库、刮削和升级余量 |
+| 现有双盘首装 | 209.89 GiB | Windows 先装 27 款“优先安装”，其余 22 款作为候补；默认只做图片刮削 |
+
+- **先暂缓 37.50 GiB 的候补 Windows。** 27 款优先安装本身约 36.37 GiB，19 款固定版本后安装和 3 款专项验收通过后再逐批加入；不要先复制全部安装介质。
+- **把 NDS 整体约 5.41 GiB 移入 eMMC。** 首装可把 16 GiB 改版预算按 eMMC 10 GiB、SSD 6 GiB 分配；这样 eMMC 的游戏与改版约 35.37 GiB，另有 8 GiB 系统预算和 8–10 GiB 最低空闲。剩余空间留给升级和新增游戏，比堆放 Wine prefix、缓存或高频存档更稳。
+- **SSD 游戏与改版首装约 174.51 GiB。** 当前五个 SSD 平台合计 211.42 GiB，暂缓候补 Windows 并移动 NDS 后为 168.51 GiB，再加 6 GiB 改版预算。这样给 Wine、存档、图片、缓存和空闲留下约 63.91 GiB；若要视频刮削或继续安装候补，先移出同容量内容，不要压缩最低空闲空间。
+- **不安装不等于从指南删除。** 主表仍是收藏与验收总目录；每批只把已通过实机验收的作品复制到机器，未安装作品保留在外部备份，不把安装介质、原镜像和压缩包重复留在 SSD。
 
 ### 实机核对顺序
 
@@ -124,8 +152,8 @@
 
 | 位置 | 内容 | 原则 |
 |---|---|---|
-| eMMC 独立 ext4 分区 | DOS／Win3.x、MAME、FBNeo、NES、PCE HuCard、MD、GB、GG、SNES、N64、GBC、WS／WSC、GBA 游戏 | 小体积顺序读取，目录级软链接，不做 mergerfs |
-| SSD `/userdata` | Win95／98、PS1、Dreamcast、NDS、PSP，以及全部存档、配置、缓存与刮削 | Windows 游戏、Wine prefix、大镜像和写入集中，避免挤占 eMMC |
+| eMMC 独立 ext4 分区 | DOS／Win3.x、MAME、FBNeo、NES、PCE HuCard、MD、GB、GG、SNES、N64、GBC、WS／WSC、GBA；首装平衡方案可加 NDS | 小体积顺序读取，目录级软链接，不做 mergerfs |
+| SSD `/userdata` | Win95／98、PS1、Dreamcast、PSP、默认方案的 NDS，以及全部存档、配置、缓存与刮削 | Windows 游戏、Wine prefix、大镜像和写入集中，避免挤占 eMMC |
 
 ```bash
 mkdir -p /mnt/emmc/roms/{dos,mame,fbneo,nes,pcengine,megadrive,gb,gg,snes,n64,gbc,wswan,wswanc,gba}
@@ -146,7 +174,7 @@ ln -s /mnt/emmc/roms/wswanc /userdata/roms/wswanc
 ln -s /mnt/emmc/roms/gba /userdata/roms/gba
 ```
 
-先用 `blkid`、`lsblk` 核对实际设备并手工验证挂载，不要照抄设备名。PCE CD 镜像虽属 PCE 平台，也放在 SSD；存档和配置始终留在 `/userdata`。
+先用 `blkid`、`lsblk` 核对实际设备并手工验证挂载，不要照抄设备名。PCE CD 镜像虽属 PCE 平台，也放在 SSD；存档和配置始终留在 `/userdata`。采用首装平衡方案把 NDS 移到 eMMC 时，先把现有 `/userdata/roms/nds` 内容完整迁移并验证，再将空出的路径替换为指向 `/mnt/emmc/roms/nds` 的软链接；仍有实体游戏目录时不要直接执行 `ln -s`。
 
 - **DOS／Win3.x 每作独立目录。** 实体文件放 eMMC `/mnt/emmc/roms/dos/<游戏名>.pc/`，经 `/userdata/roms/dos` 软链接访问；保留各自程序、音轨与启动配置，存档和模拟器配置仍由系统写入 `/userdata`。DOS 原版先用 DOSBox Pure，启动菜单或 Pad2Key 不顺时再试独立 DOSBox。DOS 游戏一般不需 BIOS。轻量 Win3.x 游戏则使用自己合法拥有的 Windows 3.x 和 Batocera 官方支持的 DOSBox‑X，共用已配置的环境，逐作核对 WinG、CD 与声音；Win95／98 游戏不走此路线。
 - **Win95／98 使用 Batocera 的 windows 系统。** 已安装游戏放 SSD `/userdata/roms/windows/`，安装介质放 `/userdata/roms/windows_installers/`；支持 `.pc`、`.exe`、`.wine`、`.wsquashfs`、`.wtgz`，无需 BIOS，也不需安装完整 Windows。每作独立 `.wine` prefix，`autorun.cmd` 用 LF 换行并明确 `DIR`、`CMD`，再用 `SAVEDIR`／`SAVEFILES` 把存档映射到 `/userdata/saves/windows/<游戏>/`。老安装器不能在 Wine 中完成时，先在另一台兼容机器安装，再复制完整安装目录。`/userdata` 用 ext4 或 btrfs，不把 Wine 库放在 FAT、NTFS 或 NAS。

@@ -91,6 +91,12 @@ for pat in [r'\bTODO\b',r'\[存疑\]',r'\[删除\]',r'\[不存在\]',r'待补',r
 # 合集展开计数和容量。
 game_total=sum(gc(e) for e in entries);total=sum(mb(e.size) for e in entries)
 check(f'**{len(entries)}** | **{game_total}** | **{total/1024:.2f} GB**' in text,f'汇总与重算不符：{len(entries)}／{game_total}／{total/1024:.2f} GB')
+check(round(ns['emmc_total']/1024,2)==19.97 and round(ns['ssd_total']/1024,2)==211.42,'eMMC／SSD 平台容量分算错误')
+check(round(ns['windows_priority']/1024,2)==36.37 and round(ns['windows_deferred']/1024,2)==37.50,'Windows 首装／候补容量分算错误')
+check(round(ns['first_install_budget']/1024,2)==209.89,'首装总预算不是 209.89 GiB')
+check(round((ns['first_ssd_rom']+6*1024)/1024,2)==174.51,'SSD 首装容量不是 174.51 GiB')
+for snippet in ['#### 256＋64 GB 双盘容量结论','298.02 GiB','50.64 GiB','310–344 GiB','512 GB SSD＋64 GB eMMC','首装平衡方案','不要直接执行 `ln -s`']:
+    check(snippet in text,f'双盘容量规划缺失：{snippet}')
 expected_counts={'Three Wonders':3,'Super Mario All-Stars':4,'Ys Book I & II':2,'Final Fantasy I & II: Dawn of Souls':2,'Street Fighter III: Double Impact':2,'Ys I & II Chronicles':2,'Castlevania: The Dracula X Chronicles':3,'Gradius / Gradius II / Gradius III':3,'TwinBee / Detana!! TwinBee':2,'Commander Keen in Goodbye, Galaxy!':2,'Galaga / Galaxian':2}
 for name,n in expected_counts.items():
     es=[e for e in entries if e.en==name]

@@ -556,9 +556,9 @@ from guide_sections import platform_overview, mod_sections, stg_history, hardwar
 out += platform_overview()
 out += ['## 存储、目录与镜像管理','',
 '### 存储分工','',
-'| 位置 | 内容 | 原则 |','|---|---|---|','| eMMC 独立 ext4 分区 | DOS／Win3.x、MAME、FBNeo、NES、PCE HuCard、MD、GB、GG、SNES、N64、GBC、WS／WSC、GBA 游戏 | 小体积顺序读取，目录级软链接，不做 mergerfs |','| SSD `/userdata` | Win95／98、PS1、Dreamcast、NDS、PSP，以及全部存档、配置、缓存与刮削 | Windows 游戏、Wine prefix、大镜像和写入集中，避免挤占 eMMC |','',
+'| 位置 | 内容 | 原则 |','|---|---|---|','| eMMC 独立 ext4 分区 | DOS／Win3.x、MAME、FBNeo、NES、PCE HuCard、MD、GB、GG、SNES、N64、GBC、WS／WSC、GBA；首装平衡方案可加 NDS | 小体积顺序读取，目录级软链接，不做 mergerfs |','| SSD `/userdata` | Win95／98、PS1、Dreamcast、PSP、默认方案的 NDS，以及全部存档、配置、缓存与刮削 | Windows 游戏、Wine prefix、大镜像和写入集中，避免挤占 eMMC |','',
 '```bash','mkdir -p /mnt/emmc/roms/{dos,mame,fbneo,nes,pcengine,megadrive,gb,gg,snes,n64,gbc,wswan,wswanc,gba}','# 先确认目标路径不存在；不要覆盖已有实体目录','ln -s /mnt/emmc/roms/dos /userdata/roms/dos','ln -s /mnt/emmc/roms/mame /userdata/roms/mame','ln -s /mnt/emmc/roms/fbneo /userdata/roms/fbneo','ln -s /mnt/emmc/roms/nes /userdata/roms/nes','ln -s /mnt/emmc/roms/pcengine /userdata/roms/pcengine','ln -s /mnt/emmc/roms/megadrive /userdata/roms/megadrive','ln -s /mnt/emmc/roms/gb /userdata/roms/gb','ln -s /mnt/emmc/roms/gg /userdata/roms/gg','ln -s /mnt/emmc/roms/snes /userdata/roms/snes','ln -s /mnt/emmc/roms/n64 /userdata/roms/n64','ln -s /mnt/emmc/roms/gbc /userdata/roms/gbc','ln -s /mnt/emmc/roms/wswan /userdata/roms/wswan','ln -s /mnt/emmc/roms/wswanc /userdata/roms/wswanc','ln -s /mnt/emmc/roms/gba /userdata/roms/gba','```','',
-'先用 `blkid`、`lsblk` 核对实际设备并手工验证挂载，不要照抄设备名。PCE CD 镜像虽属 PCE 平台，也放在 SSD；存档和配置始终留在 `/userdata`。','',
+'先用 `blkid`、`lsblk` 核对实际设备并手工验证挂载，不要照抄设备名。PCE CD 镜像虽属 PCE 平台，也放在 SSD；存档和配置始终留在 `/userdata`。采用首装平衡方案把 NDS 移到 eMMC 时，先把现有 `/userdata/roms/nds` 内容完整迁移并验证，再将空出的路径替换为指向 `/mnt/emmc/roms/nds` 的软链接；仍有实体游戏目录时不要直接执行 `ln -s`。','',
 '- **DOS／Win3.x 每作独立目录。** 实体文件放 eMMC `/mnt/emmc/roms/dos/<游戏名>.pc/`，经 `/userdata/roms/dos` 软链接访问；保留各自程序、音轨与启动配置，存档和模拟器配置仍由系统写入 `/userdata`。DOS 原版先用 DOSBox Pure，启动菜单或 Pad2Key 不顺时再试独立 DOSBox。DOS 游戏一般不需 BIOS。轻量 Win3.x 游戏则使用自己合法拥有的 Windows 3.x 和 Batocera 官方支持的 DOSBox‑X，共用已配置的环境，逐作核对 WinG、CD 与声音；Win95／98 游戏不走此路线。',
 '- **Win95／98 使用 Batocera 的 windows 系统。** 已安装游戏放 SSD `/userdata/roms/windows/`，安装介质放 `/userdata/roms/windows_installers/`；支持 `.pc`、`.exe`、`.wine`、`.wsquashfs`、`.wtgz`，无需 BIOS，也不需安装完整 Windows。每作独立 `.wine` prefix，`autorun.cmd` 用 LF 换行并明确 `DIR`、`CMD`，再用 `SAVEDIR`／`SAVEFILES` 把存档映射到 `/userdata/saves/windows/<游戏>/`。老安装器不能在 Wine 中完成时，先在另一台兼容机器安装，再复制完整安装目录。`/userdata` 用 ext4 或 btrfs，不把 Wine 库放在 FAT、NTFS 或 NAS。',
 '- **Runner 以本机 Batocera 版本为准。** Batocera 41 起已由停止维护的旧 Wine-GE 8-26 转向 Wine-TKG，后续版本仍会继续更新，因此不把某个 runner 名称写成永久前提。先查系统信息与 `/usr/wine/` 下实际安装版本；确有单作版本需求时，把兼容 runner 放到 `/userdata/system/wine/custom/` 的独立目录并为该作单独选择。4 GB 内存同时供 Batocera、Wine 与共享显存使用，不并行安装多个大型组件，也不把他人的高配测试当本机性能证明。',
@@ -671,14 +671,44 @@ def maker_cells(p):
 out+=['平台章大体按首发年代排列；Win95／98 紧随 DOS 以区分两种运行环境，N64 与 PS1 依 eMMC／SSD 存储建议对调。出品方矩阵中，空白表示该平台不属于该厂家。','',
 '| 平台 | 条目数 | 游戏数（合集展开） | 表内预留空间 | Nintendo | Sega | Sony | NEC／Hudson | Bandai | 多厂商／PC | 建议位置 |','|---|---:|---:|---:|---|---|---|---|---|---|']
 total=0
+ssd_platforms={'Win95 / Win98','PS1','PSP','Dreamcast','NDS'}
 for p in platforms:
     es=[e for e in entries if e.platform==p];v=sum(mb(e.size) for e in es);total+=v
     makers=' | '.join(maker_cells(p))
-    out.append(f'| {p} | {len(es)} | {sum(gc(e) for e in es)} | {v/1024:.2f} GB | {makers} | {"SSD" if p in {"Win95 / Win98","PS1","PSP","Dreamcast","NDS"} else "eMMC"} |')
+    out.append(f'| {p} | {len(es)} | {sum(gc(e) for e in es)} | {v/1024:.2f} GB | {makers} | {"SSD" if p in ssd_platforms else "eMMC"} |')
+ssd_total=sum(mb(e.size) for e in entries if e.platform in ssd_platforms)
+emmc_total=total-ssd_total
+windows_priority=sum(mb(e.size) for e in entries if e.platform=='Win95 / Win98' and WINDOWS_RUNTIME[e.en][0]=='优先安装')
+windows_deferred=sum(mb(e.size) for e in entries if e.platform=='Win95 / Win98' and WINDOWS_RUNTIME[e.en][0]!='优先安装')
+full_budget=total+variant_mb
+first_install_budget=full_budget-windows_deferred
+nominal_total_gib=320*10**9/2**30
+nds_total=sum(mb(e.size) for e in entries if e.platform=='NDS')
+first_ssd_rom=ssd_total-windows_deferred-nds_total
+first_emmc_rom=emmc_total+nds_total
 out+=[f'| **官方库合计** | **{len(entries)}** | **{game_total}** | **{total/1024:.2f} GB** |  |  |  |  |  |  | 另留系统、BIOS、刮削与存档 |','',
 '#### 游戏总数与总容量','',
-f'- **官方游戏总数：{game_total} 个平台版本。** 合集已展开，地区别名不重复；同一游戏跨平台各算一个可玩版本。Game & Watch 等合集按独立商品计数，不把内含迷你游戏再拆成数十款。',f'- **原创改版内容：{new_hack_count} 款。** 仅统计含全新战役、地区或主要地图的改版；纯汉化、平衡调整和便利增强不重复增加游戏数。','- **官方库预留：'+f'{total/1024:.2f} GB。** 中文化与精选改版若与原版全部并存，另建议预留 16 GB；**合计预算 {(total+variant_mb)/1024:.2f} GB**，系统、BIOS、刮削和存档另算。','',
-'> 容量是安装预算，不是实测文件总量；合集拆分、CHD／CSO、多盘与保留多个地区版都会改变占用。','',
+f'- **官方游戏总数：{game_total} 个平台版本。** 合集已展开，地区别名不重复；同一游戏跨平台各算一个可玩版本。Game & Watch 等合集按独立商品计数，不把内含迷你游戏再拆成数十款。',f'- **原创改版内容：{new_hack_count} 款。** 仅统计含全新战役、地区或主要地图的改版；纯汉化、平衡调整和便利增强不重复增加游戏数。','- **官方库预留：'+f'{total/1024:.2f} GB。** 中文化与精选改版若与原版全部并存，另建议预留 16 GB；**合计预算 {full_budget/1024:.2f} GB**，系统、BIOS、刮削和存档另算。','',
+'> 容量是安装预算，不是实测文件总量；合集拆分、CHD／CSO、多盘与保留多个地区版都会改变占用。表内按 1024 MiB 汇总，严格说是 GiB；下面用 GiB 与硬盘厂商的十进制 GB 区分。','',
+'#### 256＋64 GB 双盘容量结论','',
+f'**不建议把当前全量库同时装入 256＋64 GB。** 两块盘的标称合计是 320 GB，换算约 {nominal_total_gib:.2f} GiB；游戏与改版已占 {full_budget/1024:.2f} GiB，只剩 {nominal_total_gib-full_budget/1024:.2f} GiB 给系统、Wine、存档、刮削、缓存和空闲余量。全量安全预算约 310–344 GiB，视频刮削还要再加 10–25 GiB，因此应按“首装库＋候补库”使用，或把 SSD 升到 512 GB。','',
+'| 项目 | 规划预留 | 位置与说明 |','|---|---:|---|',
+'| Batocera 系统、启动与升级周转 | 8 GiB | eMMC；是规划预算，不是当前镜像的实测占用 |',
+'| Wine prefix、字体与自定义 runner | 12–25 GiB | SSD；49 作独立 prefix 的额外环境开销，游戏本体已计入 73.87 GiB，不重复计算 |',
+'| 存档、记忆卡与即时存档 | 4–10 GiB | SSD；即时存档数量和 PSP／PS1 使用习惯是主要变量 |',
+'| 图片刮削 | 3–6 GiB | SSD；截图、封面、标题图等按全部条目预留 |',
+'| 视频刮削 | 额外 10–25 GiB | SSD；首装默认关闭，只给常玩游戏保留 |',
+'| 缓存、临时文件与升级周转 | 4–8 GiB | SSD；安装 Windows 游戏和转换镜像时尤其需要 |',
+'| 最低空闲空间 | eMMC 8–10 GiB；SSD 24–30 GiB | 不把盘写满，避免升级、存档和临时文件失败 |','',
+'以上是非实测的规划上限与下限，不应把某一项的最低值当成保证。安装后以 `df -h` 和 `du -sh` 实测；视频、Wine prefix 与即时存档是最需要复核的三项。','',
+'##### 两种可执行方案','',
+f'| 方案 | 游戏与改版预算 | 建议 |','|---|---:|---|',
+f'| 全量收藏 | {full_budget/1024:.2f} GiB | 选 **512 GB SSD＋64 GB eMMC**；可保留完整 Windows 库、刮削和升级余量 |',
+f'| 现有双盘首装 | {first_install_budget/1024:.2f} GiB | Windows 先装 27 款“优先安装”，其余 22 款作为候补；默认只做图片刮削 |','',
+f'- **先暂缓 {windows_deferred/1024:.2f} GiB 的候补 Windows。** 27 款优先安装本身约 {windows_priority/1024:.2f} GiB，19 款固定版本后安装和 3 款专项验收通过后再逐批加入；不要先复制全部安装介质。',
+f'- **把 NDS 整体约 {nds_total/1024:.2f} GiB 移入 eMMC。** 首装可把 16 GiB 改版预算按 eMMC 10 GiB、SSD 6 GiB 分配；这样 eMMC 的游戏与改版约 {(first_emmc_rom+10*1024)/1024:.2f} GiB，另有 8 GiB 系统预算和 8–10 GiB 最低空闲。剩余空间留给升级和新增游戏，比堆放 Wine prefix、缓存或高频存档更稳。',
+f'- **SSD 游戏与改版首装约 {(first_ssd_rom+6*1024)/1024:.2f} GiB。** 当前五个 SSD 平台合计 {ssd_total/1024:.2f} GiB，暂缓候补 Windows 并移动 NDS 后为 {first_ssd_rom/1024:.2f} GiB，再加 6 GiB 改版预算。这样给 Wine、存档、图片、缓存和空闲留下约 {238.42-(first_ssd_rom+6*1024)/1024:.2f} GiB；若要视频刮削或继续安装候补，先移出同容量内容，不要压缩最低空闲空间。',
+'- **不安装不等于从指南删除。** 主表仍是收藏与验收总目录；每批只把已通过实机验收的作品复制到机器，未安装作品保留在外部备份，不把安装介质、原镜像和压缩包重复留在 SSD。','',
 '### 实机核对顺序','',
 '1. DOS：逐作检查可执行文件、声音、鼠标、存档与退出方式；中文游戏保留字库和安装目录，CD 游戏连音轨一起验证，不能只确认进入标题画面。','2. Win95／98：逐作验证安装目录、Wine prefix、字体、过场、鼠标与存档；DirectDraw 黑屏／花屏优先核对 cnc-ddraw 的 DLL 覆盖和全屏设置，Direct3D 则保持低分辨率并单独选渲染路径。','3. MAME、FBNeo：先验证 ROM set、BIOS、双人手柄，再检查高分采样与声音；不要跨核心随意搬 ZIP。','4. NES、PCE、MD、GB、GG、SNES：先开存档与特殊芯片游戏，检查 RTC、传感器和地区刷新率。','5. N64：按游戏选择插件与 1× 渲染，核对 Expansion Pak，并测试最繁忙的战斗／竞速场景。','6. PS1、GBC、Dreamcast、WS／WSC、GBA、NDS、PSP：依次检查多盘与记忆卡、GBC 存档、Dreamcast 重负载场景、WS 横竖持机、GBA 的 RTC／传感器、NDS 双屏触控、PSP 原生设置下的繁忙场景；不只看标题画面。','',
 '']
