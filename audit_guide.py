@@ -114,13 +114,66 @@ required=['Chrono Cross','Tengai Makyou II: Manji Maru','Kingdom Hearts: Birth b
 for name in required:check(name in ens,f'点名作品缺失：{name}')
 chrono_cross=next(e for e in entries if e.en=='Chrono Cross')
 check(chrono_cross.zh=='穿越时空／时空之轮 2','Chrono Cross 中文译名与 Chrono Trigger 混淆')
+gb_saint_name='聖闘士セイントパラダイス 最強の戦士たち / Saint Paradise: Saikyou no Senshitachi'
+check(not any(e.platform=='GB' and e.en=='Saint Seiya: The Sanctuary / Saint Paradise' for e in entries),'GB 圣斗士仍混入 PS2 The Sanctuary 商品名')
+gb_saint=next((e for e in entries if e.platform=='GB' and e.en==gb_saint_name),None)
+check(gb_saint and gb_saint.year=='1992' and gc(gb_saint)==1,'GB Saint Paradise 应为 1992 年单作')
 required_genres={
     'Tengai Makyou II: Manji Maru':'角色扮演',
     'Tony Hawk’s Pro Skater 2':'竞速／体育',
     'Dragon Ball: Advanced Adventure':'格斗／清版动作',
+    'Pokémon Ruby / Sapphire':'角色扮演',
+    'Super Mario RPG: Legend of the Seven Stars':'角色扮演',
+    'Paper Mario':'角色扮演',
+    'Dissidia Final Fantasy':'格斗／清版动作',
+    'Jeanne d’Arc':'战略／战棋',
+    'Bahamut Lagoon':'战略／战棋',
+    'Front Mission Alternative':'战略／战棋',
+    'Front Mission: Gun Hazard':'角色扮演',
+    'Pokémon Trading Card Game':'战略／战棋',
+    '聖闘士セイントパラダイス 最強の戦士たち / Saint Paradise: Saikyou no Senshitachi':'战略／战棋',
+    'Pokémon Snap':'模拟／音乐／派对',
+    'The World Ends with You':'角色扮演',
+    'Ys: The Oath in Felghana':'角色扮演',
+    'Skies of Arcadia':'角色扮演',
+    'Phantasy Star Online':'角色扮演',
+    'Crazy Taxi':'竞速／体育',
+    'Metropolis Street Racer':'竞速／体育',
+    'Gran Turismo':'竞速／体育',
+    'Gran Turismo 2':'竞速／体育',
+    'Ape Escape':'平台动作',
+    'Tony Hawk’s Pro Skater':'竞速／体育',
+    'Osu! Tatakae! Ouendan / Elite Beat Agents':'模拟／音乐／派对',
+    'Taiko no Tatsujin Portable':'模拟／音乐／派对',
+    '1942':'射击（STG）',
+    '1943: The Battle of Midway':'射击（STG）',
+    'Blazing Star':'射击（STG）',
+    'Cho Aniki':'射击（STG）',
+    'Nakahara no Hasha: Sangoku Shouseiden':'战略／战棋',
+    'Military Madness':'战略／战棋',
+    'Advance Wars':'战略／战棋',
+    'Live A Live':'角色扮演',
+    'Super Punch-Out!!':'竞速／体育',
+    'The Lost Vikings':'益智／休闲',
+    'Wario’s Woods':'益智／休闲',
+    'Lode Runner':'益智／休闲',
+    'Yoshi':'益智／休闲',
+    'Alien Crush':'模拟／音乐／派对',
+    "Devil's Crush":'模拟／音乐／派对',
+    'Chase HQ':'竞速／体育',
+    'Scorched Earth':'战略／战棋',
+    'Worms':'战略／战棋',
 }
 for name,category in required_genres.items():
-    check(all(e.category==category for e in entries if e.en==name),f'点名作品品类错误：{name}')
+    matches=[e for e in entries if e.en==name]
+    check(bool(matches),f'品类防回归条目缺失：{name}')
+    check(all(e.category==category for e in matches),f'点名作品品类错误：{name} → '+str([(e.platform,e.category) for e in matches]))
+for pattern,category in [(r'Metal Max.*','角色扮演'),(r'Mario & Luigi:.*','角色扮演'),(r'Mega Man Battle Network.*','角色扮演'),(r'Mega Man Star Force:.*','角色扮演'),(r'Advance Wars.*','战略／战棋'),(r'Sakura Wars [34].*','战略／战棋'),(r'Crazy Taxi(?: 2)?','竞速／体育'),(r'Banjo-(?:Kazooie|Tooie)','平台动作'),(r'Dragon Ball Z: Goku Hishouden / Goku Gekitouden','角色扮演')]:
+    matches=[e for e in entries if re.fullmatch(pattern,e.en,re.I)]
+    check(bool(matches),f'品类防回归规则无匹配：{pattern}')
+    check(all(e.category==category for e in matches),f'系列品类串扰：{pattern}')
+check(next(e for e in entries if e.en=='Gran Turismo').subgenre=='竞速与驾驶','GT 赛车被误归普通体育')
+check(next(e for e in entries if e.en=='Front Mission Alternative').subgenre=='即时军事模拟','Front Mission Alternative 未按实时战术归类')
 for name in ['Life Force / Salamander','Life Force','Gradius','Galaxian','Galaga']:
     check(all(e.category=='射击（STG）' for e in entries if e.en==name),f'STG 归类错误：{name}')
 for name in ['Contra','Super C','Battle City']:
@@ -140,13 +193,30 @@ check(civ2 and 'DOSBox‑X' in civ2.note and 'Windows 3.x' in civ2.note,'文明 
 win_entries=[e for e in entries if e.platform=='Win95 / Win98']
 win_ens={e.en for e in win_entries}
 check(platforms.index('Win95 / Win98')==platforms.index('DOS')+1,'Win95／98 未紧随 DOS')
-check(len(win_entries)==len(ns['WINDOWS_GAMES']),f'Windows 条目数异常：{len(win_entries)}')
+check(len(win_entries)==49==len(ns['WINDOWS_GAMES']),f'Windows 条目数应为 49：{len(win_entries)}')
+check('Rayman 2: The Great Escape' not in win_ens,'高风险且已有主机版的 Windows Rayman 2 不应收录')
 for en,zh,pub,size,year,note,series,category,subgenre in ns['WINDOWS_GAMES']:
     check(en in win_ens,f'Windows 精选缺失：{en}')
 for e in win_entries:
     check(e.category not in {'射击','射击（STG）','动作射击'},f'Windows 混入射击游戏：{e.en}')
-for snippet in ['/userdata/roms/windows/','cnc-ddraw','ddraw.dll','native,builtin','WINEDLLOVERRIDES=ddraw=n,b','不支持 Direct3D 或 Glide','DXVK','SAVEDIR','SAVEFILES']:
+    check(e.en in ns['WINDOWS_RUNTIME'],f'Windows 缺运行判断：{e.en}')
+    if e.en in ns['WINDOWS_RUNTIME']:
+        level,runtime_note=ns['WINDOWS_RUNTIME'][e.en]
+        check(level in {'优先安装','固定版本后安装','低画质专项验收'},f'Windows 运行级别异常：{e.en}')
+        check(f'【Wine 安装判断：{level}】{runtime_note}' in e.note,f'Windows 具体验收备注未落入正文：{e.en}')
+for snippet in ['/userdata/roms/windows/','cnc-ddraw','ddraw.dll','native,builtin','WINEDLLOVERRIDES=ddraw=n,b','不支持 Direct3D 或 Glide','DDrawCompat 官方不支持 Wine','DXVK','SAVEDIR','SAVEFILES','Wine-TKG','/usr/wine/','/userdata/system/wine/custom/']:
     check(snippet in text,f'Windows／cnc-ddraw 配置缺失：{snippet}')
+check('与 Wine-GE 运行' not in text,'仍把旧 Wine-GE 写成固定运行前提')
+check(next(e for e in win_entries if e.en=='Diablo').year=='1996–1997','Diablo 应保留 1996 首发出货／1997 广泛上市的跨年标注')
+check(next(e for e in win_entries if e.en=="Sid Meier's Alpha Centauri").year=='1999','Alpha Centauri 年份应为 1999')
+castle=next(e for e in win_entries if '幽城' in e.en)
+check(castle.en=='天地劫序傳：幽城幻劍錄' and castle.zh=='天地劫序传：幽城幻剑录' and castle.subgenre=='即时／半即时 RPG','幽城幻剑录完整名或战斗分类错误')
+civ3=next(e for e in win_entries if e.en=="Sid Meier's Civilization III")
+check('Wine ≥10.13' in civ3.note and '回归' in civ3.note,'文明 III 缺 Wine 10.13 门槛与回归风险')
+check(civ3.note.count('低画质专项验收')==1,'文明 III 未设专项验收')
+for name in ['Dungeon Keeper II','Need for Speed III: Hot Pursuit']:
+    e=next(e for e in win_entries if e.en==name)
+    check('低画质专项验收' in e.note and '640×480' in e.note,f'早期 3D 游戏缺低分辨率验收：{name}')
 check(gc(next(e for e in win_entries if e.en=='StarCraft / StarCraft: Brood War'))==2,'星际争霸合集展开计数不是 2')
 homm=[e for e in entries if e.series=='英雄无敌']
 check({e.platform for e in homm}=={'DOS','Win95 / Win98'} and len(homm)==3,'英雄无敌未形成 DOS＋Windows 三作专题')

@@ -7,7 +7,7 @@ rg=importlib.util.module_from_spec(spec); spec.loader.exec_module(rg)
 Entry=rg.Entry
 entries=rg.entries
 from guide_dos import DOS_GAMES, DOS_GENRES, DOS_SERIES, DOS_COUNTS
-from guide_windows import WINDOWS_GAMES, WINDOWS_GENRES, WINDOWS_SERIES, WINDOWS_COUNTS
+from guide_windows import WINDOWS_GAMES, WINDOWS_GENRES, WINDOWS_SERIES, WINDOWS_COUNTS, WINDOWS_RUNTIME
 
 # 只保留适合家庭电视与 N4100 保守性能范围的正式作品。
 drop_old={
@@ -323,7 +323,7 @@ Y={
 'Crisis Core: Final Fantasy VII':'2007','The 3rd Birthday':'2010','Shin Megami Tensei: Persona 3 Portable':'2009','Ridge Racer':'2004','Hatsune Miku: Project DIVA':'2009','Hatsune Miku: Project DIVA 2nd':'2010','Hatsune Miku: Project DIVA Extend':'2011','Super Robot Taisen A Portable':'2008','Final Fantasy Tactics: The War of the Lions':'2007','Ys I & II Chronicles':'2009','Ys: The Oath in Felghana':'2005','Ys Seven':'2009','Valkyria Chronicles II':'2010','Valkyria Chronicles III':'2011','Disgaea: Afternoon of Darkness':'2006','Kingdom Hearts: Birth by Sleep':'2010','LocoRoco':'2006','Patapon':'2007','Lumines':'2004','Everybody’s Golf / Hot Shots Golf':'2004','DJMax Portable 1 / 2 / Clazziquai / Black Square':'2006–2008','Taiko no Tatsujin Portable':'2005','Silent Hill: Origins':'2007','Silent Hill: Shattered Memories':'2009','Memories Off / Clannad / Steins;Gate / Higurashi / Fate/Extra':'2008–2011','Dissidia Final Fantasy':'2008','Hatsune Miku: Project DIVA 2nd':'2010','Grand Theft Auto: Chinatown Wars':'2009','Tekken: Dark Resurrection':'2006','Wipeout Pure':'2005','Jeanne d’Arc':'2006','Castlevania: The Dracula X Chronicles':'2007','Daxter':'2006','LittleBigPlanet':'2009','Lumines II':'2006',
 }
 Y.update({
-'Nakahara no Hasha: Sangoku Shouseiden':'1988','The Goonies':'1986','The Legend of Kage':'1985','Wario Land: Super Mario Land 3':'1994','Metal Gear Solid: Ghost Babel':'2000','Castlevania II: Belmont’s Revenge':'1991','Castlevania Legends':'1997','Ninja Gaiden Shadow':'1991','Double Dragon II':'1991','Teenage Mutant Ninja Turtles: Fall of the Foot Clan':'1990','Dragon Ball Z: Goku Hishouden / Goku Gekitouden':'1994–1995','Saint Seiya: The Sanctuary / Saint Paradise':'1990–1992','Dr. Mario':'1990','Yoshi':'1991',
+'Nakahara no Hasha: Sangoku Shouseiden':'1988','The Goonies':'1986','The Legend of Kage':'1985','Wario Land: Super Mario Land 3':'1994','Metal Gear Solid: Ghost Babel':'2000','Castlevania II: Belmont’s Revenge':'1991','Castlevania Legends':'1997','Ninja Gaiden Shadow':'1991','Double Dragon II':'1991','Teenage Mutant Ninja Turtles: Fall of the Foot Clan':'1990','Dragon Ball Z: Goku Hishouden / Goku Gekitouden':'1994–1995','聖闘士セイントパラダイス 最強の戦士たち / Saint Paradise: Saikyou no Senshitachi':'1992','Dr. Mario':'1990','Yoshi':'1991',
 'Sonic the Hedgehog 3 & Knuckles':'1994','Altered Beast':'1988','Nobunaga’s Ambition: Zenkokuban':'1986','Advanced Daisenryaku':'1991','Thunder Force IV: Lightening Force':'1992','The Revenge of Shinobi':'1989',"Street Fighter II': Special Champion Edition":'1993','Shinobi III':'1993','Phantasy Star IV: The End of the Millennium':'1993','Beyond Oasis / The Story of Thor':'1994',
 'Fire Emblem: Mystery of the Emblem':'1994','Fire Emblem: Genealogy of the Holy War':'1996','Langrisser':'1991','Langrisser II / Der Langrisser':'1994–1995','Front Mission: Gun Hazard':'1996','Nobunaga’s Ambition: Bushou Fuuunroku':'1990','Nobunaga’s Ambition: Haouden':'1992','Nobunaga’s Ambition: Tenshouki':'1993','Street Fighter II Turbo: Hyper Fighting':'1993','Star Fox 2':'2017','Street Fighter Alpha 2':'1996','Parodius Da!':'1992','Disney’s Aladdin':'1993','Disney’s The Lion King':'1994','The Lost Vikings':'1992',
 'Sin and Punishment: Successor of the Earth':'2000','Wave Race 64':'1996','Mario Party 1 / 2 / 3':'1998–2000','Tengai Makyou: Ziria':'1989','Gate of Thunder':'1992','Lords of Thunder':'1993','Dungeon Explorer II':'1993','Cho Aniki':'1992','Cosmic Fantasy 2':'1991','Cotton':'1993','Xevious':'1990','Tokimeki Memorial':'1994','Genpei Touma Den':'1990',
@@ -366,6 +366,36 @@ def genre(e):
         'Dragon Ball: Advanced Adventure':('格斗／清版动作','清版动作与合作'),
     }
     if s in manual_genres:return manual_genres[s]
+    # 精确覆盖优先于宽泛正则，避免 Sapphire 被当射击、Mario RPG 被当平台动作。
+    overrides=[
+        (r'Pokémon Ruby / Sapphire|Super Mario RPG: Legend of the Seven Stars|Paper Mario|Mario & Luigi:.*|Mega Man Battle Network.*|Mega Man Star Force:.*|The Legend of Heroes II: Prophecy of the Moonlight Witch.*|Tengai Makyou: Ziria|Tengai Makyou: Fuun Kabuki Den|Skies of Arcadia|Live A Live|Saint Seiya: Ougon Densetsu|Dragon Ball Z: Goku Hishouden / Goku Gekitouden','角色扮演','回合／迷宫／叙事 RPG'),
+        (r'Pokémon Trading Card Game|聖闘士セイントパラダイス 最強の戦士たち / Saint Paradise: Saikyou no Senshitachi','战略／战棋','卡牌与策略对战'),
+        (r'Pokémon Stadium(?: 2)?','战略／战棋','大战略与军团'),
+        (r'Pokémon Snap','模拟／音乐／派对','经营与生活模拟'),
+        (r'Dissidia Final Fantasy|Yie Ar Kung-Fu|Martial Masters|The Killing Blade|Red Earth / War-Zard|Nekketsu Kakutou Densetsu','格斗／清版动作','一对一与场地格斗'),
+        (r'Jeanne d’Arc|Bahamut Lagoon|Sakura Wars [34].*|Advance Wars.*|Military Madness','战略／战棋','网格战术'),
+        (r'Front Mission Alternative','战略／战棋','即时军事模拟'),
+        (r'Metal Max.*|Metal Saga.*','角色扮演','回合／迷宫／叙事 RPG'),
+        (r'Phantasy Star Online|Crystalis|Wonder Boy in Monster World|Soul Blazer|Illusion of Gaia|E\.V\.O\.: Search for Eden|Neutopia(?: II)?|Crisis Core: Final Fantasy VII|The 3rd Birthday|Nayuta no Kiseki.*|Final Fantasy Crystal Chronicles: Echoes of Time|Pokémon Ranger|The World Ends with You|Ys: The Oath in Felghana|Brave Fencer Musashi|Front Mission: Gun Hazard|Uncharted Waters: New Horizons / Daikoukai Jidai II|Dark Seal / Gate of Doom','角色扮演','动作 RPG'),
+        (r'1942|1943: The Battle of Midway|Cho Aniki|Thunder Blade|Blazing Star','射击（STG）','横纵卷轴射击'),
+        (r'Nakahara no Hasha: Sangoku Shouseiden','战略／战棋','大战略与军团'),
+        (r'Shadow of the Ninja|Takahashi Meijin no Bouken Jima IV|Doraemon|Hokuto no Ken|Kid Dracula.*|Teenage Mutant Ninja Turtles: Fall of the Foot Clan|Valis:.*|Banjo-Kazooie|Banjo-Tooie|Conker\'s Bad Fur Day|Mischief Makers|Ape Escape','平台动作','横版／单屏／3D 平台'),
+        (r'Teenage Mutant Ninja Turtles','平台动作','横版／单屏／3D 平台'),
+        (r'Teenage Mutant Ninja Turtles III: The Manhattan Project|Nekketsu Kouha Kunio-kun.*|River City Ransom.*|Alien vs\. Predator|The Ninja Warriors|Genpei Touma Den','格斗／清版动作','清版动作与合作'),
+        (r'Nintendo World Cup.*|Downtown Nekketsu Koushinkyoku.*|Excitebike|Tony Hawk’s Pro Skater|Super Punch-Out!!','竞速／体育','体育与运动'),
+        (r'Lode Runner|Yoshi|Wario’s Woods|The Lost Vikings','益智／休闲','规则解谜与短局'),
+        (r'Pilotwings','模拟／音乐／派对','经营与生活模拟'),
+        (r'Zombies Ate My Neighbors|KiKi KaiKai','动作射击','跑射与动作射击'),
+        (r'Star Wars: Rogue Squadron|Star Wars: Shadows of the Empire','动作射击','第一／第三人称射击'),
+        (r'Alien Crush|Devil\'s Crush','模拟／音乐／派对','生活模拟与派对'),
+        (r'Super Momotarou Dentetsu','模拟／音乐／派对','生活模拟与派对'),
+        (r'Chase HQ|Crazy Taxi(?: 2)?|Metropolis Street Racer|Gran Turismo(?: 2)?','竞速／体育','竞速与驾驶'),
+        (r'Osu! Tatakae! Ouendan / Elite Beat Agents|Taiko no Tatsujin Portable','模拟／音乐／派对','音乐与节奏'),
+        (r'The Typing of the Dead','模拟／音乐／派对','输入与生活模拟'),
+        (r'Scorched Earth|Worms','战略／战棋','炮术与回合对抗'),
+    ]
+    for pattern,category,subgenre in overrides:
+        if re.fullmatch(pattern,s,re.I):return category,subgenre
     if e.platform=='DOS' and s in DOS_GENRES:return DOS_GENRES[s]
     if e.platform=='Win95 / Win98' and s in WINDOWS_GENRES:return WINDOWS_GENRES[s]
     if re.search(r'Tetris|Puyo|Puzzle|Columns|Dr\. Mario|Panel de Pon|Picross|Lemmings|Magical Drop|Gunpey|Qix|ChuChu|Mr\. Driller|Buffers|Mole Mania|Twinkle Star Sprites|Professor Layton|Brain Age|WarioWare|Cooking Mama|Lumines|Katamari',s,re.I):return ('益智／休闲','落块与消除' if re.search(r'Tetris|Puyo|Puzzle Bobble|Columns|Dr\. Mario|Panel|Magical Drop|Lumines',s,re.I) else '规则解谜与短局')
@@ -416,6 +446,9 @@ for e in entries:
     e.series=series_for(e)
     e.category,e.subgenre=genre(e)
     e.note=custom_notes.get(id(e)) or rg.make_note(e).replace('|','／').replace('\n',' ')
+    if e.platform=='Win95 / Win98':
+        level,runtime_note=WINDOWS_RUNTIME[e.en]
+        e.note+=f' 【Wine 安装判断：{level}】{runtime_note}'
     if id(e) not in custom_notes and (e.old in old_names or e.en in Y or e.platform in {'GG','WS / WSC'}):
         if e.note.startswith('本作保留了该平台') or e.note==rg.series_note.get(e.series,''):e.note=''
 
@@ -506,7 +539,7 @@ platform_intro={
 'Dreamcast':'以 Flycast 原生分辨率、较成熟 2D 移植与 DC 特色游戏为主；重型 3D 只保留高代表作，不把“可启动”写成“全程稳定”。',
 'NDS':'以双屏、触控、RPG、文字冒险和本地家庭短局为主，注意触控与麦克风在游戏中的必要性。',
 'DOS':'IBM PC 兼容环境的 DOS 精品，并保留《文明 II》这类可在 DOSBox‑X＋Windows 3.x 运行的轻量作品。中文战棋、国产三剑、经营、点击冒险与即时战略均有覆盖；射击作优先采用主机／街机版本，Win95／98 专用作品转由下一平台的 Wine 管理。鼠标、键盘和手柄映射逐作写明。',
-'Win95 / Win98':'Windows 95／98 时代的低配置精品经 Batocera 官方 windows 系统与 Wine-GE 运行，并不虚拟完整 Win95。以中文 RPG、战棋、欧美角色扮演、策略经营和点击冒险为主，辅以轻量平台动作与竞速；不收第一／第三人称射击、FPS 或 STG。每作独立 Wine prefix，DirectDraw 优先试 cnc-ddraw，早期 3D 保持原始低画质，默认不开 DXVK。'}
+'Win95 / Win98':'Windows 95／98 时代的低配置精品经 Batocera 官方 windows 系统与内置 Wine runner 运行，并不虚拟完整 Win95。以中文 RPG、战棋、欧美角色扮演、策略经营和点击冒险为主，辅以轻量平台动作与竞速；不收第一／第三人称射击、FPS 或 STG。每作独立 Wine prefix，DirectDraw 优先试 cnc-ddraw，早期 3D 保持原始低画质，默认不开 DXVK。备注中的“优先安装／固定版本后安装／低画质专项验收”是公开资料形成的安装优先级，不是本机实测认证：N4100 的四核低功耗 CPU、12 EU 的 UHD 600 与 4 GB 共享内存决定了老游戏的主要风险是兼容、早期 3D、视频和字库，而非仅看当年最低配置。'}
 
 # 输出。
 out=['# Batocera 家庭游戏机精选指南','',
@@ -528,10 +561,11 @@ out += ['## 存储、目录与镜像管理','',
 '先用 `blkid`、`lsblk` 核对实际设备并手工验证挂载，不要照抄设备名。PCE CD 镜像虽属 PCE 平台，也放在 SSD；存档和配置始终留在 `/userdata`。','',
 '- **DOS／Win3.x 每作独立目录。** 实体文件放 eMMC `/mnt/emmc/roms/dos/<游戏名>.pc/`，经 `/userdata/roms/dos` 软链接访问；保留各自程序、音轨与启动配置，存档和模拟器配置仍由系统写入 `/userdata`。DOS 原版先用 DOSBox Pure，启动菜单或 Pad2Key 不顺时再试独立 DOSBox。DOS 游戏一般不需 BIOS。轻量 Win3.x 游戏则使用自己合法拥有的 Windows 3.x 和 Batocera 官方支持的 DOSBox‑X，共用已配置的环境，逐作核对 WinG、CD 与声音；Win95／98 游戏不走此路线。',
 '- **Win95／98 使用 Batocera 的 windows 系统。** 已安装游戏放 SSD `/userdata/roms/windows/`，安装介质放 `/userdata/roms/windows_installers/`；支持 `.pc`、`.exe`、`.wine`、`.wsquashfs`、`.wtgz`，无需 BIOS，也不需安装完整 Windows。每作独立 `.wine` prefix，`autorun.cmd` 用 LF 换行并明确 `DIR`、`CMD`，再用 `SAVEDIR`／`SAVEFILES` 把存档映射到 `/userdata/saves/windows/<游戏>/`。老安装器不能在 Wine 中完成时，先在另一台兼容机器安装，再复制完整安装目录。`/userdata` 用 ext4 或 btrfs，不把 Wine 库放在 FAT、NTFS 或 NAS。',
-'- **DirectDraw 优先使用 cnc-ddraw。** 将官方发布包中的 `ddraw.dll`、配置程序与所需文件放到游戏 EXE 同目录，游戏自身先设全屏并关闭自带窗口模式；在 Wine 中运行一次 `cnc-ddraw config.exe`，或把 `ddraw` 覆盖为 `native,builtin`。`autorun.cmd` 也可针对该作写 `ENV=WINEDLLOVERRIDES=ddraw=n,b`。N4100 先用 OpenGL 渲染，异常时试 GDI；速度过快再调 `maxgameticks=60`，不要默认开高成本缩放 shader。**它只处理 DirectDraw／软件渲染，不支持 Direct3D 或 Glide**，这三类不能靠替换 `ddraw.dll` 通用修复。',
-'- **Wine 配置按游戏隔离。** DirectDraw 和早期 Direct3D 默认关闭 DXVK，以 WineD3D／OpenGL 与原始低分辨率起步；只有确有收益的较新 DirectX 游戏才单独试 DXVK。老中文游戏按实际编码补字体并设置 `LANG`，不把整套字库覆盖到所有 prefix。Batocera 的高级选项通常只在首次启动生效；修改后先备份存档，再重建该作的可写层或 prefix。小型且写入多的游戏可用 `.wtgz`，大型且主要只写存档的游戏可用 `.wsquashfs`。',
+'- **Runner 以本机 Batocera 版本为准。** Batocera 41 起已由停止维护的旧 Wine-GE 8-26 转向 Wine-TKG，后续版本仍会继续更新，因此不把某个 runner 名称写成永久前提。先查系统信息与 `/usr/wine/` 下实际安装版本；确有单作版本需求时，把兼容 runner 放到 `/userdata/system/wine/custom/` 的独立目录并为该作单独选择。4 GB 内存同时供 Batocera、Wine 与共享显存使用，不并行安装多个大型组件，也不把他人的高配测试当本机性能证明。',
+'- **DirectDraw 优先使用 cnc-ddraw。** 将官方发布包中的 `ddraw.dll`、配置程序与所需文件放到游戏 EXE 同目录，游戏自身先设全屏并关闭自带窗口模式；在 Wine 中运行一次 `cnc-ddraw config.exe`，或把 `ddraw` 覆盖为 `native,builtin`。`autorun.cmd` 也可针对该作写 `ENV=WINEDLLOVERRIDES=ddraw=n,b`。N4100 先用 OpenGL 渲染，异常时试 GDI；速度过快再调 `maxgameticks=60`，不要默认开高成本缩放 shader。**它只处理 DirectDraw／软件渲染，不支持 Direct3D 或 Glide**，这三类不能靠替换 `ddraw.dll` 通用修复。DDrawCompat 官方不支持 Wine，不作为 Batocera 方案；cnc-ddraw、GOG 自带渲染器和其他 wrapper 不叠加。',
+'- **Wine 配置按游戏隔离。** DirectDraw 和早期 Direct3D 默认关闭 DXVK，以 WineD3D／OpenGL 与原始低分辨率起步；只有确有收益的较新 DirectX 游戏才单独试 DXVK。老中文游戏按实际编码补字体并设置 `LANG`，日区旧作还需检查 `LC_ALL` 与 Shift-JIS 文件名，不把整套字库覆盖到所有 prefix。Batocera 的高级选项通常只在首次启动生效；修改后先备份存档，再重建该作的可写层或 prefix。小型且写入多的游戏可用 `.wtgz`，大型且主要只写存档的游戏可用 `.wsquashfs`。《文明 III》的黑色地形问题在 Wine 10.13 上游有修复记录，但不代表外交界面、声音和后续兼容层回归都已解决，须保留该作的专项验收。',
 '- **街机按 ROM set 管理。** MAME 放 `/userdata/roms/mame`，FBNeo 放 `/userdata/roms/fbneo`；ZIP 不随意改名或解压，Neo Geo、PGM 等依赖文件随匹配 ROM set 配置。','- **BIOS 以本机检查为准。** 用 Batocera 的 BIOS 检查、`batocera-systems` 和当前版本文档确认，不用旧网络清单替代。','- **光盘与便携镜像。** PCE CD、PS1 可用 CHD，多盘配 M3U；Dreamcast 按核心选 CHD 或 GDI，转换前保留原镜像。PSP 以 ISO 作兼容基线，CSO 是否合适按游戏测试。','- **家庭游玩先测操作。** 核对多手柄分配、存档、双人画面与热键；触控、陀螺仪、阳光传感器和专用外设作品会在备注中说明。DOS／Windows 经营、RTS 与点击冒险优先实体鼠标，Pad2Key 只是可用性补偿。','',
-'官方依据：[Batocera Arcade Guide](https://wiki.batocera.org/arcade)、[Advanced arcade emulation](https://wiki.batocera.org/advanced_arcade)、[Add games/BIOS files](https://wiki.batocera.org/add_games_bios)、[Batocera DOS 系统说明](https://wiki.batocera.org/systems:dos)、[DOSBox‑X 的 Windows 3.1x 指南](https://dosbox-x.com/wiki/Guide%3AInstalling-Windows-3.1x)、[Batocera Windows（Wine）系统说明](https://wiki.batocera.org/systems:windows)、[cnc-ddraw 官方说明](https://github.com/FunkyFr3sh/cnc-ddraw)、[Xbox 系统说明](https://wiki.batocera.org/systems:xbox)。','',
+'官方依据：[Batocera Arcade Guide](https://wiki.batocera.org/arcade)、[Advanced arcade emulation](https://wiki.batocera.org/advanced_arcade)、[Add games/BIOS files](https://wiki.batocera.org/add_games_bios)、[Batocera DOS 系统说明](https://wiki.batocera.org/systems:dos)、[DOSBox‑X 的 Windows 3.1x 指南](https://dosbox-x.com/wiki/Guide%3AInstalling-Windows-3.1x)、[Batocera Windows（Wine）系统说明](https://wiki.batocera.org/systems:windows)、[Batocera Changelog](https://batocera.org/changelog)、[cnc-ddraw 官方说明](https://github.com/FunkyFr3sh/cnc-ddraw)、[DDrawCompat 官方说明](https://github.com/narzoul/DDrawCompat)、[《文明 III》Wine／Proton 问题记录](https://github.com/ValveSoftware/Proton/issues/315)、[Dungeon Keeper II 技术资料](https://www.pcgamingwiki.com/wiki/Dungeon_Keeper_2)、[Need for Speed III 技术资料](https://www.pcgamingwiki.com/wiki/Need_for_Speed_III:_Hot_Pursuit)、[The Sims 技术资料](https://www.pcgamingwiki.com/wiki/The_Sims)、[Intel N4100 官方规格](https://www.intel.com/content/www/us/en/products/sku/128983/intel-celeron-processor-n4100-4m-cache-up-to-2-40-ghz/specifications.html)、[Xbox 系统说明](https://wiki.batocera.org/systems:xbox)。','',
 '---','','## 各平台精选清单','']
 for p in platforms:
     es=[e for e in entries if e.platform==p]
@@ -612,7 +646,7 @@ def mb(size):
         return float(re.findall(r'[\d.]+',size)[0])*(1024 if 'GB' in size.upper() else 1)
     except:return 0
 game_counts={
-'Pokémon Red / Green / Blue / Yellow':4,'Pokémon Gold / Silver / Crystal':3,'Dragon Warrior Monsters 2: Cobi’s Journey / Tara’s Adventure':2,'Dragon Ball Z: Goku Hishouden / Goku Gekitouden':2,'Saint Seiya: The Sanctuary / Saint Paradise':2,'Game & Watch Gallery 1–3':3,'Shin Megami Tensei I / II':2,'Mario Party 1 / 2 / 3':3,"Bomberman '93 / '94":2,'Valis: The Fantasm Soldier / Valis II / III / IV':4,'Download / Download 2':2,
+'Pokémon Red / Green / Blue / Yellow':4,'Pokémon Gold / Silver / Crystal':3,'Dragon Warrior Monsters 2: Cobi’s Journey / Tara’s Adventure':2,'Dragon Ball Z: Goku Hishouden / Goku Gekitouden':2,'Game & Watch Gallery 1–3':3,'Shin Megami Tensei I / II':2,'Mario Party 1 / 2 / 3':3,"Bomberman '93 / '94":2,'Valis: The Fantasm Soldier / Valis II / III / IV':4,'Download / Download 2':2,
 'Pokémon FireRed / LeafGreen':2,'Mega Man Battle Network 3: Blue / White':2,'Pokémon Ruby / Sapphire':2,'Pokémon HeartGold / SoulSilver':2,'Pokémon Black / White':2,'Pokémon Black 2 / White 2':2,'Phoenix Wright: Ace Attorney / Justice for All / Trials and Tribulations (DS)':3,'Inazuma Eleven 2: Kyoui no Shinryakusha – Fire / Blizzard':2,'Digimon World Dawn / Dusk':2,'Mega Man Star Force: Pegasus / Leo / Dragon':3,'Osu! Tatakae! Ouendan / Elite Beat Agents':2,
 'Gradius / Gradius II / Gradius III':3,'Parodius Da! / Sexy Parodius / Gokujou Parodius!':3,'TwinBee / Detana!! TwinBee':2,'Puzzle Bobble / Puzzle Bobble 2 / 3 / 4':4,'Golden Axe (Arcade)':1,'Double Dragon 1 / 2 / 3 (Arcade)':3,'Metal Slug 1 / 2 / X / 3 / 4 / 5':6,'Bubble Bobble / Rainbow Islands':2,'Elevator Action / Elevator Action Returns':2,'Darius / Darius II / Darius Gaiden':3,'Pac-Man / Ms. Pac-Man':2,'Donkey Kong / Donkey Kong Jr.':2,'Galaga / Galaxian':2,
 'Virtua Tennis / Virtua Tennis 2':2,'The Legend of Heroes II: Prophecy of the Moonlight Witch / III: White Witch / IV: A Tear of Vermillion / V: Cagesong of the Ocean':4,'DJMax Portable 1 / 2 / Clazziquai / Black Square':4,'Memories Off / Clannad / Steins;Gate / Higurashi / Fate/Extra':5,'Crash Bandicoot 1 / 2: Cortex Strikes Back / 3: Warped':3,'Spyro the Dragon 1 / 2: Ripto’s Rage! / 3: Year of the Dragon':3,'Tomb Raider I / II / III':3,'Tokimeki Memorial 1 / 2':2,'The Legend of Zelda: Oracle of Seasons / Oracle of Ages':2,'Final Fantasy I / II / IV':3,

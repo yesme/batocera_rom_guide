@@ -1,7 +1,7 @@
 def platform_overview():
     rows=[
     ('DOS／Win3.x','16／32 位 x86 PC 环境','1981／1992','IBM／Microsoft 等','键盘鼠标、VGA、声卡、CD‑ROM 与中文 PC 游戏传统','DOS 用 DOSBox Pure；轻量 Win3.x 用 DOSBox‑X','每作独立 .pc 目录；DOS 先自动 CPU；Win3.x 需自备系统并配置显示、声音与 WinG；经营和 RTS 用鼠标；Win95／98 游戏转下一平台'),
-    ('Win95／98（Wine）','16／32 位 x86 Windows 程序','1995／1998','Microsoft（兼容层由 Wine 提供）','DirectDraw、早期 Direct3D、中文 RPG、策略与经营经典','Wine-GE（Batocera windows 系统）','每作独立 .wine prefix；DirectDraw 优先试 cnc-ddraw；DXVK 默认关闭；原始低分辨率；不虚拟完整 Win95，不收射击游戏'),
+    ('Win95／98（Wine）','16／32 位 x86 Windows 程序','1995／1998','Microsoft（兼容层由 Wine 提供）','DirectDraw、早期 Direct3D、中文 RPG、策略与经营经典','Batocera 内置 Wine runner（版本随系统更新）','每作独立 .wine prefix；DirectDraw 优先试 cnc-ddraw；DXVK 默认关闭；原始低分辨率；不虚拟完整 Win95，不收射击游戏'),
     ('MAME','多种 8／16／32 位街机','1970 年代末起','多厂商','早期迷宫、单屏、Taito／Namco／Sega 硬件','MAME（当前 Batocera 核心）','ROM set 必须与核心匹配；ZIP 不改名、不解压；BIOS／CHD 依赖完整'),
     ('FBNeo','多种 16／32 位 2D 街机','1980 年代末起','Capcom／SNK／IGS 等','CPS、Neo Geo、PGM、Toaplan 等','FinalBurn Neo（libretro）','Neo Geo／PGM BIOS 随匹配 ROM set；NAOMI 不放入此目录'),
     ('NES／FC','8 位','1983','Nintendo','家用卷轴动作与早期 JRPG，含 FDS','Mesen／Nestopia／FCEUmm','FDS 需 disksys.rom；核对 Mapper、地区制式与汉化改版 Mapper'),

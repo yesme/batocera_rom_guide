@@ -62,7 +62,7 @@ N2={
 'Ninja Gaiden Shadow':'以摩天楼为舞台，使用刀、锁链与忍术推进短关卡。它由 Natsume 相关团队制作，气质接近赤影战士，而非 FC 忍龙直接缩小。',
 'Teenage Mutant Ninja Turtles: Fall of the Foot Clan':'GB 首部神龟游戏以短横版关卡、角色切换和救回同伴为核心。画面虽小，仍保留四龟不同武器手感。',
 'Dragon Ball Z: Goku Hishouden / Goku Gekitouden':'两部 GB 龙珠采用指令与时机输入表现战斗，分别覆盖赛亚人至弗利萨等段落。它们不是普通横版动作移植。',
-'Saint Seiya: The Sanctuary / Saint Paradise':'GB 圣斗士作品以十二宫等剧情、指令战斗和角色培养为主，日文菜单是主要门槛。两作应作为独立商品识别。',
+'聖闘士セイントパラダイス 最強の戦士たち / Saint Paradise: Saikyou no Senshitachi':'Bandai 于 1992 年推出的 GB 独占作，把 Carddass 的 SD 圣斗士形象改编成带卡牌战斗和角色培养的 RPG，剧情从银河战争延伸至海皇篇。它是 GB 唯一一部圣斗士主系列游戏，不应与 2005 年 PS2《The Sanctuary》混名；日文菜单和卡牌说明是主要门槛。',
 'Ninja Gaiden':'FC 初代以高速跑跳、墙上借力与忍术副武器著称，过场动画在当年很有电影感。终盘难度尤其严苛。',
 'Takahashi Meijin no Bouken Jima IV':'FC 日本后期原创冒险岛，加入地图、道具与存档密码，结构比早期直线闯关更开放。日版文字不妨碍主要动作流程。',
 '1942':'纵版空战以翻滚回避和双机编队强化火力，舞台围绕太平洋战争抽象化展开。Capcom 的 FC 移植保留了街机基本节奏。',
