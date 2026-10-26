@@ -106,15 +106,16 @@ check(ns['first_install_budget']==ns['full_budget']-ns['windows_deferred'],'首�
 check(ns['first_ssd_rom']==ns['ssd_total']-ns['windows_deferred'],'SSD 首装容量计算错误')
 for snippet in ['#### 256＋64 GB 双盘容量结论',f"{ns['full_budget']/1024:.2f} GiB",f"{ns['windows_total']/1024:.2f} GiB",f"{ns['full_budget']/1024+65:.0f}–{ns['full_budget']/1024+97:.0f} GiB",'512 GB SSD＋64 GB eMMC','NDS 固定放 eMMC','不要直接执行 `ln -s`']:
     check(snippet in text,f'双盘容量规划缺失：{snippet}')
-expected_counts={'Three Wonders':3,'Super Mario All-Stars':4,'Ys Book I & II':2,'Final Fantasy I & II: Dawn of Souls':2,'Street Fighter III: Double Impact':2,'Ys I & II Chronicles':2,'Castlevania: The Dracula X Chronicles':3,'Gradius / Gradius II / Gradius III':3,'TwinBee / Detana!! TwinBee':2,'Commander Keen in Goodbye, Galaxy!':2,'Galaga / Galaxian':2}
+expected_counts={'Three Wonders':3,'Ys Book I & II':2,'Final Fantasy I & II: Dawn of Souls':2,'Gradius / Gradius II / Gradius III':3,'TwinBee / Detana!! TwinBee':2,'Commander Keen in Goodbye, Galaxy!':2,'Galaga / Galaxian':2}
 for name,n in expected_counts.items():
     es=[e for e in entries if e.en==name]
     check(len(es)==1 and gc(es[0])==n,f'合集计数错误：{name} 应为 {n}')
 
-# 深度备注应全部使用；同商品跨平台可共享备注，不同商品不能共用整段。
+# 深度备注应全部使用；被版本筛选删除的条目允许留下数据备注，其他未使用键仍报错。
 from guide_deep_notes import DEEP
 ens={e.en for e in entries}
-unused=sorted(set(DEEP)-ens)
+dropped_ens={en for platform,en in ns['VERSION_DROP']}
+unused=sorted(set(DEEP)-ens-dropped_ens)
 check(not unused,'DEEP 未使用键：'+str(unused))
 dup_notes=collections.defaultdict(list)
 for e in entries:
@@ -125,11 +126,11 @@ for note,products in dup_notes.items():
         errors.append('不同商品复用整段备注：'+str(products))
 
 # 用户点名补漏、三国、射击、改版和 PC 边界。
-required=['Chrono Cross','Tengai Makyou II: Manji Maru','Kingdom Hearts: Birth by Sleep','Dragon Ball: Advanced Adventure','Tony Hawk’s Pro Skater 2','Lumines: Puzzle Fusion','Me & My Katamari','Theme Hospital','Tomato Adventure','Puyo Puyo Sun',"Sid Meier's Civilization II",'三國志英傑傳','三國志孔明傳','Life Force / Salamander','Contra','Super C','Galaxian','Galaga','Nakahara no Hasha: Sangoku Shouseiden','あっぱれ伝 ‐伏龍の章‐ / Appare-den: Fukuryuu no Shou','Farland Story: Tooi Kuni no Monogatari / ファーランドストーリー 遠い国の物語','Farland Story Denki: Arc Ou no Ensei / ファーランドストーリー 伝記 アーク王の遠征','Farland Story: Shirogane no Tsubasa / ファーランドストーリー 白銀の翼','Farland Story: Daichi no Kizuna / ファーランドストーリー 大地の絆','Farland Story: Yottsu no Fuuin / ファーランドストーリー 四つの封印']
+required=['Chrono Cross','Tengai Makyou II: Manji Maru','Kingdom Hearts: Birth by Sleep','Dragon Ball: Advanced Adventure','Tony Hawk’s Pro Skater 2','Lumines: Puzzle Fusion','Me & My Katamari','Theme Hospital','Tomato Adventure','Puyo Puyo Sun',"Sid Meier's Civilization II",'三國志英傑傳','三國志孔明傳','Life Force / Salamander','Contra','Super C','Galaga / Galaxian','Nakahara no Hasha: Sangoku Shouseiden','あっぱれ伝 ‐伏龍の章‐ / Appare-den: Fukuryuu no Shou','Farland Story: Tooi Kuni no Monogatari / ファーランドストーリー 遠い国の物語','Farland Story Denki: Arc Ou no Ensei / ファーランドストーリー 伝記 アーク王の遠征','Farland Story: Shirogane no Tsubasa / ファーランドストーリー 白銀の翼','Farland Story: Daichi no Kizuna / ファーランドストーリー 大地の絆']
 for name in required:check(name in ens,f'点名作品缺失：{name}')
 farland=[e for e in entries if e.series=='古大陆物语']
-check(len(farland)==5 and sum(e.platform=='DOS' for e in farland)==4 and sum(e.platform=='Win95 / Win98' for e in farland)==1,'古大陆物语应为 DOS 四作＋Windows 重制合集')
-check(gc(next(e for e in farland if e.platform=='Win95 / Win98'))==2,'四个封印应按两款重制作品展开')
+check(len(farland)==4 and all(e.platform=='DOS' for e in farland),'古大陆物语应为 DOS 四作，不重复收 Windows 前两作重制合集')
+check(not any('Yottsu no Fuuin' in e.en for e in entries),'四个封印不应与 DOS 前两作重复出现')
 sengoku_bishoujo=[e for e in entries if e.series=='战国美少女']
 check(len(sengoku_bishoujo)==2 and all(e.platform=='Win95 / Win98' for e in sengoku_bishoujo),'战国美少女应为 Windows 双作专题')
 check('### 古大陆物语\n' in text and '### 战国美少女\n' in text,'古大陆物语或战国美少女专题未生成')
@@ -143,7 +144,7 @@ required_genres={
     'Tengai Makyou II: Manji Maru':'角色扮演',
     'Tony Hawk’s Pro Skater 2':'竞速／体育',
     'Dragon Ball: Advanced Adventure':'格斗／清版动作',
-    'Pokémon Ruby / Sapphire':'角色扮演',
+    'Pokémon Emerald':'角色扮演',
     'Super Mario RPG: Legend of the Seven Stars':'角色扮演',
     'Paper Mario':'角色扮演',
     'Dissidia Final Fantasy':'格斗／清版动作',
@@ -214,7 +215,7 @@ check(civ2 and 'DOSBox‑X' in civ2.note and 'Windows 3.x' in civ2.note,'文明 
 win_entries=[e for e in entries if e.platform=='Win95 / Win98']
 win_ens={e.en for e in win_entries}
 check(platforms.index('Win95 / Win98')==platforms.index('DOS')+1,'Win95／98 未紧随 DOS')
-check(len(win_entries)==43==len(ns['WINDOWS_GAMES']),f'Windows 条目数应为 43：{len(win_entries)}')
+check(len(win_entries)==39==len(ns['WINDOWS_GAMES']),f'Windows 条目数应为 39：{len(win_entries)}')
 check(set(win_ens)==set(ns['WINDOWS_RUNTIME']),'Windows 商品与运行判断映射不一致')
 check('Rayman 2: The Great Escape' not in win_ens,'高风险 Windows Rayman 2 不应收录；其他平台版本不受影响')
 for removed in ['Dungeon Keeper II','Need for Speed III: Hot Pursuit','Planescape: Torment','The Sims','Tropico','Grim Fandango','The Longest Journey','Toonstruck','Captain Claw','Jazz Jackrabbit 2','天地劫序傳：幽城幻劍錄']:
@@ -245,9 +246,6 @@ pc_sanguo_groups={
     '三國志英傑傳':'英杰传与曹操传',
     '三國志孔明傳':'英杰传与曹操传',
     '三國志曹操伝 / Sangokushi Sousouden':'英杰传与曹操传',
-    'Sangokushi V / 三國志V':'光荣《三国志》',
-    'Sangokushi VI / 三國志VI':'光荣《三国志》',
-    'Sangokushi VII / 三國志VII':'光荣《三国志》',
     'Sangokushi VIII / 三國志VIII':'光荣《三国志》',
 }
 for name,subgroup in pc_sanguo_groups.items():
@@ -256,11 +254,30 @@ for name,subgroup in pc_sanguo_groups.items():
     if e:
         check(e.subgroup==subgroup,f'PC 三国子系列归类错误：{name} → {e.subgroup}')
         check(ns['entry_link'](e) in text,f'PC 三国缺专题回链：{name}')
+for name in ['Romance of the Three Kingdoms V','Romance of the Three Kingdoms VI','Romance of the Three Kingdoms VII']:
+    matches=[e for e in entries if e.en==name]
+    check(len(matches)==1 and matches[0].platform=='PS1',f'三国志 V／VI／VII 应仅保留 PS1：{name}')
+check(not any(e.platform=='Win95 / Win98' and re.fullmatch(r'Sangokushi (V|VI|VII) / .*',e.en) for e in entries),'Windows 三国志 V／VI／VII 仍重复保留')
+
+# 跨平台版本规则逐项闭合：删除项不得出现，保留项恰好一个且写明取舍。
+final_keys={(e.platform,e.en) for e in entries}
+for key,item in ns['VERSION_DROP'].items():
+    check(key not in final_keys,f'跨平台重复版本未删除：{item["name"]} → {key}')
+for item in ns['VERSION_CHOICES']:
+    for key in item['keeps']:
+        matches=[e for e in entries if (e.platform,e.en)==key]
+        check(len(matches)==1,f'版本保留项不是恰好一个：{item["name"]} → {key}')
+        if matches:check('版本取舍：'+item['reason'] in matches[0].note,f'保留版本缺取舍说明：{key}')
+check(not any(name in text for name in ['Pokémon Crystal Clear','Pokémon Prism','Final Fantasy Tactics: The Lion War']),'失去底本的宝可梦／FFT 改版仍残留')
 gameplay=text.split('## 游戏方式专题：品类源流与代表作',1)[-1].split('## 游戏内容专题：系列与平台回链',1)[0]
 for name in ["Sid Meier's Civilization II",'Heroes of Might and Magic III: The Restoration of Erathia',"Sid Meier's Civilization III",'Icewind Dale','RollerCoaster Tycoon']:
     e=next((x for x in entries if x.en==name),None)
     check(e and ns['entry_link'](e,e.zh) in gameplay,f'游戏方式专题缺 PC 代表作回链：{name}')
-check('三国志姜维传' in text and ns['new_hack_count']==15,'曹操传精选改版或原创改版计数缺失')
+for genre,history,reps in ns['genre_defs']:
+    for name in reps:
+        e=next((x for x in entries if x.en==name),None)
+        check(e and ns['entry_link'](e,e.zh) in gameplay,f'品类代表作已失效：{genre} → {name}')
+check('三国志姜维传' in text and ns['new_hack_count']==14,'曹操传精选改版或原创改版计数缺失')
 
 report=[f'entries={len(entries)}',f'games={game_total}',f'capacity_gb={total/1024:.2f}',f'rows={len(rows)}',f'anchors={len(anchors)}',f'heading_anchors={len(heading_anchors)}',f'internal_links={len(links)}',f'errors={len(errors)}',f'warnings={len(warnings)}','']
 report += ['ERROR: '+x for x in errors]

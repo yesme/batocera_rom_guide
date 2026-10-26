@@ -70,7 +70,7 @@ DEEP={
 'Final Fantasy V Advance':'职业、技能继承与自由编队构成核心，GBA 版追加封印神殿和职业。队伍构筑深度比单纯等级推进更重要。',
 'Final Fantasy VI Advance':'多主角群像、魔石学习和世界崩坏前后结构保持完整，GBA 版增加魔石与龙巢等内容。像素原版与后续像素复刻不是同一版本。',
 'Final Fantasy I & II: Dawn of Souls':'一张 GBA 卡带收录两部重制，降低初代练级门槛并追加灵魂迷宫。两作仍保留不同职业与熟练度体系。',
-'Final Fantasy III (Nintendo DS)':'以全 3D 重制 FC 三代，重做角色形象、职业平衡和事件，并调整最终迷宫存档节奏。它与 FC 像素版应分目录。',
+'Final Fantasy III (Nintendo DS)':'以全 3D 重制 FC 三代，重做角色形象、职业平衡和事件，并调整最终迷宫存档节奏。这里采用 NDS 版的画面、界面与存档体系。',
 'Final Fantasy IV (Nintendo DS)':'全 3D、配音与增强难度重塑四代，Decant Ability 让离队角色能力可继承。它不是 GBA 的 2D Advance 版。',
 'Final Fantasy Crystal Chronicles: Echoes of Time':'以多人地牢动作、装备与部落职业为核心，NDS 版可与 Wii 同内容联动。单人也能游玩，但家庭电视使用时不把历史联机功能写成当前可用。',
 'Final Fantasy Tactics A2: Grimoire of the Rift':'回到伊瓦利斯，以任务、法则、职业和地域 auction 组织队伍成长。作为 FFTA 的续作，它扩充职业与任务，并保留以法则约束战斗、以队伍培养驱动探索的结构。',
@@ -90,7 +90,7 @@ DEEP={
 'Super Robot Taisen A Portable':'重制 GBA《A》，重做战斗动画、界面与部分系统，并加入携带机便利调整。不要误写成 NDS《A》或全新原创续作。',
 'Super Robot Taisen Alpha':'以更大的地图、剧情规模和原创主角群开启 Alpha 篇章，战斗演出与队伍编成较旧作扩展。PS1 读盘与存档应在长战役中验证。',
 'Super Robot Taisen Alpha Gaiden':'延续 Alpha 的部分角色并转入未来世界，引入不同剧情分支与机体改造规则。它是独立外传战役，不是 Alpha 简单加盘。',
-'Dai-2-Ji Super Robot Taisen (PlayStation)':'PS1 重制 FC 第二次机战，更新画面、语音和界面，保留早期 DC 战争脉络。它与 FC 汉化原版分开保存。',
+'Dai-2-Ji Super Robot Taisen (PlayStation)':'PS1 重制 FC《第二次超级机器人大战》，更新画面、语音和界面，保留早期 DC 战争脉络，并采用更完善的存档体系。',
 # 街头霸王
 'Street Fighter II Turbo: Hyper Fighting':'加速对战并开放四天王，SFC 版在家用机上保留高速规则。角色只有少量调整，重点是节奏而非新增大型系统。',
 'Super Street Fighter II: The New Challengers':'加入嘉米、飞龙、迪杰与 T. Hawk，并更新场景、音乐和受击演出。它没有 Turbo 的超级必杀与豪鬼，SFC 版与街机速度也有差别。',

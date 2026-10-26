@@ -8,6 +8,7 @@ Entry=rg.Entry
 entries=rg.entries
 from guide_dos import DOS_GAMES, DOS_GENRES, DOS_SERIES, DOS_COUNTS
 from guide_windows import WINDOWS_GAMES, WINDOWS_GENRES, WINDOWS_SERIES, WINDOWS_COUNTS, WINDOWS_RUNTIME
+from guide_versions import VERSION_CHOICES, VERSION_DROP, VERSION_REASON
 
 # 只保留适合家庭电视与 N4100 保守性能范围的正式作品。
 drop_old={
@@ -499,6 +500,15 @@ for e in entries:
         e.note=(base+' ' if base else '')+f'本作《{e.zh}》在{e.subgenre}中有独立的关卡、角色或系统配置；表列的是 {e.platform} 正式版本，应与其他平台同名移植或重制分开识别。'
     e.note=e.note.strip()
 
+# 所有备注与 Windows 运行判断完成后，统一收束移植／重制／合集的重复版本。
+present={(e.platform,e.en) for e in entries}
+missing=sorted(set(VERSION_REASON)-present)
+if missing:raise RuntimeError('版本保留规则未匹配：'+repr(missing))
+for e in entries:
+    reason=VERSION_REASON.get((e.platform,e.en))
+    if reason:e.note=(e.note+' 版本取舍：'+reason).strip()
+entries=[e for e in entries if (e.platform,e.en) not in VERSION_DROP]
+
 # 条目 ID 在所有删改后重新分配；平台与系列使用 Typora 可识别的原生标题锚点。
 platforms=['DOS','Win95 / Win98','MAME','FBNeo','NES / FC','PCE (PC Engine / TurboGrafx-16)','MD / Genesis','GB','GG','SNES / SFC','N64','PS1','GBC','Dreamcast','WS / WSC','GBA','NDS','PSP']
 short={'MAME':'MAME','FBNeo':'FBNEO','GBA':'GBA','GBC':'GBC','GB':'GB','GG':'GG','WS / WSC':'WS','NES / FC':'NES','SNES / SFC':'SNES','MD / Genesis':'MD','PCE (PC Engine / TurboGrafx-16)':'PCE','PS1':'PS1','N64':'N64','PSP':'PSP','Dreamcast':'DC','NDS':'NDS','DOS':'DOS','Win95 / Win98':'WIN9X'}
@@ -537,7 +547,7 @@ platform_intro={
 'WS / WSC':'WonderSwan 与 WonderSwan Color 合并展示，备注注明彩色版或日文门槛；以 Gunpey、风之少年与原创射击等真正体现平台价值的作品为主。',
 'NES / FC':'8 位家用机与 Famicom 正式作品，中文俗称只作辅助识别，商品原名和实际发行主体为准。',
 'SNES / SFC':'16 位任天堂平台，覆盖平台动作、JRPG、战棋、射击和合作游戏；特殊芯片作品按核心兼容情况逐一测试。',
-'MD / Genesis':'Mega Drive 与 Genesis 是同一硬件的地区名。保留《Raiden Trad》《R-Type》等正式移植，也突出 Sonic、Treasure 和战棋传统。',
+'MD / Genesis':'Mega Drive 与 Genesis 是同一硬件的地区名。优先突出 Sonic、Treasure、原创动作与战棋传统；普通街机移植已在街机章节保留时不重复占位。',
 'PCE (PC Engine / TurboGrafx-16)':'HuCard、CD‑ROM²／Super CD 与 Arcade Card 作品并列；光盘容量按预留空间估算，收藏时还需对应系统卡。',
 'PS1':'以原生分辨率运行，兼顾类型史、家庭对战与中文圈经典；多盘游戏需维护 M3U，重型画面增强不纳入默认建议。',
 'N64':'保留第一方、Rare、本地多人和类型代表，不承诺高负载游戏在 N4100 上全场景稳定；Expansion Pak 与图形插件需逐作核对。',
@@ -556,7 +566,7 @@ out=['# Batocera 家庭游戏机精选指南','',
 for p in platforms:out.append(f'  - [{p}](#{platform_id[p]})')
 out+=['- [游戏方式专题：品类源流与代表作](#游戏方式专题品类源流与代表作)','- [游戏内容专题：系列与平台回链](#游戏内容专题系列与平台回链)','- [中文化版本与精选非官方改版](#中文化版本与精选非官方改版)','- [摄像头与麦克风验证附录](#摄像头与麦克风验证附录)','',
 '---','','## 使用规则与硬件边界','',
-'1. **名字分两列。** 完整商品名采用英文、日文或中文原文，中文译名只辅助识别；同一游戏的地区版、复刻和重制不互相冒充。','2. **日期采用首发年份或合集年份范围。** 合集行明确标注范围，避免把不同作品伪装成一个日期；发行商采用该版本的主要历史发行主体，不用今天的公司名倒填。','3. **容量是预留预算，不是实测 ROM 大小。** CHD、CSO、音轨、多盘与地区版都会改变占用，安装后以实际文件为准。','4. **不保留差作凑数。** 只有系列史或版本比较确有必要的旧作才作为严格例外，并在备注说明；外设依赖、后期高负载街机和低评价移植不占位置。','5. **不纳入 Xbox、PS2、PS3、PS4、GameCube、Wii。** Batocera 虽提供 xemu 的 Xbox 入口，但 N4100＋UHD 600＋4 GB 不适合作为稳定可玩的 Xbox 库，因此这里明确不设 Xbox 章节。','6. **合法备份。** 只使用自己合法拥有的游戏与 BIOS，不提供下载，不把 hack、民间改版或虚构商品当正式发行作。','',
+'1. **名字分两列。** 完整商品名采用英文、日文或中文原文，中文译名只辅助识别；同一游戏的地区版、复刻和重制不互相冒充。','2. **同一基础作品只留一个平台版本。** 直接移植、普通重制、明确增强版和合集重复按内容完整度、版本口碑、原生操作与 N4100 模拟负担择一，理由写进保留作品备注；续作、平行原创、不同关卡或明显不同系统的独立改编不视为重复。这些取舍依据公开版本差异与保守运行判断，不是逐款实机认证，也不宣称所有玩家都有同一“最佳版”答案。','3. **日期采用首发年份或合集年份范围。** 合集行明确标注范围，避免把不同作品伪装成一个日期；发行商采用该版本的主要历史发行主体，不用今天的公司名倒填。','4. **容量是预留预算，不是实测 ROM 大小。** CHD、CSO、音轨、多盘与地区版都会改变占用，安装后以实际文件为准。','5. **不保留差作凑数。** 只有系列史或版本比较确有必要的旧作才作为严格例外，并在备注说明；外设依赖、后期高负载街机和低评价移植不占位置。','6. **不纳入 Xbox、PS2、PS3、PS4、GameCube、Wii。** Batocera 虽提供 xemu 的 Xbox 入口，但 N4100＋UHD 600＋4 GB 不适合作为稳定可玩的 Xbox 库，因此这里明确不设 Xbox 章节。','7. **合法备份。** 只使用自己合法拥有的游戏与 BIOS，不提供下载，不把 hack、民间改版或虚构商品当正式发行作。','',
 '---','']
 from guide_sections import platform_overview, mod_sections, stg_history, hardware_input_appendix
 out += platform_overview()
@@ -592,11 +602,11 @@ for p in platforms:
 genre_defs=[
 ('平台动作','从街机单屏《Donkey Kong》、FC 卷轴《Super Mario Bros.》到 16 位高速动作与 3D 收集，核心始终是移动手感、空间判断和关卡节奏。细分包括单屏动作、横版卷轴、跑跳解谜、3D 平台，以及靠能力回环打开地图的“银河城”。',['Super Mario Bros.','Sonic the Hedgehog 2','Super Metroid','Castlevania: Symphony of the Night','Shantae','Klonoa: Door to Phantomile','Rayman 2: The Great Escape']),
 ('动作冒险','这一大类把动作操作放进探索、解谜或叙事空间。塞尔达的迷宫道具、生存恐怖的资源压力、点击冒险的物品逻辑、视觉小说的调查指证都属于不同分支；它们共享“如何理解并穿过这个空间”，但不共享同一种战斗。DOS／Windows 的 SCUMM 与手绘点击冒险是其中不可缺的一支。',['The Legend of Zelda: A Link to the Past','Metal Gear Solid','Resident Evil','Ghost Trick: Phantom Detective','The Secret of Monkey Island','The Curse of Monkey Island','Broken Sword: The Shadow of the Templars']),
-('射击（STG）','STG 是 Shoot ’em up 的常用缩写，中文通常称“射击游戏”；弹幕射击只是其中后来形成的细分，并不涵盖全部 STG。本章从《Space Invaders》《Galaxian》的固定屏幕，经《Gradius》《沙罗曼蛇》的横纵卷轴，到 Cave 的高密度弹幕梳理源流；《魂斗罗》这类以人物跑跳和射击并重的作品另列“动作射击”。',['Space Invaders','Galaxian','Life Force / Salamander','Gradius','R-Type','Ikaruga']),
+('射击（STG）','STG 是 Shoot ’em up 的常用缩写，中文通常称“射击游戏”；弹幕射击只是其中后来形成的细分，并不涵盖全部 STG。本章从《Space Invaders》《Galaxian》的固定屏幕，经《Gradius》《沙罗曼蛇》的横纵卷轴，到 Cave 的高密度弹幕梳理源流；《魂斗罗》这类以人物跑跳和射击并重的作品另列“动作射击”。',['Space Invaders','Galaga / Galaxian','Life Force / Salamander','Gradius / Gradius II / Gradius III','R-Type','Ikaruga']),
 ('动作射击','这一品类以角色直接移动、跑跳、载具或第一／第三人称视角为主，射击服务于动作空间，而不是单纯沿卷轴闪避敌弹。FC《魂斗罗》《Super C》是跑射代表，《GoldenEye 007》等则属于第一人称路线；它们与 STG 并列，避免把所有带枪的游戏混为一类。',['Contra','Super C','Metal Slug 1 / 2 / X / 3 / 4 / 5','Gunstar Heroes','GoldenEye 007']),
-('格斗／清版动作','清版动作由《双截龙》《快打旋风》把街头推进、投技与多人合作定型；一对一格斗则由《Street Fighter II》确立帧数、距离和角色博弈。3D 场地格斗与派对乱斗进一步扩大分支，但本地对战始终是核心。',['Street Fighter II: The World Warrior','The King of Fighters 98','Streets of Rage 2 / Bare Knuckle II','Cadillacs and Dinosaurs','Soulcalibur','Power Stone 2']),
+('格斗／清版动作','清版动作由《双截龙》《快打旋风》把街头推进、投技与多人合作定型；一对一格斗则由《Street Fighter II》确立帧数、距离和角色博弈。3D 场地格斗与派对乱斗进一步扩大分支，但本地对战始终是核心。',['Super Street Fighter II Turbo','The King of Fighters 98','Streets of Rage 2 / Bare Knuckle II','Cadillacs and Dinosaurs','Soulcalibur','Power Stone 2']),
 ('角色扮演','家用 JRPG 从《Dragon Quest》《Final Fantasy》的清晰回合制出发，逐渐分化出 ATB、职业构筑、动作战斗与怪物养成；PC 的《Ultima》《Fallout》《Baldur’s Gate》则突出世界模拟、选择后果和小队构筑，中文 DOS／Windows 又形成仙侠武侠与历史叙事传统。此处把战棋单列；塞尔达等没有数值成长主轴的作品归动作冒险。',['Dragon Quest III: The Seeds of Salvation','Final Fantasy VI','Chrono Trigger','Pokémon Emerald','Fallout','Icewind Dale',"Baldur's Gate II: Shadows of Amn",'Diablo II','軒轅劍參外傳：天之痕']),
-('战略／战棋','光荣历史模拟把内政、外交与战争连成宏观循环；火焰之纹章、皇家骑士团和曹操传聚焦网格、单位与角色成长。PC 还发展出文明式 4X、英雄无敌的探索＋六角格战斗，以及 C&C、帝国时代式即时战略；不同节奏共享资源与决策，却不应混成同一种“战棋”。',['Fire Emblem: Genealogy of the Holy War','Tactics Ogre: Let Us Cling Together','Advance Wars','三國志曹操伝 / Sangokushi Sousouden','Sangokushi VII / 三國志VII','Heroes of Might and Magic III: The Restoration of Erathia','Age of Empires II: The Age of Kings',"Sid Meier's Civilization II","Sid Meier's Civilization III",'Jagged Alliance 2']),
+('战略／战棋','光荣历史模拟把内政、外交与战争连成宏观循环；火焰之纹章、皇家骑士团和曹操传聚焦网格、单位与角色成长。PC 还发展出文明式 4X、英雄无敌的探索＋六角格战斗，以及 C&C、帝国时代式即时战略；不同节奏共享资源与决策，却不应混成同一种“战棋”。',['Fire Emblem: Genealogy of the Holy War','Tactics Ogre: Let Us Cling Together','Advance Wars','三國志曹操伝 / Sangokushi Sousouden','Romance of the Three Kingdoms VII','Heroes of Might and Magic III: The Restoration of Erathia','Age of Empires II: The Age of Kings',"Sid Meier's Civilization II","Sid Meier's Civilization III",'Jagged Alliance 2']),
 ('竞速／体育','竞速从街机计时、伪 3D 路带发展到卡丁车道具、拟真调校与高速反重力；体育则在规则还原和电视节奏之间取舍。足球 RPG、马力欧体育和滑板目标模式进一步说明这一大类不只模拟真实赛事。',['Super Mario Kart','R4: Ridge Racer Type 4','F-ZERO X','Tony Hawk’s Pro Skater 2','Captain Tsubasa','Neo Turf Masters']),
 ('益智／休闲','俄罗斯方块、泡泡龙解谜、噗哟噗哟与宝石方块证明经典休闲并非附属：短规则能产生长期精通，本地对战又能直接服务家庭场景。PC《Lemmings》以鼠标分配技能，扩展了路线规划与逻辑解谜。细分包括落块消除、物理解谜、路线规划、绘图逻辑与短局动作益智。',['Tetris','Puzzle Bobble / Puzzle Bobble 2 / 3 / 4','Puyo Puyo Tsu','Columns','Gunpey','Lemmings']),
 ('模拟／音乐／派对','生活模拟重视日程与关系，经营模拟重视资源循环，音乐游戏把输入映射到节拍，派对和微游戏则降低旁观与轮换门槛。PC 从《SimCity》《Theme Hospital》到《RollerCoaster Tycoon》《大富翁》形成完整经营与家庭轮玩传统；专用控制器会改变体验，因此本指南优先保留普通手柄或鼠标仍能成立的作品。',['Harvest Moon','Animal Crossing: Wild World','Rhythm Heaven / Rhythm Tengoku Gold','Mario Party 1 / 2 / 3','SimCity 2000','Theme Hospital','RollerCoaster Tycoon','大富翁 4','明星志願 2'])]
@@ -620,7 +630,22 @@ for gi,(g,history,reps) in enumerate(genre_defs,1):
 out+=['---','']
 
 # 系列专题：只呈现至少两个真实成员，全部回链。
-series_intro={'最终幻想':'正传、重制与战略版分组。FFT／FFTA 属于本专题“战略版”，与皇家骑士团没有系列隶属关系。','皇家骑士团':'只收 Ogre Battle／Tactics Ogre 体系，军团制与网格战棋分开理解，不混入 FFT。','圣剑传说':'Square 的 2D 黄金期脉络在这里按系列保留：GB《最终幻想外传》建立即时战斗与成长，SFC《圣剑传说 2》加入多人与环形菜单，《圣剑传说 3》扩展多主角和转职，PS1《玛娜传奇》转向地图放置与世界构筑；GBA《新约》则重新诠释 GB 初代。它虽从最终幻想外传起步，却不属于最终幻想正传。','沙加':'Square 的 2D 黄金期在沙加系列中体现为持续系统实验：GB 三部曲以种族、耐久和非常规成长起步，SFC《浪漫沙加》发展自由剧本、闪悟与世代传承，PS1《开拓者》两作分别探索多主角自由剧情和世代连携。GB 海外旧名含 Final Fantasy，但不属于最终幻想正传；NDS《沙加 2》重制另按平台识别。','马力欧':'按平台动作、卡丁车、派对、体育、RPG、瓦力欧、咚奇刚与耀西拆分。','宝可梦':'按正统 RPG、不可思议迷宫、护林员及家用机衍生拆分；Metal Max／重装机兵不属于本专题。','三国志与三国题材':'按发行体系与玩法拆分为 Namco《中原之霸者／霸王的大陆》、光荣《三国志》、英杰传／曹操传、Capcom《吞食天地》与 IGS《三国战纪》，避免同题材混成同系列。DOS《英杰传》《孔明传》与 Windows《曹操传》《三国志 V／VI／VII／VIII》直接并列到 PC 条目，和 FC、主机、街机版本互相回链。','英雄无敌':'DOS《Heroes of Might and Magic》建立英雄探索、城镇建设与六角格战斗的循环，DOS 二代加入兵种升级与双路线战役，Windows 三代扩大阵营、魔法和地图事件。三款作品跨 DOS／Win95／98 连续收藏，但不能与只有名称相近的《魔法门》RPG 正传混成同一专题。','古大陆物语':'TGL 的 Farland Story 以短关卡、职业成长和易读网格战斗形成轻量战棋传统。这里收 DOS 中文一、二、四、五作，以及 Windows《四个封印》对前两作的重制合集；SFC 同名《雅克王的远征》是另一部独立外传，DOS 二代与 Windows 重制则按原作关系回链。','战国美少女':'TGL 的战国题材忍者 RPG 以动画式角色演出、日语语音、回合战斗和换装事件见长。Windows 首作《斩断云空》建立百地天心一行人的冒险，续作《春风之章》改以日奈为主角并保留前作人物，两作分开安装和存档。','光明与梦幻模拟战':'光明与 Langrisser 拆为两个子系列；Saturn《光明力量 III》不属于本机清单。','女神转生与女神异闻录':'本传与 Persona 分列，保留关联但不混用序号。','洛克人':'元祖／世界、X、Zero、EXE、ZX 与流星分组。','逆转裁判':'正传、逆转检事与同作者的《幽灵诡计》分开识别。'}
+series_intro={
+'最终幻想':'正传、重制与战略版分组。FFT／FFTA 属于本专题“战略版”，与皇家骑士团没有系列隶属关系。',
+'皇家骑士团':'只收 Ogre Battle／Tactics Ogre 体系，军团制与网格战棋分开理解，不混入 FFT。',
+'圣剑传说':'Square 的 2D 黄金期脉络在这里按系列保留：GBA《新约圣剑传说》重新诠释 GB 初代的即时战斗与成长，SFC《圣剑传说 2》加入多人与环形菜单，《圣剑传说 3》扩展多主角和转职，PS1《玛娜传奇》转向地图放置与世界构筑。系列虽从最终幻想外传起步，却不属于最终幻想正传。',
+'沙加':'Square 的 2D 黄金期在沙加系列中体现为持续系统实验：GB《魔界塔士》《时空之霸者》保留早期非常规成长，NDS《沙加 2》采用完整重制，SFC《浪漫沙加》发展自由剧本、闪悟与世代传承，PS1《开拓者》两作分别探索多主角自由剧情和世代连携。GB 海外旧名含 Final Fantasy，但不属于最终幻想正传。',
+'马力欧':'按平台动作、卡丁车、派对、体育、RPG、瓦力欧、咚奇刚与耀西拆分。',
+'宝可梦':'按正统 RPG、不可思议迷宫、护林员及家用机衍生拆分；Metal Max／重装机兵不属于本专题。',
+'三国志与三国题材':'按发行体系与玩法拆分为 Namco《中原之霸者／霸王的大陆》、光荣《三国志》、英杰传／曹操传、Capcom《吞食天地》与 IGS《三国战纪》，避免同题材混成同系列。DOS《英杰传》《孔明传》与 Windows《曹操传》《三国志 VIII》保留 PC 独占内容；V／VI／VII 统一采用 PS1 版，与 FC、街机及其他主机作品一起回链。',
+'英雄无敌':'DOS《Heroes of Might and Magic》建立英雄探索、城镇建设与六角格战斗的循环，DOS 二代加入兵种升级与双路线战役，Windows 三代扩大阵营、魔法和地图事件。三款作品跨 DOS／Win95／98 连续收藏，但不能与只有名称相近的《魔法门》RPG 正传混成同一专题。',
+'古大陆物语':'TGL 的 Farland Story 以短关卡、职业成长和易读网格战斗形成轻量战棋传统。这里收 DOS 中文一、二、四、五作；Windows《四个封印》重制的正是前两作，不再与 DOS 版本重复收藏。',
+'战国美少女':'TGL 的战国题材忍者 RPG 以动画式角色演出、日语语音、回合战斗和换装事件见长。Windows 首作《斩断云空》建立百地天心一行人的冒险，续作《春风之章》改以日奈为主角并保留前作人物，两作分开安装和存档。',
+'光明与梦幻模拟战':'光明与 Langrisser 拆为两个子系列；Saturn《光明力量 III》不属于本机清单。',
+'女神转生与女神异闻录':'本传与 Persona 分列，保留关联但不混用序号。',
+'洛克人':'元祖／世界、X、Zero、EXE、ZX 与流星分组。',
+'逆转裁判':'正传、逆转检事与同作者的《幽灵诡计》分开识别。'
+}
 out+=['## 游戏内容专题：系列与平台回链','','按作品世界观、题材与真实系列组织；仅两个及以上真实成员设立专题，单款作品不单列“系列”。DOS、Windows、主机和掌机版本使用同一专题并互相回链，单款背景已经并回平台表备注。','']
 for s in series_order:
     es=sorted((e for e in entries if e.series==s),key=lambda e:platforms.index(e.platform))
@@ -655,7 +680,7 @@ game_counts.update(DOS_COUNTS)
 game_counts.update(WINDOWS_COUNTS)
 def gc(e):return game_counts.get(e.en,1)
 game_total=sum(gc(e) for e in entries)
-new_hack_count=15
+new_hack_count=14
 variant_mb=16*1024
 maker_columns=['Nintendo','Sega','Sony','NEC／Hudson','Bandai','多厂商／PC']
 def maker_cells(p):
@@ -691,10 +716,10 @@ first_ssd_rom=ssd_total-windows_deferred
 first_emmc_rom=emmc_total
 out+=[f'| **官方库合计** | **{len(entries)}** | **{game_total}** | **{total/1024:.2f} GB** |  |  |  |  |  |  | 另留系统、BIOS、刮削与存档 |','',
 '#### 游戏总数与总容量','',
-f'- **官方游戏总数：{game_total} 个平台版本。** 合集已展开，地区别名不重复；同一游戏跨平台各算一个可玩版本。Game & Watch 等合集按独立商品计数，不把内含迷你游戏再拆成数十款。',f'- **原创改版内容：{new_hack_count} 款。** 仅统计含全新战役、地区或主要地图的改版；纯汉化、平衡调整和便利增强不重复增加游戏数。','- **官方库预留：'+f'{total/1024:.2f} GB。** 中文化与精选改版若与原版全部并存，另建议预留 16 GB；**合计预算 {full_budget/1024:.2f} GB**，系统、BIOS、刮削和存档另算。','',
+f'- **官方游戏总数：{game_total} 款。** 合集已展开，地区别名不重复；同一基础作品只计算最终保留的一个平台版本，独立续作与改编仍分别计数。Game & Watch 等合集按独立商品计数，不把内含迷你游戏再拆成数十款。',f'- **原创改版内容：{new_hack_count} 款。** 仅统计含全新战役、地区或主要地图的改版；纯汉化、平衡调整和便利增强不重复增加游戏数。','- **官方库预留：'+f'{total/1024:.2f} GB。** 中文化与精选改版若与原版全部并存，另建议预留 16 GB；**合计预算 {full_budget/1024:.2f} GB**，系统、BIOS、刮削和存档另算。','',
 '> 容量是安装预算，不是实测文件总量；合集拆分、CHD／CSO、多盘与保留多个地区版都会改变占用。表内按 1024 MiB 汇总，严格说是 GiB；下面用 GiB 与硬盘厂商的十进制 GB 区分。','',
 '#### 256＋64 GB 双盘容量结论','',
-f'**不建议把当前全量库同时装入 256＋64 GB。** 两块盘的标称合计是 320 GB，换算约 {nominal_total_gib:.2f} GiB；游戏与改版已占 {full_budget/1024:.2f} GiB，只剩 {nominal_total_gib-full_budget/1024:.2f} GiB 给系统、Wine、存档、刮削、缓存和空闲余量。全量安全预算约 {full_budget/1024+65:.0f}–{full_budget/1024+97:.0f} GiB，视频刮削还要再加 10–25 GiB，因此应按“首装库＋候补库”使用，或把 SSD 升到 512 GB。','',
+f'**精简后，256＋64 GB 可以尝试全量安装，但仍不算宽裕。** 两块盘的标称合计是 320 GB，换算约 {nominal_total_gib:.2f} GiB；游戏与改版已占 {full_budget/1024:.2f} GiB，只剩 {nominal_total_gib-full_budget/1024:.2f} GiB 给系统、Wine、存档、刮削、缓存和空闲余量。全量无视频预算约 {full_budget/1024+65:.0f}–{full_budget/1024+97:.0f} GiB，范围横跨现有总容量，视频刮削还要再加 10–25 GiB。因此，现有双盘应从首装库逐批验收；若希望全量、视频刮削和充足升级余量同时成立，仍建议 512 GB SSD。','',
 '| 项目 | 规划预留 | 位置与说明 |','|---|---:|---|',
 '| Batocera 系统、启动与升级周转 | 8 GiB | eMMC；是规划预算，不是当前镜像的实测占用 |',
 f'| Wine prefix、字体与自定义 runner | 12–25 GiB | SSD；{windows_count} 作独立 prefix 的额外环境开销，游戏本体已计入 {windows_total/1024:.2f} GiB，不重复计算 |',
