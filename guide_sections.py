@@ -24,13 +24,13 @@ def platform_overview():
     out += ['| '+' | '.join(r)+' |' for r in rows]
     return out+['']
 
-def mod_sections(entries,short,platforms):
+def mod_sections(entries,short,platforms,entry_link):
     labels={'DOS':'DOS','Win95／98':'Win95 / Win98','MAME':'MAME','FBNeo':'FBNeo','NES／FC':'NES / FC','PCE':'PCE (PC Engine / TurboGrafx-16)','MD':'MD / Genesis','GB':'GB','GG':'GG','SNES／SFC':'SNES / SFC','N64':'N64','PS1':'PS1','GBC':'GBC','Dreamcast':'Dreamcast','WS／WSC':'WS / WSC','GBA':'GBA','NDS':'NDS','PSP':'PSP'}
     def ordered(rows):
         return sorted(rows,key=lambda r:platforms.index(labels[r[0]]))
     def link(title):
         e=next((x for x in entries if x.en==title),None)
-        return f'[{e.zh}](#{e.eid.lower()})' if e else title
+        return entry_link(e,e.zh) if e else title
     trans=[
     ('NES／FC','Final Fantasy / II / III','早期中文化＋后续修正','FC 的《太空战士》等旧译名承载早期传播史；建议保留一个忠实修正版本，法术、道具和存档必须实测。'),
     ('NES／FC','Dragon Quest I–IV','早期中文化＋后续修正','DQ 的文本和菜单量较大，不同卡带时期译名差异明显；III／IV 优先选修复乱码与存档问题的版本。'),
@@ -110,11 +110,11 @@ def mod_sections(entries,short,platforms):
     '改版选择参考：[CBR 的 ROM hack 类型综述](https://www.cbr.com/best-rom-hacks-better-than-original/) 与 [Rockman 4: Minus Infinity 评测](https://www.romhacking.net/reviews/5674/)；FC 中文化传播参考 [重装机兵与 FC 中文 RPG 史料](https://k.sina.cn/article_1403377667_53a5d80300100pilc.html?from=game)。','','---','']
     return out,len(hacks)
 
-def stg_history(entries):
+def stg_history(entries,entry_link):
     def link(title):
         e=next((x for x in entries if x.en==title),None)
         if not e:e=next((x for x in entries if x.en.startswith(title)),None)
-        return f'[{e.zh}](#{e.eid.lower()})' if e else title
+        return entry_link(e,e.zh) if e else title
     out=['**STG 机制时间线。** 这条脉络按机制而不是“厂商名气”排列。Toaplan 强化关卡记忆、武器和节奏；彩京把角色、蓄力攻击与近战风险结合起来；Cave 则把敌弹密度、连锁、得分和 Hyper 等系统推到新层次。“擦弹”并非所有 Cave 作品的统一核心：《怒首领蜂》重点是连锁与弹幕，《大往生》还要理解 Hyper 的资源收益。','',
     '| 年代 | 厂商／流派 | 条目回链 | 在进化史中的位置 |','|---:|---|---|---|']
     timeline=[

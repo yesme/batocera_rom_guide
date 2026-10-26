@@ -31,35 +31,34 @@ for e in entries:
     check(e.series not in {'皇家骑士团'} or not re.search(r'Final Fantasy',e.en),f'最终幻想误入皇家骑士团：{e.en}')
     check(e.series not in {'宝可梦'} or 'Metal Max' not in e.en,f'重装机兵误入宝可梦：{e.en}')
 
-# Markdown 行、普通标题锚点、HTML 锚点和回链。
+# Markdown 条目行与 Typora 原生标题回链，不使用 HTML 锚点。
 rows=[]
 for line in text.splitlines():
-    if not line.startswith('| <a id="'):continue
+    m=re.match(r'^\| ([A-Z0-9]+-\d{3}) \|',line)
+    if not m:continue
     cells=[c.strip() for c in line.strip().strip('|').split('|')]
     check(len(cells)==8,f'条目列数不是 8：{line[:100]}')
-    if len(cells)==8:
-        eid=re.sub(r'^<a id="[a-z0-9-]+"></a>','',cells[0]).lower()
-        rows.append((eid,*cells[1:]))
+    if len(cells)==8:rows.append((m.group(1).lower(),*cells[1:]))
 check(len(rows)==len(entries),f'Markdown 条目行 {len(rows)} != 数据条目 {len(entries)}')
 anchors=re.findall(r'<a id="([^"]+)"></a>',text)
-check(len(anchors)==len(set(anchors)),'HTML 锚点重复：'+str([k for k,v in collections.Counter(anchors).items() if v>1]))
+check(not anchors,'Typora 原生版仍含 HTML 锚点：'+str(anchors[:10]))
 def slug(title):
     title=re.sub(r'[^\w\- ]','',title.strip().lower(),flags=re.UNICODE)
     return re.sub(r' +','-',title)
 heading_anchors={slug(h) for h in re.findall(r'^#{1,6} +(.+)$',text,re.M)}
 links=re.findall(r'\]\(#([^)]+)\)',text)
-missing=sorted(set(links)-set(anchors)-heading_anchors)
+missing=sorted(set(links)-heading_anchors)
 check(not missing,'失效内部链接：'+str(missing))
 series_id=ns['series_id'];series_counts=ns['series_counts']
 for e in entries:
-    check(e.eid.lower() in anchors,f'{e.eid} 缺 HTML 锚点')
     sid=series_id.get(e.series)
     if e.series and series_counts[e.series]>=2:
-        check(bool(sid),f'{e.eid} 系列无 ID：{e.series}')
+        check(bool(sid),f'{e.eid} 系列无原生标题 ID：{e.series}')
         if sid:
             row=next((r[7] for r in rows if r[0]==e.eid.lower()),'')
             check(f'[系列专题](#{sid})' in row,f'{e.eid} 缺系列回链')
-            check(sid in anchors,f'{e.eid} 系列锚点缺失：{sid}')
+            check(sid in heading_anchors,f'{e.eid} 系列标题锚点缺失：{sid}')
+            check(ns['entry_link'](e) in text,f'{e.eid} 缺平台原生回链')
     else:
         check(not sid,f'单成员系列不应设专题：{e.series}')
         check(f'### {e.series}\n' not in text if e.series else True,f'单成员系列仍有章节：{e.series}')
@@ -73,12 +72,22 @@ for line in overview.splitlines():
     if cells and cells[0] in expected_overview:overview_order.append(cells[0])
 check(overview_order==expected_overview,f'硬件总览顺序不符：{overview_order}')
 capacity=text.split('### 容量、出品方与存储汇总',1)[-1].split('#### 游戏总数与总容量',1)[0]
+capacity_lines=capacity.splitlines()
+header_i=next((i for i,line in enumerate(capacity_lines) if line.startswith('| 平台 | 条目数 |')),None)
+check(header_i is not None,'容量汇总缺表头')
+if header_i is not None:
+    header_cells=[c.strip() for c in capacity_lines[header_i].strip().strip('|').split('|')]
+    divider_cells=[c.strip() for c in capacity_lines[header_i+1].strip().strip('|').split('|')]
+    check(len(header_cells)==11 and len(divider_cells)==11,f'容量汇总表头／分隔行列数不符：{len(header_cells)}／{len(divider_cells)}')
+    check(all(re.fullmatch(r':?-{3}:?',c) for c in divider_cells),'容量汇总分隔行标记不规范')
 capacity_order=[]
-for line in capacity.splitlines():
+for line in capacity_lines:
     cells=[c.strip() for c in line.strip().strip('|').split('|')]
     if len(cells)==11 and cells[0] in platforms:
         p=cells[0];capacity_order.append(p)
         check(cells[4:10]==ns['maker_cells'](p),f'厂家矩阵错误：{p} → {cells[4:10]}')
+        expected_storage='SSD' if p in ns['ssd_platforms'] else 'eMMC'
+        check(cells[10]==expected_storage,f'存储位置错误：{p} → {cells[10]}')
 check(capacity_order==platforms,f'容量表顺序不符：{capacity_order}')
 check(text.index('### N64')<text.index('### PS1'),'N64 未排在 PS1 前')
 check('## 容量汇总与运行核对' not in text,'容量仍是独立旧章节')
@@ -91,11 +100,11 @@ for pat in [r'\bTODO\b',r'\[存疑\]',r'\[删除\]',r'\[不存在\]',r'待补',r
 # 合集展开计数和容量。
 game_total=sum(gc(e) for e in entries);total=sum(mb(e.size) for e in entries)
 check(f'**{len(entries)}** | **{game_total}** | **{total/1024:.2f} GB**' in text,f'汇总与重算不符：{len(entries)}／{game_total}／{total/1024:.2f} GB')
-check(round(ns['emmc_total']/1024,2)==19.97 and round(ns['ssd_total']/1024,2)==211.42,'eMMC／SSD 平台容量分算错误')
+check(round(ns['emmc_total']/1024,2)==25.37 and round(ns['ssd_total']/1024,2)==206.01,'eMMC／SSD 平台容量分算错误')
 check(round(ns['windows_priority']/1024,2)==36.37 and round(ns['windows_deferred']/1024,2)==37.50,'Windows 首装／候补容量分算错误')
 check(round(ns['first_install_budget']/1024,2)==209.89,'首装总预算不是 209.89 GiB')
 check(round((ns['first_ssd_rom']+6*1024)/1024,2)==174.51,'SSD 首装容量不是 174.51 GiB')
-for snippet in ['#### 256＋64 GB 双盘容量结论','298.02 GiB','50.64 GiB','310–344 GiB','512 GB SSD＋64 GB eMMC','首装平衡方案','不要直接执行 `ln -s`']:
+for snippet in ['#### 256＋64 GB 双盘容量结论','298.02 GiB','50.64 GiB','310–344 GiB','512 GB SSD＋64 GB eMMC','NDS 固定放 eMMC','不要直接执行 `ln -s`']:
     check(snippet in text,f'双盘容量规划缺失：{snippet}')
 expected_counts={'Three Wonders':3,'Super Mario All-Stars':4,'Ys Book I & II':2,'Final Fantasy I & II: Dawn of Souls':2,'Street Fighter III: Double Impact':2,'Ys I & II Chronicles':2,'Castlevania: The Dracula X Chronicles':3,'Gradius / Gradius II / Gradius III':3,'TwinBee / Detana!! TwinBee':2,'Commander Keen in Goodbye, Galaxy!':2,'Galaga / Galaxian':2}
 for name,n in expected_counts.items():
@@ -239,10 +248,11 @@ for name,subgroup in pc_sanguo_groups.items():
     check(e and e.series=='三国志与三国题材',f'PC 三国未进入同题材专题：{name}')
     if e:
         check(e.subgroup==subgroup,f'PC 三国子系列归类错误：{name} → {e.subgroup}')
-        check(f'[{e.eid}](#{e.eid.lower()})' in text,f'PC 三国缺专题回链：{name}')
+        check(ns['entry_link'](e) in text,f'PC 三国缺专题回链：{name}')
 gameplay=text.split('## 游戏方式专题：品类源流与代表作',1)[-1].split('## 游戏内容专题：系列与平台回链',1)[0]
 for eid in ['dos-020','win9x-018','win9x-024','win9x-004','win9x-034']:
-    check(f'#{eid}' in gameplay,f'游戏方式专题缺 PC 代表作回链：{eid}')
+    e=next((x for x in entries if x.eid.lower()==eid),None)
+    check(e and ns['entry_link'](e,e.zh) in gameplay,f'游戏方式专题缺 PC 代表作回链：{eid}')
 check('三国志姜维传' in text and ns['new_hack_count']==15,'曹操传精选改版或原创改版计数缺失')
 
 report=[f'entries={len(entries)}',f'games={game_total}',f'capacity_gb={total/1024:.2f}',f'rows={len(rows)}',f'anchors={len(anchors)}',f'heading_anchors={len(heading_anchors)}',f'internal_links={len(links)}',f'errors={len(errors)}',f'warnings={len(warnings)}','']

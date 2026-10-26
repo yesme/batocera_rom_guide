@@ -499,7 +499,7 @@ for e in entries:
         e.note=(base+' ' if base else '')+f'本作《{e.zh}》在{e.subgenre}中有独立的关卡、角色或系统配置；表列的是 {e.platform} 正式版本，应与其他平台同名移植或重制分开识别。'
     e.note=e.note.strip()
 
-# 稳定 ID 在所有删改后重新分配；只有两款以上真实成员才设系列专题。
+# 条目 ID 在所有删改后重新分配；平台与系列使用 Typora 可识别的原生标题锚点。
 platforms=['DOS','Win95 / Win98','MAME','FBNeo','NES / FC','PCE (PC Engine / TurboGrafx-16)','MD / Genesis','GB','GG','SNES / SFC','N64','PS1','GBC','Dreamcast','WS / WSC','GBA','NDS','PSP']
 short={'MAME':'MAME','FBNeo':'FBNEO','GBA':'GBA','GBC':'GBC','GB':'GB','GG':'GG','WS / WSC':'WS','NES / FC':'NES','SNES / SFC':'SNES','MD / Genesis':'MD','PCE (PC Engine / TurboGrafx-16)':'PCE','PS1':'PS1','N64':'N64','PSP':'PSP','Dreamcast':'DC','NDS':'NDS','DOS':'DOS','Win95 / Win98':'WIN9X'}
 for p in platforms:
@@ -508,7 +508,13 @@ series_counts={s:sum(e.series==s for e in entries) for s in {e.series for e in e
 series_order=[]
 for e in entries:
     if e.series and series_counts[e.series]>=2 and e.series not in series_order:series_order.append(e.series)
-series_id={s:f'series-{i:02d}' for i,s in enumerate(series_order,1)}
+def slug(title):
+    title=re.sub(r'[^\w\- ]','',title.strip().lower(),flags=re.UNICODE)
+    return re.sub(r' +','-',title)
+platform_id={p:slug(p) for p in platforms}
+series_id={s:slug(s) for s in series_order}
+def entry_link(e,label=None):
+    return f'[{label or e.eid}](#{platform_id[e.platform]})'
 # 系列子组。
 for e in entries:
     if e.series=='最终幻想':e.subgroup='战略版' if 'Tactics' in e.en else ('VII 衍生' if 'Crisis Core' in e.en else '正传与重制')
@@ -547,7 +553,7 @@ out=['# Batocera 家庭游戏机精选指南','',
 '本清单只覆盖 **DOS、Win95／98、MAME、FBNeo、NES／FC、PCE、MD、GB、GG、SNES／SFC、N64、PS1、GBC、Dreamcast、WS／WSC、GBA、NDS、PSP**。筛选依据是平台支持、保守性能范围、作品质量与家庭游玩价值，并非逐款实机测试承诺；合集行是收藏组，不等于一个 ROM。','',
 '## 总目录','',
 '- [使用规则与硬件边界](#使用规则与硬件边界)','- [平台、硬件、模拟器与容量汇总](#平台硬件模拟器与容量汇总)','- [存储、目录与镜像管理](#存储目录与镜像管理)','- [各平台精选清单](#各平台精选清单)']
-for p in platforms:out.append(f'  - [{p}](#platform-{short[p].lower()})')
+for p in platforms:out.append(f'  - [{p}](#{platform_id[p]})')
 out+=['- [游戏方式专题：品类源流与代表作](#游戏方式专题品类源流与代表作)','- [游戏内容专题：系列与平台回链](#游戏内容专题系列与平台回链)','- [中文化版本与精选非官方改版](#中文化版本与精选非官方改版)','- [三层查漏补缺结果](#三层查漏补缺结果)','- [摄像头与麦克风验证附录](#摄像头与麦克风验证附录)','',
 '---','','## 使用规则与硬件边界','',
 '1. **名字分两列。** 完整商品名采用英文、日文或中文原文，中文译名只辅助识别；同一游戏的地区版、复刻和重制不互相冒充。','2. **日期采用首发年份或合集年份范围。** 合集行明确标注范围，避免把不同作品伪装成一个日期；发行商采用该版本的主要历史发行主体，不用今天的公司名倒填。','3. **容量是预留预算，不是实测 ROM 大小。** CHD、CSO、音轨、多盘与地区版都会改变占用，安装后以实际文件为准。','4. **不保留差作凑数。** 只有系列史或版本比较确有必要的旧作才作为严格例外，并在备注说明；外设依赖、后期高负载街机和低评价移植不占位置。','5. **不纳入 Xbox、PS2、PS3、PS4、GameCube、Wii。** Batocera 虽提供 xemu 的 Xbox 入口，但 N4100＋UHD 600＋4 GB 不适合作为稳定可玩的 Xbox 库，因此这里明确不设 Xbox 章节。','6. **合法备份。** 只使用自己合法拥有的游戏与 BIOS，不提供下载，不把 hack、民间改版或虚构商品当正式发行作。','',
@@ -556,9 +562,9 @@ from guide_sections import platform_overview, mod_sections, stg_history, hardwar
 out += platform_overview()
 out += ['## 存储、目录与镜像管理','',
 '### 存储分工','',
-'| 位置 | 内容 | 原则 |','|---|---|---|','| eMMC 独立 ext4 分区 | DOS／Win3.x、MAME、FBNeo、NES、PCE HuCard、MD、GB、GG、SNES、N64、GBC、WS／WSC、GBA；首装平衡方案可加 NDS | 小体积顺序读取，目录级软链接，不做 mergerfs |','| SSD `/userdata` | Win95／98、PS1、Dreamcast、PSP、默认方案的 NDS，以及全部存档、配置、缓存与刮削 | Windows 游戏、Wine prefix、大镜像和写入集中，避免挤占 eMMC |','',
-'```bash','mkdir -p /mnt/emmc/roms/{dos,mame,fbneo,nes,pcengine,megadrive,gb,gg,snes,n64,gbc,wswan,wswanc,gba}','# 先确认目标路径不存在；不要覆盖已有实体目录','ln -s /mnt/emmc/roms/dos /userdata/roms/dos','ln -s /mnt/emmc/roms/mame /userdata/roms/mame','ln -s /mnt/emmc/roms/fbneo /userdata/roms/fbneo','ln -s /mnt/emmc/roms/nes /userdata/roms/nes','ln -s /mnt/emmc/roms/pcengine /userdata/roms/pcengine','ln -s /mnt/emmc/roms/megadrive /userdata/roms/megadrive','ln -s /mnt/emmc/roms/gb /userdata/roms/gb','ln -s /mnt/emmc/roms/gg /userdata/roms/gg','ln -s /mnt/emmc/roms/snes /userdata/roms/snes','ln -s /mnt/emmc/roms/n64 /userdata/roms/n64','ln -s /mnt/emmc/roms/gbc /userdata/roms/gbc','ln -s /mnt/emmc/roms/wswan /userdata/roms/wswan','ln -s /mnt/emmc/roms/wswanc /userdata/roms/wswanc','ln -s /mnt/emmc/roms/gba /userdata/roms/gba','```','',
-'先用 `blkid`、`lsblk` 核对实际设备并手工验证挂载，不要照抄设备名。PCE CD 镜像虽属 PCE 平台，也放在 SSD；存档和配置始终留在 `/userdata`。采用首装平衡方案把 NDS 移到 eMMC 时，先把现有 `/userdata/roms/nds` 内容完整迁移并验证，再将空出的路径替换为指向 `/mnt/emmc/roms/nds` 的软链接；仍有实体游戏目录时不要直接执行 `ln -s`。','',
+'| 位置 | 内容 | 原则 |','|---|---|---|','| eMMC 独立 ext4 分区 | DOS／Win3.x、MAME、FBNeo、NES、PCE HuCard、MD、GB、GG、SNES、N64、GBC、WS／WSC、GBA、NDS | 小体积顺序读取，目录级软链接，不做 mergerfs |','| SSD `/userdata` | Win95／98、PS1、Dreamcast、PSP，以及全部存档、配置、缓存与刮削 | Windows 游戏、Wine prefix、大镜像和写入集中，避免挤占 eMMC |','',
+'```bash','mkdir -p /mnt/emmc/roms/{dos,mame,fbneo,nes,pcengine,megadrive,gb,gg,snes,n64,gbc,wswan,wswanc,gba,nds}','# 先确认目标路径不存在；不要覆盖已有实体目录','ln -s /mnt/emmc/roms/dos /userdata/roms/dos','ln -s /mnt/emmc/roms/mame /userdata/roms/mame','ln -s /mnt/emmc/roms/fbneo /userdata/roms/fbneo','ln -s /mnt/emmc/roms/nes /userdata/roms/nes','ln -s /mnt/emmc/roms/pcengine /userdata/roms/pcengine','ln -s /mnt/emmc/roms/megadrive /userdata/roms/megadrive','ln -s /mnt/emmc/roms/gb /userdata/roms/gb','ln -s /mnt/emmc/roms/gg /userdata/roms/gg','ln -s /mnt/emmc/roms/snes /userdata/roms/snes','ln -s /mnt/emmc/roms/n64 /userdata/roms/n64','ln -s /mnt/emmc/roms/gbc /userdata/roms/gbc','ln -s /mnt/emmc/roms/wswan /userdata/roms/wswan','ln -s /mnt/emmc/roms/wswanc /userdata/roms/wswanc','ln -s /mnt/emmc/roms/gba /userdata/roms/gba','ln -s /mnt/emmc/roms/nds /userdata/roms/nds','```','',
+'先用 `blkid`、`lsblk` 核对实际设备并手工验证挂载，不要照抄设备名。PCE CD 镜像虽属 PCE 平台，也放在 SSD；存档和配置始终留在 `/userdata`。NDS 固定放 eMMC；若已有 `/userdata/roms/nds` 实体目录，先完整迁移并验证，再替换为上述软链接，仍有实体游戏目录时不要直接执行 `ln -s`。','',
 '- **DOS／Win3.x 每作独立目录。** 实体文件放 eMMC `/mnt/emmc/roms/dos/<游戏名>.pc/`，经 `/userdata/roms/dos` 软链接访问；保留各自程序、音轨与启动配置，存档和模拟器配置仍由系统写入 `/userdata`。DOS 原版先用 DOSBox Pure，启动菜单或 Pad2Key 不顺时再试独立 DOSBox。DOS 游戏一般不需 BIOS。轻量 Win3.x 游戏则使用自己合法拥有的 Windows 3.x 和 Batocera 官方支持的 DOSBox‑X，共用已配置的环境，逐作核对 WinG、CD 与声音；Win95／98 游戏不走此路线。',
 '- **Win95／98 使用 Batocera 的 windows 系统。** 已安装游戏放 SSD `/userdata/roms/windows/`，安装介质放 `/userdata/roms/windows_installers/`；支持 `.pc`、`.exe`、`.wine`、`.wsquashfs`、`.wtgz`，无需 BIOS，也不需安装完整 Windows。每作独立 `.wine` prefix，`autorun.cmd` 用 LF 换行并明确 `DIR`、`CMD`，再用 `SAVEDIR`／`SAVEFILES` 把存档映射到 `/userdata/saves/windows/<游戏>/`。老安装器不能在 Wine 中完成时，先在另一台兼容机器安装，再复制完整安装目录。`/userdata` 用 ext4 或 btrfs，不把 Wine 库放在 FAT、NTFS 或 NAS。',
 '- **Runner 以本机 Batocera 版本为准。** Batocera 41 起已由停止维护的旧 Wine-GE 8-26 转向 Wine-TKG，后续版本仍会继续更新，因此不把某个 runner 名称写成永久前提。先查系统信息与 `/usr/wine/` 下实际安装版本；确有单作版本需求时，把兼容 runner 放到 `/userdata/system/wine/custom/` 的独立目录并为该作单独选择。4 GB 内存同时供 Batocera、Wine 与共享显存使用，不并行安装多个大型组件，也不把他人的高配测试当本机性能证明。',
@@ -569,7 +575,7 @@ out += ['## 存储、目录与镜像管理','',
 '---','','## 各平台精选清单','']
 for p in platforms:
     es=[e for e in entries if e.platform==p]
-    out += [f'### {p}','',f'<a id="platform-{short[p].lower()}"></a>','',platform_intro[p],'',
+    out += [f'### {p}','',platform_intro[p],'',
     '| 条目 | 完整商品名（英文／日文／原文） | 中文译名 | 出版日期 | 出版商 | 预留空间 | 品类 | 内容·历史备注 |','|---|---|---|---:|---|---:|---|---|']
     for e in es:
         note=e.note
@@ -579,7 +585,7 @@ for p in platforms:
             background=rg.series_note.get(e.series,'').strip()
             if background and background not in note:
                 note+=f' 系列背景：{background}'
-        out.append(f'| <a id="{e.eid.lower()}"></a>{e.eid} | {e.en.replace("|","／")} | {e.zh.replace("|","／")} | {e.year} | {e.pub} | {e.size} | {e.category}／{e.subgenre} | {note.strip()} |')
+        out.append(f'| {e.eid} | {e.en.replace("|","／")} | {e.zh.replace("|","／")} | {e.year} | {e.pub} | {e.size} | {e.category}／{e.subgenre} | {note.strip()} |')
     out+=['','---','']
 
 # 十大品类，包含历史、细分与真实条目链接；STG 与动作射击并列。
@@ -597,11 +603,11 @@ genre_defs=[
 out+=['## 游戏方式专题：品类源流与代表作','','本章按每个条目的主要玩法归类，细分方向写在平台表的“品类”列。DOS／Windows 与主机作品采用同一分类；代表系列链接回游戏内容专题，代表条目链接回平台，跨类型作品只设一个主品类，避免重复计数。','']
 for gi,(g,history,reps) in enumerate(genre_defs,1):
     out += [f'### {g}','',history,'']
-    if g=='射击（STG）':out += stg_history(entries)+['']
+    if g=='射击（STG）':out += stg_history(entries,entry_link)+['']
     linked=[]
     for title in reps:
         e=next((x for x in entries if x.en==title),None)
-        if e:linked.append(f'[{e.zh}](#{e.eid.lower()})')
+        if e:linked.append(entry_link(e,e.zh))
     sers=[]
     for e in entries:
         if e.category==g and e.series and e.series not in sers:sers.append(e.series)
@@ -619,7 +625,7 @@ out+=['## 游戏内容专题：系列与平台回链','','按作品世界观、�
 for s in series_order:
     es=sorted((e for e in entries if e.series==s),key=lambda e:platforms.index(e.platform))
     intro=series_intro.get(s,rg.series_note.get(s,f'围绕《{es[0].zh}》等真实同一系列作品整理，按平台回到对应版本。'))
-    out += [f'### {s}','',f'<a id="{series_id[s]}"></a>','',intro+'','']
+    out += [f'### {s}','',intro+'','']
     groups=[]
     for e in es:
         if e.subgroup not in groups:groups.append(e.subgroup)
@@ -627,10 +633,10 @@ for s in series_order:
         if len(groups)>1:out += [f'#### {g}','']
         out += ['| 完整商品名 | 中文译名 | 平台 | 出版日期 | 平台条目 |','|---|---|---|---:|---|']
         for e in es:
-            if e.subgroup==g:out.append(f'| {e.en} | {e.zh} | {short[e.platform]} | {e.year} | [{e.eid}](#{e.eid.lower()}) |')
+            if e.subgroup==g:out.append(f'| {e.en} | {e.zh} | {short[e.platform]} | {e.year} | {entry_link(e)} |')
         out+=['']
     out+=['---','']
-mod_out,hack_count=mod_sections(entries,short,platforms)
+mod_out,hack_count=mod_sections(entries,short,platforms,entry_link)
 out += mod_out
 
 out+=['## 三层查漏补缺结果','',
@@ -669,9 +675,9 @@ def maker_cells(p):
     else:cells[5]='IBM／Microsoft 等' if p in {'DOS','Win95 / Win98'} else '多厂商'
     return cells
 out+=['平台章大体按首发年代排列；Win95／98 紧随 DOS 以区分两种运行环境，N64 与 PS1 依 eMMC／SSD 存储建议对调。出品方矩阵中，空白表示该平台不属于该厂家。','',
-'| 平台 | 条目数 | 游戏数（合集展开） | 表内预留空间 | Nintendo | Sega | Sony | NEC／Hudson | Bandai | 多厂商／PC | 建议位置 |','|---|---:|---:|---:|---|---|---|---|---|---|']
+'| 平台 | 条目数 | 游戏数（合集展开） | 表内预留空间 | Nintendo | Sega | Sony | NEC／Hudson | Bandai | 多厂商／PC | 建议位置 |','|---|---:|---:|---:|---|---|---|---|---|---|---|']
 total=0
-ssd_platforms={'Win95 / Win98','PS1','PSP','Dreamcast','NDS'}
+ssd_platforms={'Win95 / Win98','PS1','PSP','Dreamcast'}
 for p in platforms:
     es=[e for e in entries if e.platform==p];v=sum(mb(e.size) for e in es);total+=v
     makers=' | '.join(maker_cells(p))
@@ -684,8 +690,8 @@ full_budget=total+variant_mb
 first_install_budget=full_budget-windows_deferred
 nominal_total_gib=320*10**9/2**30
 nds_total=sum(mb(e.size) for e in entries if e.platform=='NDS')
-first_ssd_rom=ssd_total-windows_deferred-nds_total
-first_emmc_rom=emmc_total+nds_total
+first_ssd_rom=ssd_total-windows_deferred
+first_emmc_rom=emmc_total
 out+=[f'| **官方库合计** | **{len(entries)}** | **{game_total}** | **{total/1024:.2f} GB** |  |  |  |  |  |  | 另留系统、BIOS、刮削与存档 |','',
 '#### 游戏总数与总容量','',
 f'- **官方游戏总数：{game_total} 个平台版本。** 合集已展开，地区别名不重复；同一游戏跨平台各算一个可玩版本。Game & Watch 等合集按独立商品计数，不把内含迷你游戏再拆成数十款。',f'- **原创改版内容：{new_hack_count} 款。** 仅统计含全新战役、地区或主要地图的改版；纯汉化、平衡调整和便利增强不重复增加游戏数。','- **官方库预留：'+f'{total/1024:.2f} GB。** 中文化与精选改版若与原版全部并存，另建议预留 16 GB；**合计预算 {full_budget/1024:.2f} GB**，系统、BIOS、刮削和存档另算。','',
@@ -706,8 +712,8 @@ f'| 方案 | 游戏与改版预算 | 建议 |','|---|---:|---|',
 f'| 全量收藏 | {full_budget/1024:.2f} GiB | 选 **512 GB SSD＋64 GB eMMC**；可保留完整 Windows 库、刮削和升级余量 |',
 f'| 现有双盘首装 | {first_install_budget/1024:.2f} GiB | Windows 先装 27 款“优先安装”，其余 22 款作为候补；默认只做图片刮削 |','',
 f'- **先暂缓 {windows_deferred/1024:.2f} GiB 的候补 Windows。** 27 款优先安装本身约 {windows_priority/1024:.2f} GiB，19 款固定版本后安装和 3 款专项验收通过后再逐批加入；不要先复制全部安装介质。',
-f'- **把 NDS 整体约 {nds_total/1024:.2f} GiB 移入 eMMC。** 首装可把 16 GiB 改版预算按 eMMC 10 GiB、SSD 6 GiB 分配；这样 eMMC 的游戏与改版约 {(first_emmc_rom+10*1024)/1024:.2f} GiB，另有 8 GiB 系统预算和 8–10 GiB 最低空闲。剩余空间留给升级和新增游戏，比堆放 Wine prefix、缓存或高频存档更稳。',
-f'- **SSD 游戏与改版首装约 {(first_ssd_rom+6*1024)/1024:.2f} GiB。** 当前五个 SSD 平台合计 {ssd_total/1024:.2f} GiB，暂缓候补 Windows 并移动 NDS 后为 {first_ssd_rom/1024:.2f} GiB，再加 6 GiB 改版预算。这样给 Wine、存档、图片、缓存和空闲留下约 {238.42-(first_ssd_rom+6*1024)/1024:.2f} GiB；若要视频刮削或继续安装候补，先移出同容量内容，不要压缩最低空闲空间。',
+f'- **NDS 整体约 {nds_total/1024:.2f} GiB，固定放入 eMMC。** 首装可把 16 GiB 改版预算按 eMMC 10 GiB、SSD 6 GiB 分配；这样 eMMC 的游戏与改版约 {(first_emmc_rom+10*1024)/1024:.2f} GiB，另有 8 GiB 系统预算和 8–10 GiB 最低空闲。剩余空间留给升级和新增游戏，比堆放 Wine prefix、缓存或高频存档更稳。',
+f'- **SSD 游戏与改版首装约 {(first_ssd_rom+6*1024)/1024:.2f} GiB。** 当前四个 SSD 平台合计 {ssd_total/1024:.2f} GiB，暂缓候补 Windows 后为 {first_ssd_rom/1024:.2f} GiB，再加 6 GiB 改版预算。这样给 Wine、存档、图片、缓存和空闲留下约 {238.42-(first_ssd_rom+6*1024)/1024:.2f} GiB；若要视频刮削或继续安装候补，先移出同容量内容，不要压缩最低空闲空间。',
 '- **不安装不等于从指南删除。** 主表仍是收藏与验收总目录；每批只把已通过实机验收的作品复制到机器，未安装作品保留在外部备份，不把安装介质、原镜像和压缩包重复留在 SSD。','',
 '### 实机核对顺序','',
 '1. DOS：逐作检查可执行文件、声音、鼠标、存档与退出方式；中文游戏保留字库和安装目录，CD 游戏连音轨一起验证，不能只确认进入标题画面。','2. Win95／98：逐作验证安装目录、Wine prefix、字体、过场、鼠标与存档；DirectDraw 黑屏／花屏优先核对 cnc-ddraw 的 DLL 覆盖和全屏设置，Direct3D 则保持低分辨率并单独选渲染路径。','3. MAME、FBNeo：先验证 ROM set、BIOS、双人手柄，再检查高分采样与声音；不要跨核心随意搬 ZIP。','4. NES、PCE、MD、GB、GG、SNES：先开存档与特殊芯片游戏，检查 RTC、传感器和地区刷新率。','5. N64：按游戏选择插件与 1× 渲染，核对 Expansion Pak，并测试最繁忙的战斗／竞速场景。','6. PS1、GBC、Dreamcast、WS／WSC、GBA、NDS、PSP：依次检查多盘与记忆卡、GBC 存档、Dreamcast 重负载场景、WS 横竖持机、GBA 的 RTC／传感器、NDS 双屏触控、PSP 原生设置下的繁忙场景；不只看标题画面。','',
