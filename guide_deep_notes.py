@@ -41,7 +41,6 @@ DEEP={
 # 洛克人
 'Mega Man':'首作建立八大 Boss 之前的六机器人选关、武器克制与取得能力循环。没有后来的滑铲和蓄力炮，精确跳跃与道具使用更重要。',
 'Mega Man: Dr. Wily’s Revenge':'GB 初代混合 FC 一二代的机器人与关卡，并加入威利城新内容。小屏卷轴和跳跃判定使它并非简单 FC 合集。',
-'Mega Man II':'沿用 GB 掌机化结构，组合 FC 二代与三代元素；难度与音乐评价较特殊，作为系列版本史保留，不建议替代家用机二代入门。',
 'Mega Man III':'重新编排 FC 三至五代 Boss，并加入滑铲、蓄力与原创最终段落。它比前两部 GB 作更接近完整原创掌机洛克人。',
 'Mega Man IV':'引入商店、P 芯片和更完整原创关卡，FC 四代与五代 Boss 分组出现。系统与剧情已明显脱离单纯移植。',
 'Mega Man V':'以星体机器人和外太空关卡取代直接 reuse FC 阵容，新武器与专属 Boss 让它成为 GB 五作中最完整的一作。',
@@ -138,7 +137,7 @@ DEEP={
 'Parodius Da! / Sexy Parodius / Gokujou Parodius!':'从初代的 Konami 戏仿到极上的关卡目标与性感帕罗迪乌斯的任务分支，三部都保留射击系统而强化喜剧演出。',
 # 雷电与 R-Type
 'Raiden Trad':'MD 移植街机初代，保留红色散弹／蓝色激光与导弹组合，画面和双人表现受硬件调整。标题 Trad 不等于续作。',
-'R-Type':'蓄力波动炮与 Force 装置同时服务正面攻坚、后方防御和特殊站位，关卡强调记忆。街机原版与 MD／PCE 移植各有画面与内容差异。',
+'R-Type':'蓄力波动炮与 Force 装置同时服务正面攻坚、后方防御和特殊站位，关卡强调记忆。PCE 版将初代拆成两部分发行，街机原版则以连续关卡呈现完整流程。',
 'R-Type III: The Third Lightning':'提供三种 Force 与 Hyper 模式，关卡更强调大型机关和高速场景。SFC 原创续作不是 R-Type II 的简单移植。',
 'Raiden':'双色主武器、导弹与双人协作构成直观纵版射击，节奏重火力路线而非复杂得分。Seibu Kaihatsu 是发行主体，不应写成 Irem。',
 'Raiden II':'新增紫色等离子鞭与更复杂 Boss，保持双色武器和双人节奏。画面与敌弹升级明显，但仍是传统背板射击。',
@@ -222,7 +221,7 @@ DEEP={
 'The Legend of Heroes: Zero no Kiseki':'舞台转至克洛斯贝尔，特务支援课以城市案件切入政治结构，组合战技与 Orbment 延续轨迹构筑。故事衔接碧之轨迹。',
 'The Legend of Heroes: Ao no Kiseki':'直接收束零轨的克洛斯贝尔危机，扩大势力冲突和角色结局，Burst 等系统强化团战。应从零轨顺序进入。',
 'Nayuta no Kiseki / The Legend of Nayuta: Boundless Trails':'改用关卡制动作 RPG，剑技、法术、季节变化与装备收集构成循环。虽名为轨迹，但世界观和玩法都独立。',
-'The Legend of Heroes II: Prophecy of the Moonlight Witch / III: White Witch / IV: A Tear of Vermillion / V: Cagesong of the Ocean':'此行是 PSP 时代英雄传说旧作移植收藏组，各作以不同主角与大陆展开传统 RPG；具体战斗与剧情不同，安装应按商品拆分而非当作一部轨迹。',
+'The Legend of Heroes III: White Witch / IV: A Tear of Vermillion / V: Cagesong of the Ocean':'PSP 移植汇集卡卡布三部曲：III《白发魔女》、IV《朱红的泪》和 V《海之槛歌》，三作以不同主角和大陆展开传统回合 RPG。北美曾把 III 改作 The Legend of Heroes II: Prophecy of the Moonlight Witch，这是地区改名而不是第四款；安装和存档仍按三款独立商品管理。',
 # 勇者斗恶龙
 'Dragon Quest IX: Sentinels of the Starry Skies':'自定义主角与伙伴，以职业、装备、任务和藏宝图迷宫构成长期冒险。曾强调擦肩与多人，离线单人仍有完整主线。',
 'Dragon Quest Monsters: Joker':'在绿色侦察队大赛中捕捉、合成怪物，以技能树和队伍搭配战斗。它是怪兽篇 3D 化新起点，不是 DQM 旧作移植。',
@@ -235,7 +234,6 @@ DEEP={
 # 数码宝贝、沙加与牧场
 'Digimon World Dawn / Dusk':'双版本分别以不同区域、任务和数码兽阵容展开，培育、农场岛与属性搭配决定队伍。它们是同世代互补版本，不是昼／夜两个地区别名。',
 'Digimon World':'从被吸入数码世界开始，通过喂食、训练和作息养育伙伴，并招募数码兽重建 File City。养成条件隐晦，死亡与转生是循环的一部分。',
-'Digimon World 2':'改为驾驶数码坦克探索随机地牢，捕捉、合体与组织队伍构成主要养成。与初代开放城镇养育不同，更偏迷宫 RPG。',
 'Digimon World 3 / 2003':'以网游式数码世界为舞台，采用队伍回合战斗、进化和卡片等元素；2003 版追加内容。剧情和系统与 World 1／2 不连续。',
 'Romancing SaGa':'八名主角、自由剧本与事件开放顺序构成非线性冒险，武器耐久、LP 和闪悟让战斗代价鲜明。没有统一等级曲线引导玩家。',
 'Romancing SaGa 2':'皇帝世代继承跨越数百年，技能闪悟、阵型与帝国发展互相影响，敌人强度随进程变化。多代选择会改变可用角色和结局。',
@@ -251,7 +249,7 @@ DEEP={
 'Ogre Battle 64: Person of Lordly Caliber':'以 3D 地图实时调度军团，小队阵形、地形、补给和道德选择共同决定战役。N64 版扩展军团规模，和 SFC 初代剧情、系统不同。',
 # 魂斗罗与风云默示录
 'Contra III: The Alien Wars':'双武器随时切换、炸弹与攀爬动作强化跑射，俯视关卡采用 Mode 7。SFC 原创第三作与街机 Super Contra 不是同一游戏。',
-'Kizuna Encounter: Super Tag Battle / Fu’un Super Combo':'两名角色可随时换人，武器格斗与连段围绕标签节奏展开。它是风云默示录续作，不是魂斗罗。',
+'Kizuna Encounter: Super Tag Battle':'两名角色可随时换人，武器格斗与连段围绕标签节奏展开。它是《Savage Reign》的续作，以双人组队和场地攻击扩展前作体系；Super Tag Battle 准确概括了这组双人换人规则。',
 'Contra (Arcade)':'以纵横卷轴、散弹等武器和双人合作建立系列基础，街机关卡比 FC 更短且演出不同。持续投币与家用有限接关改变难度体验。',
 'Super Contra (Arcade)':'增加可升级武器、更密集敌群与俯视图关卡，双人合作仍是核心。它是街机第二作，不是 SFC《Contra III》。',
 # Darius、伊苏、塞尔达
@@ -351,7 +349,6 @@ DEEP={
 'Mortal Kombat':'真人数字化角色、重击与终结技形成鲜明风格，血量、上勾拳和隐藏角色塑造街机话题。它不同于街霸的卡通格斗路线。',
 'Killer Instinct':'以连段、Combo Breaker 和 Ultra Combo 构成高压攻防，预渲染角色和双人模式是 SFC 家用版本特色。',
 'Killer Instinct Gold':'把 Killer Instinct 2 的角色与连段带到 N64，调整帧率、场景与家用模式。它不是 SFC 初代的简单移植。',
-'Kizuna Encounter':'双人标签、武器和场地攻击可随时联动，连段与换人是核心。它是风云默示录的续作，不属于魂斗罗。',
 'Vampire Savior: The Lord of Vampire':'Dark Force 提供限时角色强化，ES／EX 技与空中连段形成高速恶魔战士对战。角色系统差异很大。',
 'Marvel Super Heroes':'以漫威角色和六颗无限宝石改变攻防，宝石能力可在战中激活。空中连段与大型角色演出连接后来的 VS 系列。',
 'Rival Schools: United by Fate':'校园角色以双人队伍、协力技和 3D 场地展开格斗，剧情按学校分组。轻松外表下保留完整立回与连段。',
@@ -385,7 +382,7 @@ DEEP={
 'NBA Jam':'以二对二、夸张扣篮和连续命中“着火”强化街机篮球，规则刻意简化。家庭双人和合作比真实赛季更重要。',
 'ToeJam & Earl':'两名外星人在随机化的地球层级寻找飞船零件，礼物盒、隐藏斜坡和双人分屏形成探索。它不是体育游戏。',
 'Windjammers':'以飞盘投掷、弧线球和超级射门在六格场地对战，攻防转换接近格斗与体育结合。Neo Geo 双人对局尤其经典。',
-'Super Monaco GP':'以 F1 街道赛、档位和湿地变化构成计时竞速，街机原版还有不同机台形式。它是赛车，不应套用球类运动备注。',
+'Super Monaco GP':'以 F1 街道赛、档位和湿地变化构成计时竞速，街机原版还有不同机台形式。速度感、超车路线与计时压力是作品的核心。',
 'Virtua Tennis / Virtua Tennis 2':'以简洁挥拍、跑位和场地类型建立易上手网球，World Circuit 与多人比赛扩充内容。两作分别收藏。',
 'Everybody’s Golf / Hot Shots Golf':'三键挥杆结合风向、地形、旋转和角色成长，规则易懂但球场管理有深度。PSP 首作适合短局。',
 'Panel de Pon':'左右交换相邻方块，横竖三消会抬升棋盘，主动连锁和同时消除可攻击对手。它是 Puzzle League 的 SFC 原点。',

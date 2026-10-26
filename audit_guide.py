@@ -86,7 +86,7 @@ for line in capacity_lines:
     if len(cells)==11 and cells[0] in platforms:
         p=cells[0];capacity_order.append(p)
         check(cells[4:10]==ns['maker_cells'](p),f'厂家矩阵错误：{p} → {cells[4:10]}')
-        expected_storage='SSD' if p in ns['ssd_platforms'] else 'eMMC'
+        expected_storage=ns['storage_for'](p)
         check(cells[10]==expected_storage,f'存储位置错误：{p} → {cells[10]}')
 check(capacity_order==platforms,f'容量表顺序不符：{capacity_order}')
 check(text.index('### N64')<text.index('### PS1'),'N64 未排在 PS1 前')
@@ -126,8 +126,20 @@ for note,products in dup_notes.items():
         errors.append('不同商品复用整段备注：'+str(products))
 
 # 用户点名补漏、三国、射击、改版和 PC 边界。
-required=['Chrono Cross','Tengai Makyou II: Manji Maru','Kingdom Hearts: Birth by Sleep','Dragon Ball: Advanced Adventure','Tony Hawk’s Pro Skater 2','Lumines: Puzzle Fusion','Me & My Katamari','Theme Hospital','Tomato Adventure','Puyo Puyo Sun',"Sid Meier's Civilization II",'三國志英傑傳','三國志孔明傳','Life Force / Salamander','Contra','Super C','Galaga / Galaxian','Nakahara no Hasha: Sangoku Shouseiden','あっぱれ伝 ‐伏龍の章‐ / Appare-den: Fukuryuu no Shou','Farland Story: Tooi Kuni no Monogatari / ファーランドストーリー 遠い国の物語','Farland Story Denki: Arc Ou no Ensei / ファーランドストーリー 伝記 アーク王の遠征','Farland Story: Shirogane no Tsubasa / ファーランドストーリー 白銀の翼','Farland Story: Daichi no Kizuna / ファーランドストーリー 大地の絆']
+required=['Chrono Cross','Tengai Makyou II: Manji Maru','Kingdom Hearts: Birth by Sleep','Dragon Ball: Advanced Adventure','Tony Hawk’s Pro Skater 2','Lumines: Puzzle Fusion','Theme Hospital','Tomato Adventure','Puyo Puyo Sun',"Sid Meier's Civilization II",'三國志英傑傳','三國志孔明傳','Life Force / Salamander','Contra','Super C','Galaga / Galaxian','Nakahara no Hasha: Sangoku Shouseiden','あっぱれ伝 ‐伏龍の章‐ / Appare-den: Fukuryuu no Shou','Farland Story: Tooi Kuni no Monogatari / ファーランドストーリー 遠い国の物語','Farland Story Denki: Arc Ou no Ensei / ファーランドストーリー 伝記 アーク王の遠征','Farland Story: Shirogane no Tsubasa / ファーランドストーリー 白銀の翼','Farland Story: Daichi no Kizuna / ファーランドストーリー 大地の絆','Guerrilla War','Road Fighter','Antarctic Adventure','Hook','Ninja Baseball Bat Man','Super Bomberman 3','Super Bomberman 5','World of Illusion Starring Mickey Mouse and Donald Duck','Professor Layton and the Diabolical Box','Metal Max 2: Reloaded','Etrian Odyssey III: The Drowned City','Tetris DS','Summon Night: Swordcraft Story','Summon Night: Swordcraft Story 2','TearRing Saga: Yutona Eiyuu Senki','Steins;Gate','Fate/EXTRA','Command & Conquer: Red Alert 2 / Yuri’s Revenge','Emperor: Rise of the Middle Kingdom']
 for name in required:check(name in ens,f'点名作品缺失：{name}')
+check(any(e.platform=='PSP' and e.en=='Tactics Ogre: Let Us Cling Together (PSP)' and e.year=='2010' for e in entries),'PSP 命运之轮缺失或年份错误')
+check(not any(e.platform=='FBNeo' and e.en=='Kizuna Encounter' for e in entries),'风云默示录 2 仍有短名重复条目')
+check(not any(e.platform=='MD / Genesis' and e.en=='R-Type' for e in entries),'MD 仍有不存在的官方 R-Type')
+check(not any(e.platform=='FBNeo' and e.en=='Marvel vs. Capcom 2: New Age of Heroes' for e in entries),'NAOMI 的 MVC2 不应放入 FBNeo')
+pce_name='PCE (PC Engine / TurboGrafx-16)'
+pce_ens={e.en for e in entries if e.platform==pce_name}
+check(set(ns['PCE_CD'])<=pce_ens,'PCE CD 清单包含非 PCE 或已删除商品')
+check(ns['storage_for'](pce_name)=='eMMC＋SSD','PCE HuCard／CD 应分列 eMMC＋SSD')
+check(ns['ssd_total']==sum(mb(e.size) for e in entries if e.platform in {'Win95 / Win98','PS1','Dreamcast','PSP'} or e.en in ns['PCE_CD']),'SSD 容量未准确纳入 PCE CD')
+for name,year in {'Dragon Quest IV: Chapters of the Chosen':'2007','Dragon Quest V: Hand of the Heavenly Bride':'2008','Dragon Quest VI: Realms of Revelation':'2010','Professor Layton and the Last Specter':'2009'}.items():
+    check(any(e.platform=='NDS' and e.en==name and e.year==year for e in entries),f'NDS 重制／首发年份错误：{name}')
+check(any(e.platform=='NDS' and e.en=='Dragon Quest IV: Chapters of the Chosen' and e.pub=='Square Enix' for e in entries),'NDS 勇者斗恶龙 IV 发行商应为 Square Enix')
 farland=[e for e in entries if e.series=='古大陆物语']
 check(len(farland)==4 and all(e.platform=='DOS' for e in farland),'古大陆物语应为 DOS 四作，不重复收 Windows 前两作重制合集')
 check(not any('Yottsu no Fuuin' in e.en for e in entries),'四个封印不应与 DOS 前两作重复出现')
@@ -215,7 +227,7 @@ check(civ2 and 'DOSBox‑X' in civ2.note and 'Windows 3.x' in civ2.note,'文明 
 win_entries=[e for e in entries if e.platform=='Win95 / Win98']
 win_ens={e.en for e in win_entries}
 check(platforms.index('Win95 / Win98')==platforms.index('DOS')+1,'Win95／98 未紧随 DOS')
-check(len(win_entries)==39==len(ns['WINDOWS_GAMES']),f'Windows 条目数应为 39：{len(win_entries)}')
+check(len(win_entries)==41==len(ns['WINDOWS_GAMES']),f'Windows 条目数应为 41：{len(win_entries)}')
 check(set(win_ens)==set(ns['WINDOWS_RUNTIME']),'Windows 商品与运行判断映射不一致')
 check('Rayman 2: The Great Escape' not in win_ens,'高风险 Windows Rayman 2 不应收录；其他平台版本不受影响')
 for removed in ['Dungeon Keeper II','Need for Speed III: Hot Pursuit','Planescape: Torment','The Sims','Tropico','Grim Fandango','The Longest Journey','Toonstruck','Captain Claw','Jazz Jackrabbit 2','天地劫序傳：幽城幻劍錄']:

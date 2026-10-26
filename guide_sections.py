@@ -1,6 +1,6 @@
 def platform_overview():
     rows=[
-    ('DOS／Win3.x','16／32 位 x86 PC 环境','1981／1992','IBM／Microsoft 等','键盘鼠标、VGA、声卡、CD‑ROM 与中文 PC 游戏传统','DOS 用 DOSBox Pure；轻量 Win3.x 用 DOSBox‑X','每作独立 .pc 目录；DOS 先自动 CPU；Win3.x 需自备系统并配置显示、声音与 WinG；经营和 RTS 用鼠标；Win95／98 游戏转下一平台'),
+    ('DOS／Win3.x','16／32 位 x86 PC 环境','1981／1992','IBM／Microsoft 等','键盘鼠标、VGA、声卡、CD‑ROM 与中文 PC 游戏传统','DOS 用 DOSBox Pure；轻量 Win3.x 用 DOSBox‑X','DOSBox Pure 可用 .zip／.dosz；复杂安装与独立配置用 .pc；Win3.x 需自备系统并配置显示、声音与 WinG；经营和 RTS 用鼠标；Win95／98 游戏转下一平台'),
     ('Win95／98（Wine）','16／32 位 x86 Windows 程序','1995／1998','Microsoft（兼容层由 Wine 提供）','DirectDraw、早期 Direct3D、中文 RPG、策略与经营经典','Batocera 内置 Wine runner（版本随系统更新）','每作独立 .wine prefix；DirectDraw 优先试 cnc-ddraw；DXVK 默认关闭；原始低分辨率；不虚拟完整 Win95，不收射击游戏'),
     ('MAME','多种 8／16／32 位街机','1970 年代末起','多厂商','早期迷宫、单屏、Taito／Namco／Sega 硬件','MAME（当前 Batocera 核心）','ROM set 必须与核心匹配；ZIP 不改名、不解压；BIOS／CHD 依赖完整'),
     ('FBNeo','多种 16／32 位 2D 街机','1980 年代末起','Capcom／SNK／IGS 等','CPS、Neo Geo、PGM、Toaplan 等','FinalBurn Neo（libretro）','Neo Geo／PGM BIOS 随匹配 ROM set；NAOMI 不放入此目录'),
@@ -11,7 +11,7 @@ def platform_overview():
     ('GG','8 位','1990','Sega','Master System 相近架构的彩色掌机','Genesis Plus GX／Gearsystem','小屏视野与原版一致；整数缩放，不要误用 MD ROM'),
     ('SNES／SFC','16 位','1990','Nintendo','Mode 7、丰富音源、特殊增强芯片','Snes9x（轻量优先）／bsnes','特殊芯片逐作核对；Star Fox 2 用正式发行版；高画质 bsnes 更耗资源'),
     ('N64','64 位','1996','Nintendo','3D 平台与四人本地对战，部分用 Expansion Pak','Mupen64Plus‑Next','按游戏选 GLideN64／Rice；Expansion Pak 游戏核对内存；重负载场景测帧'),
-    ('PS1','32 位','1994','Sony','CD 光盘、预渲染背景与早期 3D','DuckStation／PCSX‑ReARMed','原生分辨率起步；多盘 M3U；记忆卡与 BIOS 校验，不开高负载增强'),
+    ('PS1','32 位','1994','Sony','CD 光盘、预渲染背景与早期 3D','x86_64 优先 DuckStation；PCSX‑ReARMed 仅作后备','原生分辨率起步；多盘 M3U；记忆卡与 BIOS 校验，不开高负载增强'),
     ('GBC','8 位','1998','Nintendo','彩色掌机，兼容部分 GB 黑卡','Gambatte／SameBoy','GBC 与 GB 分目录；双版本联动密码属于游戏内功能'),
     ('Dreamcast','32 位','1998','Sega','GD‑ROM、NAOMI 同源、2D 格斗与 3D 原创','Flycast','原生分辨率起步；DC 与 NAOMI 分开；核对 GDI／CHD、区域和 VGA 选项'),
     ('WS／WSC','16 位','1999／2000','Bandai','横竖双持、低功耗、原创益智与掌机衍生','Beetle Cygne／Beetle Wswan','Gunpey 等按游戏旋转画面与按键；WS、WSC 目录可分开'),

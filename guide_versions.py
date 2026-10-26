@@ -19,7 +19,7 @@ choice('波斯王子初代', [('DOS', 'Prince of Persia')], [('MD / Genesis', 'P
 choice('Another World', [('DOS', 'Another World / Out of This World')], [('SNES / SFC', 'Another World / Out of This World')], '保留 DOS 版：以电脑原版的电影化动作解谜和检查点结构为基准，避免与 SFC 移植重复；键盘映射即可游玩。')
 choice('Lemmings', [('DOS', 'Lemmings')], [('SNES / SFC', 'Lemmings')], '保留 DOS 版：为旅鼠逐个分配技能天然适合鼠标，原版关卡与操作效率优于手柄移植；SFC 版不再重复。')
 choice('大航海时代 II', [('DOS', 'Uncharted Waters: New Horizons / Daikoukai Jidai II')], [('SNES / SFC', 'Uncharted Waters: New Horizons / Daikoukai Jidai II')], '保留 DOS 版：航海、交易与大量菜单在 PC 鼠标界面下更顺手，内容基础完整；SFC 同名移植不再重复。')
-choice('R-Type 初代', [('FBNeo', 'R-Type')], [('MD / Genesis', 'R-Type'), ('PCE (PC Engine / TurboGrafx-16)', 'R-Type')], '保留街机原版：Force、蓄力炮和关卡节奏均以街机为基准，FBNeo 在 N4100 上负担低；MD 与 PCE 的分关或移植差异不再各存一份。')
+choice('R-Type 初代', [('FBNeo', 'R-Type')], [('MD / Genesis', 'R-Type'), ('PCE (PC Engine / TurboGrafx-16)', 'R-Type')], '保留街机原版：Force、蓄力炮和关卡节奏均以街机为基准，FBNeo 在 N4100 上负担低；PCE 分关移植不再另存。MD 没有官方《R-Type》卡带，因此本作的早期家用对照采用 PCE 版。')
 choice('雷电初代', [('FBNeo', 'Raiden')], [('MD / Genesis', 'Raiden Trad'), ('PCE (PC Engine / TurboGrafx-16)', 'Raiden')], '保留街机原版：双色武器、双人合作与原版关卡节奏完整，2D 模拟负担低；MD《Raiden Trad》和 PCE 移植不再重复。')
 choice('兽王记', [('MAME', 'Altered Beast')], [('MD / Genesis', 'Altered Beast')], '保留街机原版：变身、清版节奏与双人内容以街机为基准；MD 同捆移植虽有历史意义，但不再为同一作品占第二份。')
 choice('战斧初代', [('FBNeo', 'Golden Axe (Arcade)')], [('MD / Genesis', 'Golden Axe')], '保留街机原版：魔法、骑乘和合作清版以街机内容为基准；MD 移植不重复，MD 的 II／III 作为独立续作继续保留。')
@@ -50,6 +50,8 @@ choice('小蜜蜂／大蜜蜂', [('MAME', 'Galaga / Galaxian')], [('NES / FC', '
 choice('真·女神转生 I／II', [('SNES / SFC', 'Shin Megami Tensei I / II')], [('PS1', 'Shin Megami Tensei'), ('PS1', 'Shin Megami Tensei II')], '保留 SFC 两作：以原始 16 位迷宫、阵营和恶魔交涉系统为版本基准，PS1 对应移植不再重复；SFC 合集行仍展开计两款。')
 choice('真·女神转生 if…', [('SNES / SFC', 'Shin Megami Tensei if...')], [('PS1', 'Shin Megami Tensei if...')], '保留 SFC 原版：学园迷宫、守护灵与多路线结构完整，PS1 移植不再另占容量。')
 choice('皇家骑士团 2', [('SNES / SFC', 'Tactics Ogre: Let Us Cling Together')], [('PS1', 'Tactics Ogre: Let Us Cling Together (PlayStation)')], '保留 SFC 原版：网格战棋、法律阵营与职业系统完整，避免 PS1 移植的读取与镜像开销；它不与 PSP 另一部重制作品混名。')
+choice('重装机兵 2', [('NDS', 'Metal Max 2: Reloaded')], [('SNES / SFC', 'Metal Max 2')], '保留 NDS《重装机兵 2R》：以重制的画面、界面、地图与追加内容覆盖 SFC 二代，战车改造和赏金首主体完整；melonDS 软件渲染即可作为保守起点，SFC 原版不再重复收藏。')
+choice('幻想大陆战记', [('PS1', 'Brigandine: Grand Edition')], [('PS1', 'Brigandine: The Legend of Forsena')], '保留日本正式发行的《Grand Edition》：它扩展 Forsena 的帝国路线、多人轮玩、职业、魔物与演出，同一基础战役只留内容更完整的官方扩展版；日文文本门槛保留在备注中。')
 choice('伊苏 I＋II', [('PCE (PC Engine / TurboGrafx-16)', 'Ys Book I & II')], [('PSP', 'Ys I & II Chronicles')], '保留 PCE CD《Book I & II》：两作连续冒险、CD 音画与演出是该版本的历史特色；PSP《Chronicles》合集不再重复。')
 choice('伊苏 III', [('PSP', 'Ys: The Oath in Felghana')], [('PCE (PC Engine / TurboGrafx-16)', 'Ys III: Wanderers from Ys')], '在本机可运行候选中优先《菲尔盖纳的誓约》：它以完整重制扩展伊苏 III 的动作与关卡，替代 PCE 旧版；但这是 3D PSP 游戏，N4100 仍须以 1× 渲染实测繁忙场景，不能视为已认证。')
 choice('恶魔城 血之轮回／月下', [('PCE (PC Engine / TurboGrafx-16)', 'Akumajou Dracula X: Chi no Rondo / Castlevania: Rondo of Blood'), ('PS1', 'Castlevania: Symphony of the Night')], [('PSP', 'Castlevania: The Dracula X Chronicles')], '分别保留 PCE《血之轮回》和 PS1《月下夜想曲》：直接使用两个原生平台版本；PSP《X 历代记》合集再次包含二者并有 3D 负担，不再重复。SFC《Dracula X》是独立改编，仍保留。')
@@ -88,6 +90,7 @@ choice('梦幻模拟战初代', [('SNES / SFC', 'Der Langrisser')], [('MD / Gene
 choice('咚奇刚街机初代', [('MAME', 'Donkey Kong / Donkey Kong Jr.')], [('NES / FC', 'Donkey Kong')], '保留 MAME 的《Donkey Kong／Jr.》街机组合：爬梯、跨锤、拆铆钉与藤蔓关卡采用原始版本，FC 初代移植不再重复；GB 版有百余个扩展解谜关卡，仍作为独立作品保留。')
 choice('Darius 初代', [('MAME', 'Darius / Darius II / Darius Gaiden')], [('PCE (PC Engine / TurboGrafx-16)', 'Darius Plus')], '保留 MAME 的 Darius 街机收藏组：初代的区域分支和机械鱼 Boss 采用街机基准，PCE《Darius Plus》的单屏重排不再重复；SFC《Darius Twin》是独立续作。')
 choice('心跳回忆初代', [('PS1', 'Tokimeki Memorial 1 / 2')], [('PCE (PC Engine / TurboGrafx-16)', 'Tokimeki Memorial')], '保留 PS1 两作收藏组：初代的学习、社团、约会与角色评价和二代续篇集中管理，PCE 初代移植不再重复；两作仍展开计两款并分别维护存档。')
+choice('风云默示录 2 同平台重复名', [('FBNeo', 'Kizuna Encounter: Super Tag Battle')], [('FBNeo', 'Kizuna Encounter')], '只保留完整商品名《Kizuna Encounter: Super Tag Battle》：短名条目是同一款街机游戏，不另占一条。')
 
 VERSION_DROP = {}
 VERSION_REASON = {}
