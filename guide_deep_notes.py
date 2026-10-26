@@ -73,7 +73,7 @@ DEEP={
 'Final Fantasy III (Nintendo DS)':'以全 3D 重制 FC 三代，重做角色形象、职业平衡和事件，并调整最终迷宫存档节奏。它与 FC 像素版应分目录。',
 'Final Fantasy IV (Nintendo DS)':'全 3D、配音与增强难度重塑四代，Decant Ability 让离队角色能力可继承。它不是 GBA 的 2D Advance 版。',
 'Final Fantasy Crystal Chronicles: Echoes of Time':'以多人地牢动作、装备与部落职业为核心，NDS 版可与 Wii 同内容联动。单人也能游玩，但家庭电视使用时不把历史联机功能写成当前可用。',
-'Final Fantasy Tactics A2: Grimoire of the Rift':'回到伊瓦利斯，以任务、法则、职业和地域 auction 组织队伍成长。它是 FFTA 的续作，不是 PS1 FFT 移植，也不属于皇家骑士团。',
+'Final Fantasy Tactics A2: Grimoire of the Rift':'回到伊瓦利斯，以任务、法则、职业和地域 auction 组织队伍成长。作为 FFTA 的续作，它扩充职业与任务，并保留以法则约束战斗、以队伍培养驱动探索的结构。',
 'Crisis Core: Final Fantasy VII':'以扎克斯视角补完 VII 前史，即时战斗结合 DMW 轮盘、魔晶石合成与支线任务。叙事与正传紧密相关，宜在了解 VII 后游玩。',
 # 超级机器人大战
 'Dai-3-Ji Super Robot Taisen':'以 DC 战争和跨作品冲突组织战役，机体改造、精神指令与说服系统继续发展。SFC 早期作品界面朴素，却是旧系列剧情的重要节点。',
@@ -135,9 +135,7 @@ DEEP={
 'Parodius Da!':'把 Gradius 的力量槽和角色换成章鱼、企鹅等荒诞阵容，音乐与场景大量戏仿 Konami。笑料之下仍是完整关卡记忆型射击。',
 'Pop’n TwinBee':'保留铃铛强化与双人协力，并加入生命值、近战和更鲜明角色演出。SFC 原创家用作与街机 Detana 不是同一关卡。',
 'Life Force':'街机版以横纵交替、Option 与有机生物关卡构成沙罗曼蛇体系，海外 Life Force 又调整力量槽规则。需按地区 ROM 识别。',
-'Gradius / Gradius II / Gradius III / Gradius Gaiden':'四作分别代表力量槽定型、武器组扩展、高密度挑战和 PS1 后期原创外传；Gaiden 并非街机编号 IV。街机与家用版本不要混用 ROM。',
 'Parodius Da! / Sexy Parodius / Gokujou Parodius!':'从初代的 Konami 戏仿到极上的关卡目标与性感帕罗迪乌斯的任务分支，三部都保留射击系统而强化喜剧演出。',
-'TwinBee / Detana!! TwinBee / Pop’n TwinBee':'初代确立铃铛强化，Detana 加入蓄力与剧情角色，Pop’n 则是 SFC 家用原创。三作按街机／家用和年份区分。',
 # 雷电与 R-Type
 'Raiden Trad':'MD 移植街机初代，保留红色散弹／蓝色激光与导弹组合，画面和双人表现受硬件调整。标题 Trad 不等于续作。',
 'R-Type':'蓄力波动炮与 Force 装置同时服务正面攻坚、后方防御和特殊站位，关卡强调记忆。街机原版与 MD／PCE 移植各有画面与内容差异。',
@@ -186,7 +184,6 @@ DEEP={
 'Nobunaga’s Ambition: Shouseiroku':'强调武将身份、城市群和战场指挥，历史事件推动战国局势。PS1 的大地图与读盘节奏适合慢玩。',
 'Nobunaga’s Ambition: Reppuuden':'加入箱庭式领地建设与更鲜明战役演出，玩家在内政发展和军团作战间循环。烈风传不是吉翁的系谱，二者须分开。',
 'Langrisser':'佣兵指挥官带领兵种单位作战，指挥范围、兵种克制和转职决定战线。MD 初代是 Warsong 的日版原作。',
-'Langrisser II / Der Langrisser':'二代扩展艾尔文与光辉后裔的战争，Der 则重排剧情并提供帝国、黑暗等多路线。两者不是完全相同的剧本版本。',
 'Shining Force':'探索村镇与网格战役交替，角色升级、转职和永久编队构成冒险。它与 Langrisser 的佣兵军团制不同。',
 'Shining Soul':'转为俯视即时动作 RPG，以职业、装备掉落和地牢刷取替代光明力量战棋。GBA 联机曾是卖点，单机也能完整推进。',
 'Shining Soul II':'增加职业、技能、道具与地牢变化，角色构筑比初代丰富。它是动作 RPG 续作，不是光明力量 III 的掌机版。',
@@ -219,7 +216,6 @@ DEEP={
 'Golden Axe':'三名职业角色以魔法瓶、骑乘生物和投技合作闯关，MD 移植另有追加内容。它是系列家用起点。',
 'Golden Axe II':'沿用三人清版并调整魔法操作、敌群和关卡，新增场景但系统变化克制。适合喜欢初代合作节奏的玩家。',
 'Golden Axe III':'增加新角色、分支路线与更丰富连段，日版 MD 原创续作。发行范围较小，角色与手感不同于街机 Death Adder 复仇。',
-'Golden Axe (Arcade) / Golden Axe: The Revenge of Death Adder':'初代以骑乘与魔法建立合作规则，Death Adder 复仇改用新角色、分支和更华丽演出。两者不是 MD II／III。',
 'Golden Axe: The Revenge of Death Adder':'四名新角色各有魔法和连段，关卡分支、坐骑与多人配合大幅扩展。它是街机原创续篇，不是 MD《战斧 III》。',
 # 英雄传说与轨迹
 'The Legend of Heroes: Trails in the Sky the 3rd':'以凯文和星杯骑士为主线，通过门与回忆补完空轨人物，迷宫和战斗比重高于 FC／SC。它适合通完前两作后游玩。',
@@ -318,7 +314,6 @@ DEEP={
 'Advance Wars: Dual Strike':'双屏呈现地图与情报，双战线、双 CO 和 Tag 技让指挥节奏更复杂。兵种数值仍透明，适合回合推演。',
 'Golden Sun: Dark Dawn':'以初代后代为主角，精神力解谜、精灵收集与召唤延续 GBA 体系。新大陆和角色让故事与前两作相连但可独立识别。',
 # 本次战略与模拟补漏相关旧条目
-'Advanced Daisenryaku':'以德意志战场为题材，在六角格上管理武器单位、燃料弹药、地形与补给。SystemSoft 开发、Sega 发行 MD 版，是高级大战略早期家用代表。',
 'Daisenryaku: Master Combat':'以现代兵器数据库、六角格和回合战役构成大战略，强调单位性能与补给而非角色养成。PS1 版适合慢节奏推演。',
 'Panzer General':'以二战战役、六角格和部队经验构成核心，战果会影响后续单位与战役路线。它是 SSI／MicroProse 的家用移植，不存在对应街机原版。',
 'Allied General':'把 Panzer General 体系转向盟军战役，以部队经验、补给和六边形地图组织反攻。它与德军视角前作共享规则但战役内容独立。',

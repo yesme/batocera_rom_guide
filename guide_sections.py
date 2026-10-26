@@ -1,28 +1,33 @@
 def platform_overview():
     rows=[
+    ('DOS／Win3.x','16／32 位 x86 PC 环境','1981／1992','IBM／Microsoft 等','键盘鼠标、VGA、声卡、CD‑ROM 与中文 PC 游戏传统','DOS 用 DOSBox Pure；轻量 Win3.x 用 DOSBox‑X','每作独立 .pc 目录；DOS 先自动 CPU；Win3.x 需自备系统并配置显示、声音与 WinG；经营和 RTS 用鼠标；Win95／98 游戏转下一平台'),
+    ('Win95／98（Wine）','16／32 位 x86 Windows 程序','1995／1998','Microsoft（兼容层由 Wine 提供）','DirectDraw、早期 Direct3D、中文 RPG、策略与经营经典','Wine-GE（Batocera windows 系统）','每作独立 .wine prefix；DirectDraw 优先试 cnc-ddraw；DXVK 默认关闭；原始低分辨率；不虚拟完整 Win95，不收射击游戏'),
     ('MAME','多种 8／16／32 位街机','1970 年代末起','多厂商','早期迷宫、单屏、Taito／Namco／Sega 硬件','MAME（当前 Batocera 核心）','ROM set 必须与核心匹配；ZIP 不改名、不解压；BIOS／CHD 依赖完整'),
     ('FBNeo','多种 16／32 位 2D 街机','1980 年代末起','Capcom／SNK／IGS 等','CPS、Neo Geo、PGM、Toaplan 等','FinalBurn Neo（libretro）','Neo Geo／PGM BIOS 随匹配 ROM set；NAOMI 不放入此目录'),
-    ('GBA','32 位','2001','Nintendo','ARM 掌机，2D 动作与 RPG 丰富','mGBA（libretro）','默认即可；核对 RTC、存档类型；Boktai 与转转瓦力欧需传感器映射'),
-    ('GBC','8 位','1998','Nintendo','彩色掌机，兼容部分 GB 黑卡','Gambatte／SameBoy','GBC 与 GB 分目录；双版本联动密码属于游戏内功能'),
+    ('NES／FC','8 位','1983','Nintendo','家用卷轴动作与早期 JRPG，含 FDS','Mesen／Nestopia／FCEUmm','FDS 需 disksys.rom；核对 Mapper、地区制式与汉化改版 Mapper'),
+    ('PCE','8 位 CPU＋16 位图形','1987','NEC／Hudson Soft','HuCard 与 CD‑ROM²，射击和 CD 音画突出','Beetle PCE Fast／Beetle PCE','CD 需对应 syscard BIOS；Arcade Card 游戏单独验证；CHD 保留音轨'),
+    ('MD／Genesis','16 位','1988','Sega','高速 2D、FM 音源、街机风格','Genesis Plus GX','六键手柄用于街霸等；Sonic 3 & Knuckles 用锁合镜像；核对地区'),
     ('GB','8 位','1989','Nintendo','单色便携，长续航与经典短局','Gambatte／SameBoy','用 GB 调色板，不把 GBC 专用卡误放入 GB；联机按核心支持'),
     ('GG','8 位','1990','Sega','Master System 相近架构的彩色掌机','Genesis Plus GX／Gearsystem','小屏视野与原版一致；整数缩放，不要误用 MD ROM'),
-    ('WS／WSC','16 位','1999／2000','Bandai','横竖双持、低功耗、原创益智与掌机衍生','Beetle Cygne／Beetle Wswan','Gunpey 等按游戏旋转画面与按键；WS、WSC 目录可分开'),
-    ('NES／FC','8 位','1983','Nintendo','家用卷轴动作与早期 JRPG，含 FDS','Mesen／Nestopia／FCEUmm','FDS 需 disksys.rom；核对 Mapper、地区制式与汉化改版 Mapper'),
     ('SNES／SFC','16 位','1990','Nintendo','Mode 7、丰富音源、特殊增强芯片','Snes9x（轻量优先）／bsnes','特殊芯片逐作核对；Star Fox 2 用正式发行版；高画质 bsnes 更耗资源'),
-    ('MD／Genesis','16 位','1988','Sega','高速 2D、FM 音源、街机风格','Genesis Plus GX','六键手柄用于街霸等；Sonic 3 & Knuckles 用锁合镜像；核对地区'),
-    ('PCE','8 位 CPU＋16 位图形','1987','NEC／Hudson Soft','HuCard 与 CD‑ROM²，射击和 CD 音画突出','Beetle PCE Fast／Beetle PCE','CD 需对应 syscard BIOS；Arcade Card 游戏单独验证；CHD 保留音轨'),
-    ('PS1','32 位','1994','Sony','CD 光盘、预渲染背景与早期 3D','DuckStation／PCSX‑ReARMed','原生分辨率起步；多盘 M3U；记忆卡与 BIOS 校验，不开高负载增强'),
     ('N64','64 位','1996','Nintendo','3D 平台与四人本地对战，部分用 Expansion Pak','Mupen64Plus‑Next','按游戏选 GLideN64／Rice；Expansion Pak 游戏核对内存；重负载场景测帧'),
-    ('PSP','32 位','2004','Sony','宽屏便携、UMD、2D 与大型 3D 并存','PPSSPP','1× 渲染、保留缓冲渲染；ISO 为兼容基线；逐作验证，不用统一跳帧掩盖卡顿'),
+    ('PS1','32 位','1994','Sony','CD 光盘、预渲染背景与早期 3D','DuckStation／PCSX‑ReARMed','原生分辨率起步；多盘 M3U；记忆卡与 BIOS 校验，不开高负载增强'),
+    ('GBC','8 位','1998','Nintendo','彩色掌机，兼容部分 GB 黑卡','Gambatte／SameBoy','GBC 与 GB 分目录；双版本联动密码属于游戏内功能'),
     ('Dreamcast','32 位','1998','Sega','GD‑ROM、NAOMI 同源、2D 格斗与 3D 原创','Flycast','原生分辨率起步；DC 与 NAOMI 分开；核对 GDI／CHD、区域和 VGA 选项'),
+    ('WS／WSC','16 位','1999／2000','Bandai','横竖双持、低功耗、原创益智与掌机衍生','Beetle Cygne／Beetle Wswan','Gunpey 等按游戏旋转画面与按键；WS、WSC 目录可分开'),
+    ('GBA','32 位','2001','Nintendo','ARM 掌机，2D 动作与 RPG 丰富','mGBA（libretro）','默认即可；核对 RTC、存档类型；Boktai 与转转瓦力欧需传感器映射'),
     ('NDS','双 32 位 ARM','2004','Nintendo','双屏、触控、麦克风与本地无线','melonDS（软件渲染优先）','配置竖屏／横屏布局与触控；存档类型、麦克风按游戏检查，不开高倍率'),
+    ('PSP','32 位','2004','Sony','宽屏便携、UMD、2D 与大型 3D 并存','PPSSPP','1× 渲染、保留缓冲渲染；ISO 为兼容基线；逐作验证，不用统一跳帧掩盖卡顿'),
     ]
-    out=['## 平台、硬件与模拟器总览','','核心名称是 Batocera 常见选项，实际可用项随安装版本变化；先用轻量核心和原生设置，再针对单作调整，不为所有游戏套同一个“优化配置”。','',
+    out=['## 平台、硬件、模拟器与容量汇总','','本表、下方容量矩阵与“各平台精选清单”使用完全相同的平台顺序。核心名称是 Batocera 常见选项，实际可用项随安装版本变化；先用轻量核心和原生设置，再针对单作调整，不为所有游戏套同一个“优化配置”。','',
     '| 平台 | 位数／架构 | 发布时间 | 发布商 | 主要特点 | 对应模拟器／核心 | 特别配置 |','|---|---|---:|---|---|---|---|']
     out += ['| '+' | '.join(r)+' |' for r in rows]
-    return out+['','---','']
+    return out+['']
 
-def mod_sections(entries,short):
+def mod_sections(entries,short,platforms):
+    labels={'DOS':'DOS','Win95／98':'Win95 / Win98','MAME':'MAME','FBNeo':'FBNeo','NES／FC':'NES / FC','PCE':'PCE (PC Engine / TurboGrafx-16)','MD':'MD / Genesis','GB':'GB','GG':'GG','SNES／SFC':'SNES / SFC','N64':'N64','PS1':'PS1','GBC':'GBC','Dreamcast':'Dreamcast','WS／WSC':'WS / WSC','GBA':'GBA','NDS':'NDS','PSP':'PSP'}
+    def ordered(rows):
+        return sorted(rows,key=lambda r:platforms.index(labels[r[0]]))
     def link(title):
         e=next((x for x in entries if x.en==title),None)
         return f'[{e.zh}](#{e.eid.lower()})' if e else title
@@ -62,8 +67,10 @@ def mod_sections(entries,short):
     ('PSP','Ys: The Oath in Felghana／Ys Seven／Monster Hunter Portable 3rd','民间汉化','装备、技能、怪物与任务说明适合中文；动作本身不需要等汉化，但完整体验会明显受益。'),
     ]
     hacks=[
+    ('Win95／98','三国志姜维传','三國志曹操伝 / Sangokushi Sousouden','非官方全新剧情与战役','以姜维为主角扩展后三国故事，包含独立人物、战役和大量新文本，是曹操传引擎的高完成度中文同人改版，不是光荣官方续作。按所选发布包说明使用匹配底本，在独立 Wine prefix 中运行，不与曹操传原版共用存档；同样优先保留完整动画、字体与 cnc-ddraw 配置。'),
     ('NES／FC','Super Mario Bros. 3Mix','Super Mario Bros. 3','全新关卡／跨作机制','融合多部马力欧元素与新地图，完成度高；先通原版再玩，部分改版 Mapper 需在 Mesen／FCEUmm 验证。'),
     ('NES／FC','Super Mario Unlimited','Super Mario Bros.','全新关卡／难度重构','基于初代引擎设计新世界，强调隐藏路线与跳跃技巧，不是官方 Lost Levels。'),
+    ('NES／FC','Yanshan 90 Tank / Tank 1990（烟山 90 坦克）','Battle City','新关卡／规则扩展','烟山软件基于 FC《Battle City》制作的经典修改版，加入新手枪与船、消草、敌人拾取道具及更多关卡／难度组合，并支持双人借命。它不是 Namco 官方续作；同名合卡与后续二改很多，应固定一个说明清楚的版本，用 Mesen 验证选关、道具和双人，A–N 等模式不重复算游戏数。'),
     ('NES／FC','Rockman 4: Minus Infinity','Mega Man 4','系统增强／全新关卡','重做武器、Boss 与关卡并加入惊喜演出，质量很高但难度硬核；适合熟悉元祖系列的玩家。'),
     ('SNES／SFC','The Second Reality Project Reloaded','Super Mario World','全新关卡','大型新关卡包，重做地图、图形与音乐，保留 SMW 手感；与原版分存档。'),
     ('SNES／SFC','The Legend of Zelda: Parallel Worlds','The Legend of Zelda: A Link to the Past','全新地图／难度重构','重排世界和迷宫，路线与解谜几乎全新，难度高于原作；不是官方续作。'),
@@ -86,6 +93,7 @@ def mod_sections(entries,short):
     ('PS1','Final Fantasy Tactics: Valeria','Final Fantasy Tactics','职业与平衡重构','调整职业、装备、敌人和难度，让冷门技能更有用；适合已理解原版 FFT 的玩家。'),
     ('PSP','Final Fantasy Tactics: The Lion War','Final Fantasy Tactics: The War of the Lions','内容与职业增强','基于狮子战争追加职业、角色与战斗内容，底本必须是 PSP 版，不能套到 PS1 FFT。'),
     ]
+    trans=ordered(trans);hacks=ordered(hacks)
     out=['## 中文化版本与精选非官方改版','',
     '这一章与官方商品清单分开管理。**中文化不视为新游戏；改版也不冒充官方发行。** 文件建议按 `平台／原版`、`平台／汉化`、`平台／改版` 分开，各自保留补丁说明、底本版本和独立存档。只把补丁应用于自己合法备份的原版，不提供 ROM 或下载地址。','',
     '### 中文化版本：优先保留哪些','',
@@ -97,26 +105,17 @@ def mod_sections(entries,short):
     '| 平台 | 改版名称 | 对应原作 | 类型 | 内容、难度与兼容说明 |','|---|---|---|---|---|']
     for p,h,b,k,n in hacks:out.append(f'| {p} | {h} | {link(b)} | {k} | {n} |')
     out+=['','### 改版安装与家庭游玩规则','',
-    '1. 先读补丁要求的地区、Rev、Header 与 CRC，底本不对不要硬打；IPS／BPS／xdelta 不混用。','2. 原版、汉化、改版使用不同目录与存档名，先开新档再验证旧档；不要把兼容未证实的改版直接覆盖家庭共用存档。','3. 模拟器优先沿用原作核心；若改版修改 Mapper、容量或图形方式，再逐作切换核心。Rockman 4 MI、N64 大型改版尤其需要实际场景验证。','4. 难度标签必须保留：Radical Red、Parallel Worlds、Rockman 4 MI 等面向熟练玩家，不能替代家庭首次游玩的原版。','',
+    '1. 先读补丁要求的地区、Rev、Header 与 CRC，底本不对不要硬打；IPS／BPS／xdelta 不混用。Windows 改版则核对发布包对应的原版版本和文件结构，不把不同整合包逐文件混拷。','2. 原版、汉化、改版使用不同目录与存档名，先开新档再验证旧档；不要把兼容未证实的改版直接覆盖家庭共用存档。','3. 模拟器优先沿用原作核心；若改版修改 Mapper、容量或图形方式，再逐作切换核心。Windows 改版使用独立 Wine prefix，保留自己的字体、DLL 覆盖和 cnc-ddraw 配置。Rockman 4 MI、N64 大型改版尤其需要实际场景验证。','4. 难度标签必须保留：Radical Red、Parallel Worlds、Rockman 4 MI 等面向熟练玩家，不能替代家庭首次游玩的原版。','',
     '> 版本统计：上表共收录 '+str(len(trans))+' 组中文化建议、'+str(len(hacks))+' 款精选改版。中文化与增强版不重复计算原作总数；含全新战役／地图的改版另作改版内容统计。','',
     '改版选择参考：[CBR 的 ROM hack 类型综述](https://www.cbr.com/best-rom-hacks-better-than-original/) 与 [Rockman 4: Minus Infinity 评测](https://www.romhacking.net/reviews/5674/)；FC 中文化传播参考 [重装机兵与 FC 中文 RPG 史料](https://k.sina.cn/article_1403377667_53a5d80300100pilc.html?from=game)。','','---','']
     return out,len(hacks)
 
-def special_topics(entries):
+def stg_history(entries):
     def link(title):
         e=next((x for x in entries if x.en==title),None)
         if not e:e=next((x for x in entries if x.en.startswith(title)),None)
         return f'[{e.zh}](#{e.eid.lower()})' if e else title
-    out=['## 两个深化专题','',
-    '### 史克威尔 2D 黄金期：圣剑、沙加与圣龙','',
-    '这里的“黄金期”指 Square 从 FC／GB 到 SFC，再延伸到 PS1 2D／预渲染制作阶段，不把 Enix 的《勇者斗恶龙》《星之海洋》混入 Square 年表。《圣剑传说》从最终幻想外传独立成动作 RPG；《沙加》不断试验自由剧本、闪悟和非常规成长；《圣龙传说》则把龙、地形与网格战斗结合，是独立作品而不是一个长系列。','',
-    '| 支线 | 发展脉络与代表作品 |','|---|---|',
-    '| 圣剑传说 | '+link('Seiken Densetsu: Final Fantasy Gaiden')+' 的 GB 原点 → '+link('Secret of Mana')+' 的多人环形菜单 → '+link('Trials of Mana')+' 的多主角与转职 → '+link('Legend of Mana')+' 的世界构筑；'+link('Sword of Mana')+' 则是对 GB 初代的重新诠释。 |',
-    '| 沙加 | '+link('The Final Fantasy Legend')+' 的 GB 三部曲 → '+link('Romancing SaGa')+' 的 SFC 自由剧本 → '+link('SaGa Frontier')+' 与 '+link('SaGa Frontier 2')+' 的多主角、世代和连携实验。 |',
-    '| 圣龙与同期系统探索 | '+link('Bahamut Lagoon')+' 用龙与地形改变战棋；'+link('Treasure of the Rudra')+' 用言灵组合魔法；'+link('Live A Live')+' 以分时代章节汇流，'+link('Chrono Trigger')+' 则以时空和协力技代表另一种高峰。 |','',
-    '版本勾稽：GB《Final Fantasy Adventure》归入圣剑，不归最终幻想正传；《Secret of Mana》是圣剑 2，《Trials of Mana》是圣剑 3；《Bahamut Lagoon》只列一次“圣龙”主题，不虚构续作。','',
-    '### 街机 STG 进化史：从传统射击到高密度弹幕','',
-    '这条时间线按机制而不是“厂商名气”排列。Toaplan（东亚企划）强化关卡记忆、武器和节奏；彩京把角色、蓄力攻击与近战风险结合起来；Cave 则把敌弹密度、连锁、得分和 Hyper 等系统推到新层次。**“擦弹”并非所有 Cave 作品的统一核心**：《怒首领蜂》重点是连锁与弹幕，《大往生》还要理解 Hyper 的资源收益。','',
+    out=['**STG 机制时间线。** 这条脉络按机制而不是“厂商名气”排列。Toaplan 强化关卡记忆、武器和节奏；彩京把角色、蓄力攻击与近战风险结合起来；Cave 则把敌弹密度、连锁、得分和 Hyper 等系统推到新层次。“擦弹”并非所有 Cave 作品的统一核心：《怒首领蜂》重点是连锁与弹幕，《大往生》还要理解 Hyper 的资源收益。','',
     '| 年代 | 厂商／流派 | 条目回链 | 在进化史中的位置 |','|---:|---|---|---|']
     timeline=[
     ('1985','Toaplan','Tiger Heli','早期纵版空战，以炸弹和固定关卡节奏建立记忆型射击。'),
@@ -136,7 +135,7 @@ def special_topics(entries):
     ('2003','Cave','Espgaluda','觉醒系统改变敌弹与得分规则，进一步强化攻防转换。'),
     ]
     for year,maker,title,note in timeline:out.append(f'| {year} | {maker} | {link(title)} | {note} |')
-    out+=['','补充交叉索引：彩京另见 '+link('Strikers 1945')+'，Toaplan 另见 '+link('Fire Shark')+' 与 '+link('Out Zone')+'；Treasure 的 '+link('Ikaruga')+' 以黑白极性吸收敌弹，不属于 Cave，却构成理解弹幕规则创新的必要对照。','','---','']
+    out+=['','补充交叉索引：彩京另见 '+link('Strikers 1945')+'，Toaplan 另见 '+link('Fire Shark')+' 与 '+link('Out Zone')+'；Treasure 的 '+link('Ikaruga')+' 以黑白极性吸收敌弹，不属于 Cave，却构成理解弹幕规则创新的必要对照。']
     return out
 
 def hardware_input_appendix():

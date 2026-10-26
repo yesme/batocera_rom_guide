@@ -6,6 +6,8 @@ spec=importlib.util.spec_from_file_location('rg',ROOT/'rebuild_guide.py')
 rg=importlib.util.module_from_spec(spec); spec.loader.exec_module(rg)
 Entry=rg.Entry
 entries=rg.entries
+from guide_dos import DOS_GAMES, DOS_GENRES, DOS_SERIES, DOS_COUNTS
+from guide_windows import WINDOWS_GAMES, WINDOWS_GENRES, WINDOWS_SERIES, WINDOWS_COUNTS
 
 # 只保留适合家庭电视与 N4100 保守性能范围的正式作品。
 drop_old={
@@ -190,6 +192,8 @@ add('WS / WSC','One Piece: Grand Battle! Swan Colosseum','海贼王：天鹅斗�
 add('WS / WSC','Riviera: Yakusoku no Chi Riviera','约束之地：利维艾拉','Bandai','4MB','2002','以选择推进场景、有限行动点和回合制战斗构成冒险，资源取舍会影响探索结果。WSC 原版是 Sting 该系列的起点，日文阅读门槛较高。','Dept. Heaven')
 add('WS / WSC','Final Fantasy I / II / IV','最终幻想 I／II／IV（WS／WSC）','Square','8MB','2000–2002','WS／WSC 分别重制早期最终幻想，改进画面、界面与部分平衡；其中 IV 为 WSC 版本。此行是三个独立商品的收藏组，日文版文本门槛较高。','最终幻想')
 add('WS / WSC','Front Mission','前线任务（WSC）','Square','4MB','2002','把 SFC 初代机甲战棋带到 WSC，保留部件损坏、武器射程与阵营战争。画面针对掌机重绘，日文菜单和剧情需要一定阅读基础。','前线任务')
+add('NES / FC','Galaxian','小蜜蜂（FC 版）','Namco','0.5MB','1984','外星机群在编队中轮番俯冲，玩家要判断离队轨迹并抓住反击间隙。FC 版把 1979 年街机《Galaxian》的固定射击规则带进家庭，它才是中文通常所称的“小蜜蜂”，不要与续作《Galaga》混名。')
+add('NES / FC','Galaga','大蜜蜂（FC 版）','Namco','0.5MB','1985','在《Galaxian》的俯冲攻击上加入 Boss 捕获、救回双机火力与挑战关，风险回报比前作更丰富。FC 版于 1985 年发行，中文常称“大蜜蜂”；与街机原版及《Galaxian》都分开计数。')
 add('NES / FC','Fire Emblem: Shadow Dragon and the Blade of Light','火焰之纹章：暗黑龙与光之剑','Nintendo','1MB','1990','马尔斯复国战争把单位职业、武器耐久和永久阵亡结合，是系列首作。界面与移动节奏古老，保留它是为了理解整个战棋谱系。','火焰之纹章')
 add('NES / FC','Dai-2-Ji Super Robot Taisen','第 2 次超级机器人大战','Banpresto','1MB','1991','高达、魔神与盖塔等机体进入网格战棋，精神指令和改造开始形成系列基本循环。它在中文圈的中文化传播尤其广。','超级机器人大战')
 add('SNES / SFC','Dragon Quest III: The Seeds of Salvation','勇者斗恶龙 III：传说的开始（SFC 重制版）','Enix','8MB','1996','以 SFC 音画重制 FC 第三作，保留转职、昼夜与广阔世界，并调整界面和平衡。它不是 GBA 游戏，也与 NDS 没有对应原生移植。','勇者斗恶龙')
@@ -219,12 +223,30 @@ add('PSP','Mobile Suit Gundam: Gihren’s Greed – Axis no Kyoui V','机动战�
 add('PS1','Brigandine: The Legend of Forsena','幻想大陆战记：弗鲁塞那传说','Hearty Robin / Atlus','700MB','1998','选择国家经营符文骑士与召唤魔物，在大陆据点争夺和小队六角格战斗间循环。多国视角、职业转职与魔物编成带来重玩价值，北美版由 Atlus 发行。','幻想大陆战记')
 add('PS1','Brigandine: Grand Edition','幻想大陆战记：Grand Edition','Hearty Robin','900MB','2000','官方扩展版让艾斯加雷斯帝国正式可玩，新增最多六人轮玩、事件配音、职业和魔物，并调整战斗规则。仅在日本发行；它不是玩家“威力加强版”，也不等于网络联机。','幻想大陆战记')
 add('PS1','Gradius Gaiden','宇宙巡航机外传','Konami','600MB','1996','PS1 原创外传提供四种力量槽配置与双机合作，关卡和大型 Boss 专为家用机设计。它不是街机 Gradius IV，也不应混入 FBNeo 合集。','宇宙巡航机与兵蜂')
+# DOSBox 管理 DOS 与轻量 Win3.x；Win95／98 游戏另走 Batocera Wine。
+for en,zh,pub,size,year,note,series,category,subgenre in DOS_GAMES:
+    if category!='射击':add('DOS',en,zh,pub,size,year,note,series)
+for en,zh,pub,size,year,note,series,category,subgenre in WINDOWS_GAMES:
+    if category not in {'射击','射击（STG）','动作射击'}:add('Win95 / Win98',en,zh,pub,size,year,note,series)
 # 低评价凑数及不属于 FBNeo 的 Atomiswave 条目不保留。
 entries=[e for e in entries if e.en not in {'Burning Fight','Blue Stinger','Sega GT','Sonic Spinball','Sonic 3D Blast','Knights of Valour: The Seven Spirits','Capcom vs SNK 1','Capcom vs SNK 2'}]
+# SFC 只有 Der Langrisser（MD 初代的重制），没有另一张 Langrisser II 卡带。
+entries=[e for e in entries if not (e.platform=='SNES / SFC' and e.en=='Langrisser II / Der Langrisser')]
 for e in entries:
     if e.platform=='SNES / SFC' and e.en=='Trials of Mana / Seiken Densetsu 3':e.year='1995'
+    if e.platform=='FBNeo' and e.en=='Gradius / Gradius II / Gradius III / Gradius Gaiden':
+        e.en='Gradius / Gradius II / Gradius III';e.zh='宇宙巡航机 I／II／III';e.note='三部街机编号作依次扩展力量槽、武器组和高密度关卡，体现从固定配置到多武器选择的演进。PS1 原创《Gradius Gaiden》另有独立条目，不再混作街机 ROM。'
+    if e.platform=='FBNeo' and e.en=='TwinBee / Detana!! TwinBee / Pop’n TwinBee':
+        e.en='TwinBee / Detana!! TwinBee';e.zh='兵蜂／出击！！兵蜂';e.note='初代以打铃铛变色强化和双人合作为核心，Detana 加入蓄力、角色演出与更完整关卡。SFC 家用原创《Pop’n TwinBee》保留在 SNES 表，不在这里重复占位。'
+    if e.platform=='FBNeo' and e.en=='Golden Axe (Arcade) / Golden Axe: The Revenge of Death Adder':
+        e.en='Golden Axe (Arcade)';e.zh='战斧（街机）';e.note='以魔法储量、骑乘生物、投技和双人合作建立战斧的街机规则。它不是 MD II／III；同平台独立条目《The Revenge of Death Adder》也不重复塞进本合集。'
+    if e.platform=='MD / Genesis' and e.en=='Langrisser II / Der Langrisser':
+        e.en='Langrisser II';e.zh='梦幻模拟战 II';e.year='1994';e.note='艾尔文与光辉后裔的战争延续兵种、指挥官范围和转职系统，关卡规模与角色阵容较初代扩大。此条只收 MD 原版；《Der Langrisser》是 SFC 对 MD 初代的多路线重制，不是本作的移植。'
+    if e.platform=='MD / Genesis' and e.en=='Advanced Daisenryaku':
+        e.en='Advanced Daisenryaku: Deutsch Dengeki Sakusen';e.zh='高级大战略：德意志电击作战';e.note='SystemSoft 开发、Sega 于 1991 年发行的 MD 战略游戏，以二战欧洲战场、武器单位、燃料弹药和补给为核心。它承继电脑《大战略》系列，但没有对应 DOS 原版可再复制一条；也不是与 MD 版互为重制的另一款游戏。'
     if e.en=='装甲勇士Armored Warriors':e.en='Armored Warriors';e.zh='装甲勇士'
     if e.platform=='FBNeo' and e.en in {'Raiden','Raiden II'}:e.pub='Seibu Kaihatsu'
+    if e.platform=='PSP' and e.en=='Ys I & II Chronicles':e.year='2009'
     if e.en=='Lumines':
         e.en='Lumines: Puzzle Fusion';e.zh='音乐方块';e.pub='Bandai / Ubisoft';e.year='2004'
     if e.en=='Lumines II':e.zh='音乐方块 II';e.pub='Q Entertainment / Buena Vista Games'
@@ -338,14 +360,25 @@ for e in entries:
 # 每作一个主品类和一个细分品类。
 def genre(e):
     s=e.en
+    manual_genres={
+        'Tengai Makyou II: Manji Maru':('角色扮演','回合／迷宫／叙事 RPG'),
+        'Tony Hawk’s Pro Skater 2':('竞速／体育','体育与运动'),
+        'Dragon Ball: Advanced Adventure':('格斗／清版动作','清版动作与合作'),
+    }
+    if s in manual_genres:return manual_genres[s]
+    if e.platform=='DOS' and s in DOS_GENRES:return DOS_GENRES[s]
+    if e.platform=='Win95 / Win98' and s in WINDOWS_GENRES:return WINDOWS_GENRES[s]
     if re.search(r'Tetris|Puyo|Puzzle|Columns|Dr\. Mario|Panel de Pon|Picross|Lemmings|Magical Drop|Gunpey|Qix|ChuChu|Mr\. Driller|Buffers|Mole Mania|Twinkle Star Sprites|Professor Layton|Brain Age|WarioWare|Cooking Mama|Lumines|Katamari',s,re.I):return ('益智／休闲','落块与消除' if re.search(r'Tetris|Puyo|Puzzle Bobble|Columns|Dr\. Mario|Panel|Magical Drop|Lumines',s,re.I) else '规则解谜与短局')
     if re.search(r'Fire Emblem|Tactics Ogre|Ogre Battle|Advance Wars|Romance of the Three Kingdoms|Sangokushi|Nobunaga|Langrisser|Shining Force|Super Robot|Front Mission(?!: Gun Hazard)|Disgaea|Valkyria Chronicles|Panzer|Allied General|Brigandine|Gihren|Military Madness|Civilization|Daisen|Vandal Hearts|Final Fantasy Tactics',s,re.I):return ('战略／战棋','即时军事模拟' if 'Panzer Front' in s else ('网格战术' if re.search(r'Fire Emblem|Tactics|Langrisser|Shining Force|Super Robot|Front Mission|Disgaea|Valkyria|Vandal|Brigandine',s,re.I) else '大战略与军团'))
     if re.search(r'Mario Kart|F-ZERO|Ridge Racer|Gran Turismo|Rally|Out Run|Daytona|Hang-On|Wave Race|Snowboarding|Hydro Thunder|Burnout|Midnight Club|Wipeout|Crash Team Racing|Road Rash|Super Monaco|Rock n\' Roll Racing|Top Gear|Golf|Tennis|NBA|NFL|Captain Tsubasa|Inazuma Eleven|Neo Turf Masters|Winning Eleven|Super Dodge Ball|Street Basket|Windjammers|Fishing',s,re.I):return ('竞速／体育','竞速与驾驶' if re.search(r'Kart|F-ZERO|Racer|Racing|Rally|Out Run|Daytona|Hang-On|Wave Race|Hydro|Wipeout|Monaco|Top Gear|Midnight|Burnout',s,re.I) else '体育与运动')
     if re.search(r'Rhythm|Project DIVA|DJMax|Dance Dance|beatmania|PaRappa|Vib-Ribbon|Space Channel|Samba|Patapon|Band Brothers|Nintendogs|Animal Crossing|Harvest Moon|Rune Factory|SimCity|Theme Hospital|Tokimeki|Memories Off|Clannad|Steins;Gate|Higurashi|Fate/Extra|Mario Party|Game & Watch|Super Monkey Ball',s,re.I):return ('模拟／音乐／派对','音乐与节奏' if re.search(r'Rhythm|DIVA|DJMax|Dance|beatmania|PaRappa|Vib|Channel|Samba|Patapon|Band',s,re.I) else ('经营与生活模拟' if re.search(r'Theme|SimCity|Harvest|Rune|Nintendogs|Animal',s,re.I) else '生活模拟与派对'))
     if re.search(r'Street Fighter|King of Fighters|Samurai Shodown|Last Blade|Fatal Fury|Art of Fighting|World Heroes|Kizuna|Savage Reign|Galaxy Fight|Tekken|Mortal Kombat|Killer Instinct|Darkstalkers|Vampire|JoJo|Marvel|Capcom vs|Guilty Gear|Dead or Alive|Soulcalibur|Power Stone|Virtua Fighter|Pocket Fighter|Battle Spirit|Grand Battle|Yuu Yuu Hakusho|Supersonic Warriors|Ninja Council|Rival Schools|Project Justice|Slam Masters|Smash Bros|Windjammers',s,re.I):return ('格斗／清版动作','一对一与场地格斗')
     if re.search(r'Final Fight|Double Dragon|Streets of Rage|Bare Knuckle|Golden Axe|Cadillacs|Captain Commando|Knights of the Round|Punisher|Battle Circuit|Armored Warriors|Dungeons & Dragons|Three Wonders|King of Dragons|Magic Sword|Sengoku 3|Guardians|Denjin Makai|Night Slashers|Knights of Valour|Oriental Legend|Warriors of Fate|Tenchi wo Kurau II|X-Men \(Arcade\)|Simpsons|Sunset Riders|Violent Storm|Mystic Warriors|Turtles in Time|Teenage Mutant Ninja Turtles II|Burning Fight|Dungeon Explorer|Splatterhouse|Vigilante|Altered Beast',s,re.I):return ('格斗／清版动作','清版动作与合作')
-    if re.search(r'Gradius|R-Type|Raiden|Strikers|Gunbird|Truxton|Vimana|Garegga|Darius|Thunder Force|Xevious|Galaga|Galaxian|Space Invaders|Fantasy Zone|After Burner|Space Harrier|Gunhed|Blazing Lazers|Cotton|Magical Chase|Download|Dead Moon|Image Fight|Out Zone|Twin Cobra|Fire Shark|Batsugun|DoDonPachi|ESP Ra\.De|Espgaluda|Progear|Tiger Heli|Sengoku Blade|Sol Divide|Dragon Blaze|Mars Matrix|Giga Wing|Xexex|Parodius|TwinBee|Life Force|Salamander|Gate of Thunder|Lords of Thunder|Spriggan|Sapphire|Aleste|Power Strike|Metal Black|In the Hunt|U\.N\. Squadron|Axelay|Star Fox|Sin and Punishment|Bangai-O|Ikaruga|Rez|Silversword|Space Gun|House of the Dead',s,re.I):return ('射击','卷轴与弹幕射击')
-    if re.search(r'Contra|Metal Slug|Gunstar|Alien Soldier|Midnight Resistance|Heavy Barrel|Jackal|Rush’n Attack|Journey to Silius|Metal Gear(?! Solid: Ghost Babel)|GoldenEye|Perfect Dark|Turok|Medal of Honor|Syphon Filter|Resistance|Gundam vs|Cannon Fodder',s,re.I):return ('射击','跑射与动作射击')
+    if re.search(r'Gradius|R-Type|Raiden|Strikers|Gunbird|Truxton|Vimana|Garegga|Darius|Thunder Force|Xevious|Galaga|Galaxian|Space Invaders|Fantasy Zone|After Burner|Space Harrier|Gunhed|Blazing Lazers|Cotton|Magical Chase|Download|Dead Moon|Image Fight|Out Zone|Twin Cobra|Fire Shark|Batsugun|DoDonPachi|ESP Ra\.De|Espgaluda|Progear|Tiger Heli|Sengoku Blade|Sol Divide|Dragon Blaze|Mars Matrix|Giga Wing|Xexex|Parodius|TwinBee|Life Force|Salamander|Gate of Thunder|Lords of Thunder|Spriggan|Sapphire|Aleste|Power Strike|Metal Black|In the Hunt|U\.N\. Squadron|Axelay|Star Fox|Sin and Punishment|Bangai-O|Ikaruga|Rez|Silversword|Space Gun|House of the Dead',s,re.I):
+        sub='弹幕射击' if re.search(r'DoDonPachi|ESP Ra\.De|Espgaluda|Progear|Batsugun|Garegga|Mars Matrix|Giga Wing|Ikaruga|Judgement Silversword',s,re.I) else ('固定屏幕与轨道射击' if re.search(r'Galaga|Galaxian|Space Invaders|After Burner|Space Harrier|Star Fox|Sin and Punishment|Rez',s,re.I) else '横纵卷轴射击')
+        return ('射击（STG）',sub)
+    if re.search(r'Contra|Super C|Metal Slug|Gunstar|Alien Soldier|Midnight Resistance|Heavy Barrel|Jackal|Rush’n Attack|Journey to Silius|Battle City|Metal Gear(?! Solid: Ghost Babel)|GoldenEye|Perfect Dark|Turok|Medal of Honor|Syphon Filter|Resistance|Gundam vs|Cannon Fodder',s,re.I):
+        return ('动作射击','第一／第三人称射击' if re.search(r'GoldenEye|Perfect Dark|Turok|Medal of Honor|Syphon Filter|Resistance',s,re.I) else '跑射与动作射击')
     if re.search(r'Final Fantasy|Dragon Quest|Dragon Warrior|Pokémon(?!.*Puzzle)|Golden Sun|Chrono|Mother|EarthBound|Shin Megami|Persona|Suikoden|Grandia|Star Ocean|Tales of|Breath of Fire|Lufia|SaGa|Mana|Terranigma|Soul Blazer|Illusion of Gaia|Bahamut Lagoon|Robotrek|Arcana|E\.V\.O\.|Xenogears|Vagrant Story|Valkyrie Profile|Legend of Dragoon|Lunar|Wild Arms|Popolocrois|Metal Max|Metal Saga|Phantasy Star(?! Online)|Shining Soul|Baldur’s Gate|Kingdom Hearts|Etrian Odyssey|Rune Factory|Riviera|Defenders of Oasis|Blue Sphere|Monster Hunter|Trails in the Sky|Kiseki|Nayuta|Ys |Digimon World|Inazuma Eleven|Dragon Ball: Daimaou|Feng Shen|Destiny of an Emperor|Shokatsu Koumei|Crystalis|Neutopia|Beyond Oasis|Landstalker|Wonder Boy in Monster World|Cosmic Fantasy|Parasite Eve|The 3rd Birthday|Jeanne d’Arc|Crisis Core|Tomato Adventure|Treasure of the Rudra',s,re.I):return ('角色扮演','动作 RPG' if re.search(r'Mana|Seiken Densetsu|Ys |Kingdom Hearts|Monster Hunter|Shining Soul|Baldur|Metal Max|Star Ocean|Tales of|Terranigma|Beyond Oasis|Landstalker',s,re.I) else '回合／迷宫／叙事 RPG')
     if re.search(r'Mario(?!.*Kart)|Donkey Kong|Yoshi|Wario|Kirby|Sonic|Mega Man|Castlevania|Metroid|Ninja Gaiden|Adventure Island|Bonk|Crash|Spyro|Klonoa|Rayman|Ristar|Vectorman|Earthworm Jim|Aladdin|Lion King|Shinobi|Strider|Rocket Knight|Dynamite Headdy|Ristar|Ghouls|Ghosts|Makaimura|Gimmick|Batman|DuckTales|Chip ’n Dale|Joe & Mac|Karnov|Rastan|Legendary Axe|ActRaiser|Prince of Persia|Another World|Shantae|Astro Boy|Ninja Five-O|Gunstar Super Heroes|LocoRoco|Daxter|LittleBigPlanet|Comix Zone|Wonder Boy: The Dragon|Tails Adventure|Shinobi II|Illusion Starring|Illusion|ToeJam|Ecco|Balloon Fight|Ice Climber|Circus Charlie|The Legend of Kage|Ninja JaJaMaru|Saiyuuki World|Goonies|Blaster Master|Bubble Bobble|Rainbow Islands|Snow Bros|Parasol Stars|Mario Bros\.|Pac-Man|Dig Dug|Frogger|Bomberman|Stafy|Starfy',s,re.I):return ('平台动作','探索型动作' if re.search(r'Metroid|Symphony of the Night|Aria of Sorrow|Harmony of Dissonance|Circle of the Moon|Dawn of Sorrow|Portrait of Ruin|Order of Ecclesia|Dragon’s Trap|Shantae|Amazing Mirror',s,re.I) else '横版／单屏／3D 平台')
     return ('动作冒险','生存恐怖与潜行' if re.search(r'Resident Evil|Silent Hill|Dino Crisis|Metal Gear|Clock Tower',s,re.I) else '探索／解谜／文字冒险')
@@ -353,6 +386,8 @@ def genre(e):
 # 系列只按真实 IP 关系，尤其不把 FFT 塞进皇家骑士团。
 def series_for(e):
     s=e.en
+    if e.platform=='DOS' and s in DOS_SERIES:return DOS_SERIES[s]
+    if e.platform=='Win95 / Win98' and s in WINDOWS_SERIES:return WINDOWS_SERIES[s]
     if re.search(r'Seiken Densetsu|Secret of Mana|Trials of Mana|Sword of Mana|Legend of Mana',s,re.I):return '圣剑传说'
     if re.search(r'The Final Fantasy Legend|Final Fantasy Legend II|Final Fantasy Legend III',s,re.I):return '沙加'
     if re.search(r'Mother|EarthBound',s,re.I):return 'MOTHER'
@@ -362,6 +397,7 @@ def series_for(e):
     if re.search(r'Daisenryaku|Panzer General|Allied General',s,re.I):return '大战略与装甲将军'
     if re.search(r'Gihren',s,re.I):return '基连的野望'
     if re.search(r'Brigandine',s,re.I):return '幻想大陆战记'
+    if re.search(r'Nakahara no Hasha|Haou no Tairiku',s,re.I):return '三国志与三国题材'
     if re.search(r'Densetsu no Stafy|The Legendary Starfy',s,re.I):return '传说的斯塔菲'
     if re.search(r'Katamari',s,re.I):return '块魂'
     if re.search(r'Lumines',s,re.I):return '音乐方块'
@@ -398,7 +434,7 @@ def detail(e):
         return '系列首作以刀剑重击、武器脱手和道具投掷区别于拳脚格斗，节奏更强调读招。'
     m=re.search(r'Mega Man (\d+)$',s)
     if m:return f'元祖第 {m.group(1)} 作延续 Boss 武器克制与选关，关卡机关、蓄力和辅助能力随代际逐步调整；可与同平台其他编号作比较关卡节奏。'
-    if re.search(r'Final Fantasy Tactics Advance',s):return '以伊瓦利斯学校社团为切口，法则牌会限制战斗中的行动，职业任务和地域占领构成养成。它是最终幻想战略版的掌机分支，不属于皇家骑士团。'
+    if re.search(r'Final Fantasy Tactics Advance',s):return '以伊瓦利斯学校社团为切口，法则牌会限制战斗中的行动，职业任务和地域占领构成养成。作为最终幻想战略版的掌机分支，它把网格战斗、职业培养与较轻盈的校园异世界叙事结合起来。'
     if re.search(r'Final Fantasy Tactics: The War of the Lions',s):return 'PSP 版重制 FFT，加入动画过场、新职业与角色，并调整多人内容；政治群像和网格职业战仍是核心，载入与战斗速度需注意。'
     if re.search(r'Final Fantasy Tactics$',s):return rg.notes_exact['Final Fantasy Tactics']
     if re.search(r'Final Fantasy I / II / IV',s):return 'WSC／WS 重制早期最终幻想，改良画面、界面与部分平衡；三作是独立商品，I／II 偏系列源头，IV 则有完整 ATB 群像剧。'
@@ -406,23 +442,39 @@ def detail(e):
     return ''
 from guide_notes import N2
 from guide_deep_notes import DEEP
+version_notes={
+('Win95 / Win98','Rayman 2: The Great Escape'):'Rayman 为解救世界收集能量、恢复伙伴并对抗机械海盗，3D 关卡把跳跃、攀爬、飞行与轻解谜结合。PC 版与 Dreamcast／N64／PS1 版本在关卡和画面上有差异；保持原始低画质和手柄输入，不把其他平台备注套用到 Windows 版。',
+('NES / FC','Dragon Quest IV: Chapters of the Chosen'):'各章先讲述不同伙伴的命运，最后汇入勇者一行，章节结构让群像塑造格外鲜明。此条是 FC 原版，受硬件限制的界面与遇敌节奏不同于 NDS 重制，不存在对应的 GBA 移植。',
+('NES / FC','Tetris'):'旋转四格方块、堆叠并消除整行，速度提升后空间规划越来越紧张。此条是 FC 版本，应与任天堂 GB 捆绑版分开识别；它不以联机或便携传播史为卖点，核心价值仍是这套极简规则。',
+('GB','The Legend of Zelda: Link’s Awakening'):'林克在谜样岛屿收集乐器、穿越迷宫，离岛设定与结局带有淡淡忧伤。此条是 GB 单色原版；DX 的色彩和隐藏迷宫留在 GBC 条目，不把两版混成一个镜像。',
+('SNES / SFC','Langrisser'):'《Der Langrisser》以 SFC 重制 MD 初代，保留指挥官、兵种克制与转职，并扩展多阵营路线和角色演出。它不是《Langrisser II》，也不应沿用只介绍 MD 初代的备注。',
+('PS1','Resident Evil 2'):'里昂与克莱尔的双路线从警局扩展到地下设施，资源管理、固定镜头和解谜延续初代。PS1 原版以双光盘呈现两条起始路线，是后续 N64 高压缩移植与各类重制之前的基准版本。',
+('GBC','Mario Tennis'):'除即时网球外还有 RPG 式校园成长、训练和赛事，属性培养会直接影响击球能力。GBC 版可与 N64 版联动，但自身拥有完整成长模式，不是家用版的简单缩小移植。',
+('PSP','Grand Theft Auto: Chinatown Wars'):'以俯视角呈现自由城帮派任务、驾驶和毒品交易经济，保留系列开放城市结构。PSP 版没有 NDS 的触屏交互，改用普通按键并调整画面表现，不能沿用 NDS 的操作说明。',
+('FBNeo','Street Fighter Alpha 2'):'以 Alpha Counter、Custom Combo 和更鲜明角色阵容发展少年街霸，街机原版在动画、输入与对战节奏上是版本基准。SFC 移植的载入和画面妥协不写入本条。',
+('PS1','Tokimeki Memorial 1 / 2'):'初代以学习、社团、约会和角色评价建立恋爱模拟循环，二代扩大人物关系、事件与毕业前经营。这里按两部独立 PS1 商品收藏，不把 PCE 初代或单作备注当成整个合集的内容。',
+}
 for e in entries:
     if e.en in N2:e.note=N2[e.en]
     d=detail(e)
     if d:e.note=d
     if e.en in DEEP:e.note=DEEP[e.en]
+    if (e.platform,e.en) in version_notes:e.note=version_notes[(e.platform,e.en)]
+    if e.platform=='SNES / SFC' and e.en=='Langrisser':e.en='Der Langrisser';e.year='1995'
     if not e.note:
         base=rg.series_note.get(e.series,'')
         e.note=(base+' ' if base else '')+f'本作《{e.zh}》在{e.subgenre}中有独立的关卡、角色或系统配置；表列的是 {e.platform} 正式版本，应与其他平台同名移植或重制分开识别。'
+    e.note=e.note.strip()
 
-# 稳定 ID 在所有删改后重新分配。
-platforms=['MAME','FBNeo','GBA','GBC','GB','GG','WS / WSC','NES / FC','SNES / SFC','MD / Genesis','PCE (PC Engine / TurboGrafx-16)','PS1','N64','PSP','Dreamcast','NDS']
-short={'MAME':'MAME','FBNeo':'FBNEO','GBA':'GBA','GBC':'GBC','GB':'GB','GG':'GG','WS / WSC':'WS','NES / FC':'NES','SNES / SFC':'SNES','MD / Genesis':'MD','PCE (PC Engine / TurboGrafx-16)':'PCE','PS1':'PS1','N64':'N64','PSP':'PSP','Dreamcast':'DC','NDS':'NDS'}
+# 稳定 ID 在所有删改后重新分配；只有两款以上真实成员才设系列专题。
+platforms=['DOS','Win95 / Win98','MAME','FBNeo','NES / FC','PCE (PC Engine / TurboGrafx-16)','MD / Genesis','GB','GG','SNES / SFC','N64','PS1','GBC','Dreamcast','WS / WSC','GBA','NDS','PSP']
+short={'MAME':'MAME','FBNeo':'FBNEO','GBA':'GBA','GBC':'GBC','GB':'GB','GG':'GG','WS / WSC':'WS','NES / FC':'NES','SNES / SFC':'SNES','MD / Genesis':'MD','PCE (PC Engine / TurboGrafx-16)':'PCE','PS1':'PS1','N64':'N64','PSP':'PSP','Dreamcast':'DC','NDS':'NDS','DOS':'DOS','Win95 / Win98':'WIN9X'}
 for p in platforms:
     for i,e in enumerate([x for x in entries if x.platform==p],1):e.eid=f'{short[p]}-{i:03d}'
+series_counts={s:sum(e.series==s for e in entries) for s in {e.series for e in entries if e.series}}
 series_order=[]
 for e in entries:
-    if e.series and e.series not in series_order:series_order.append(e.series)
+    if e.series and series_counts[e.series]>=2 and e.series not in series_order:series_order.append(e.series)
 series_id={s:f'series-{i:02d}' for i,s in enumerate(series_order,1)}
 # 系列子组。
 for e in entries:
@@ -430,7 +482,7 @@ for e in entries:
     elif e.series=='马力欧':
         e.subgroup='卡丁车' if 'Kart' in e.en else ('派对' if 'Party' in e.en else ('体育' if re.search(r'Golf|Tennis',e.en) else ('瓦力欧' if 'Wario' in e.en else ('咚奇刚' if 'Donkey Kong' in e.en else ('耀西' if 'Yoshi' in e.en else ('角色扮演' if re.search(r'Paper Mario|Mario & Luigi|Super Mario RPG',e.en) else '平台动作'))))))
     elif e.series=='宝可梦':e.subgroup='不可思议迷宫' if 'Mystery Dungeon' in e.en else ('护林员' if 'Ranger' in e.en else ('家用机与益智衍生' if re.search(r'Stadium|Snap|Puzzle|Trading Card|Hey You',e.en) else '正统角色扮演'))
-    elif e.series=='三国志与三国题材':e.subgroup='光荣《三国志》' if re.search(r'Romance|Sangokushi',e.en) else ('吞食天地' if 'Tenchi wo Kurau' in e.en else ('三国战纪' if 'Knights of Valour' in e.en else '其他三国题材'))
+    elif e.series=='三国志与三国题材':e.subgroup='英杰传与曹操传' if re.search(r'Eiketsuden|Sousouden|英傑傳|孔明傳|曹操伝|曹操傳',e.en) else ('Namco《三国志》' if re.search(r'Nakahara no Hasha|Haou no Tairiku|^Sangokushi$',e.en) else ('光荣《三国志》' if re.search(r'Romance|Sangokushi',e.en) else ('吞食天地' if re.search(r'Tenchi wo Kurau|Destiny of an Emperor',e.en) else ('三国战纪' if 'Knights of Valour' in e.en else '其他三国题材'))))
     elif e.series=='洛克人':e.subgroup='EXE／网络对战' if 'Battle Network' in e.en else ('Zero' if 'Zero' in e.en else ('ZX 与流星' if re.search(r'ZX|Star Force',e.en) else ('X' if 'Mega Man X' in e.en else '元祖与世界')))
     elif e.series=='光明与梦幻模拟战':e.subgroup='梦幻模拟战' if 'Langrisser' in e.en else '光明系列'
     elif e.series=='女神转生与女神异闻录':e.subgroup='Persona' if 'Persona' in e.en else '真·女神转生'
@@ -452,53 +504,66 @@ platform_intro={
 'N64':'保留第一方、Rare、本地多人和类型代表，不承诺高负载游戏在 N4100 上全场景稳定；Expansion Pak 与图形插件需逐作核对。',
 'PSP':'删除对 N4100 负担过高的重型 3D 动作与开放世界，以 2D、静态场景 RPG、战棋和原创休闲为主；仍按实机场景验证。',
 'Dreamcast':'以 Flycast 原生分辨率、较成熟 2D 移植与 DC 特色游戏为主；重型 3D 只保留高代表作，不把“可启动”写成“全程稳定”。',
-'NDS':'以双屏、触控、RPG、文字冒险和本地家庭短局为主，注意触控与麦克风在游戏中的必要性。'}
+'NDS':'以双屏、触控、RPG、文字冒险和本地家庭短局为主，注意触控与麦克风在游戏中的必要性。',
+'DOS':'IBM PC 兼容环境的 DOS 精品，并保留《文明 II》这类可在 DOSBox‑X＋Windows 3.x 运行的轻量作品。中文战棋、国产三剑、经营、点击冒险与即时战略均有覆盖；射击作优先采用主机／街机版本，Win95／98 专用作品转由下一平台的 Wine 管理。鼠标、键盘和手柄映射逐作写明。',
+'Win95 / Win98':'Windows 95／98 时代的低配置精品经 Batocera 官方 windows 系统与 Wine-GE 运行，并不虚拟完整 Win95。以中文 RPG、战棋、欧美角色扮演、策略经营和点击冒险为主，辅以轻量平台动作与竞速；不收第一／第三人称射击、FPS 或 STG。每作独立 Wine prefix，DirectDraw 优先试 cnc-ddraw，早期 3D 保持原始低画质，默认不开 DXVK。'}
 
 # 输出。
 out=['# Batocera 家庭游戏机精选指南','',
 '> 适用配置：Intel Celeron N4100＋UHD 600＋4 GB 内存＋Batocera。定位是电视上的家庭游戏机，因此本地合作、双人对战、经典休闲与大作同样占位置。','',
-'本清单只覆盖 **MAME、FBNeo、GBA、GBC、GB、GG、WS／WSC、NES／FC、SNES／SFC、MD、PCE、PS1、N64、PSP、Dreamcast、NDS**。筛选依据是平台支持、保守性能范围、作品质量与家庭游玩价值，并非逐款实机测试承诺；合集行是收藏组，不等于一个 ROM。','',
+'本清单只覆盖 **DOS、Win95／98、MAME、FBNeo、NES／FC、PCE、MD、GB、GG、SNES／SFC、N64、PS1、GBC、Dreamcast、WS／WSC、GBA、NDS、PSP**。筛选依据是平台支持、保守性能范围、作品质量与家庭游玩价值，并非逐款实机测试承诺；合集行是收藏组，不等于一个 ROM。','',
 '## 总目录','',
-'- [使用规则与硬件边界](#使用规则与硬件边界)','- [平台、硬件与模拟器总览](#平台硬件与模拟器总览)','- [存储、目录与镜像管理](#存储目录与镜像管理)','- [各平台精选清单](#各平台精选清单)']
+'- [使用规则与硬件边界](#使用规则与硬件边界)','- [平台、硬件、模拟器与容量汇总](#平台硬件模拟器与容量汇总)','- [存储、目录与镜像管理](#存储目录与镜像管理)','- [各平台精选清单](#各平台精选清单)']
 for p in platforms:out.append(f'  - [{p}](#platform-{short[p].lower()})')
-out+=['- [游戏品类：源流与代表作](#游戏品类源流与代表作)','- [两个深化专题](#两个深化专题)','- [系列专题与平台回链](#系列专题与平台回链)','- [中文化版本与精选非官方改版](#中文化版本与精选非官方改版)','- [三层查漏补缺结果](#三层查漏补缺结果)','- [容量汇总与运行核对](#容量汇总与运行核对)','- [摄像头与麦克风验证附录](#摄像头与麦克风验证附录)','',
+out+=['- [游戏方式专题：品类源流与代表作](#游戏方式专题品类源流与代表作)','- [游戏内容专题：系列与平台回链](#游戏内容专题系列与平台回链)','- [中文化版本与精选非官方改版](#中文化版本与精选非官方改版)','- [三层查漏补缺结果](#三层查漏补缺结果)','- [摄像头与麦克风验证附录](#摄像头与麦克风验证附录)','',
 '---','','## 使用规则与硬件边界','',
-'1. **名字分两列。** 完整商品名采用英文或日文，中文译名只辅助识别；同一游戏的地区版、复刻和重制不互相冒充。','2. **日期采用首发年份或合集年份范围。** 合集行明确标注范围，避免把不同作品伪装成一个日期；发行商采用该版本的主要历史发行主体，不用今天的公司名倒填。','3. **容量是预留预算，不是实测 ROM 大小。** CHD、CSO、音轨、多盘与地区版都会改变占用，安装后以实际文件为准。','4. **不保留差作凑数。** 只有系列史或版本比较确有必要的旧作才作为严格例外，并在备注说明；外设依赖、后期高负载街机和低评价移植不占位置。','5. **不纳入 Xbox、PS2、PS3、PS4、GameCube、Wii。** Batocera 虽提供 xemu 的 Xbox 入口，但 N4100＋UHD 600＋4 GB 不适合作为稳定可玩的 Xbox 库，因此这里明确不设 Xbox 章节。','6. **合法备份。** 只使用自己合法拥有的游戏与 BIOS，不提供下载，不把 hack、民间改版或虚构商品当正式发行作。','',
+'1. **名字分两列。** 完整商品名采用英文、日文或中文原文，中文译名只辅助识别；同一游戏的地区版、复刻和重制不互相冒充。','2. **日期采用首发年份或合集年份范围。** 合集行明确标注范围，避免把不同作品伪装成一个日期；发行商采用该版本的主要历史发行主体，不用今天的公司名倒填。','3. **容量是预留预算，不是实测 ROM 大小。** CHD、CSO、音轨、多盘与地区版都会改变占用，安装后以实际文件为准。','4. **不保留差作凑数。** 只有系列史或版本比较确有必要的旧作才作为严格例外，并在备注说明；外设依赖、后期高负载街机和低评价移植不占位置。','5. **不纳入 Xbox、PS2、PS3、PS4、GameCube、Wii。** Batocera 虽提供 xemu 的 Xbox 入口，但 N4100＋UHD 600＋4 GB 不适合作为稳定可玩的 Xbox 库，因此这里明确不设 Xbox 章节。','6. **合法备份。** 只使用自己合法拥有的游戏与 BIOS，不提供下载，不把 hack、民间改版或虚构商品当正式发行作。','',
 '---','']
-from guide_sections import platform_overview, mod_sections, special_topics, hardware_input_appendix
+from guide_sections import platform_overview, mod_sections, stg_history, hardware_input_appendix
 out += platform_overview()
 out += ['## 存储、目录与镜像管理','',
 '### 存储分工','',
-'| 位置 | 内容 | 原则 |','|---|---|---|','| eMMC 独立 ext4 分区 | NES、GB、GBC、GBA、GG、WS／WSC、MD、SNES、PCE、N64、FBNeo／MAME 小 ROM | 小体积顺序读取，目录级软链接，不做 mergerfs |','| SSD `/userdata` | PS1、PSP、Dreamcast、PCE CD、NDS，以及全部存档、配置、缓存与刮削 | 大镜像和写入集中，避免挤占 eMMC |','',
-'```bash','mkdir -p /mnt/emmc/roms/{nes,gb,gbc,gba,gg,wswan,wswanc,megadrive,snes,n64,pcengine,fbneo,mame}','# 先确认目标路径不存在；不要覆盖已有实体目录','ln -s /mnt/emmc/roms/gb /userdata/roms/gb','ln -s /mnt/emmc/roms/gbc /userdata/roms/gbc','ln -s /mnt/emmc/roms/gg /userdata/roms/gg','ln -s /mnt/emmc/roms/wswan /userdata/roms/wswan','ln -s /mnt/emmc/roms/wswanc /userdata/roms/wswanc','ln -s /mnt/emmc/roms/fbneo /userdata/roms/fbneo','ln -s /mnt/emmc/roms/mame /userdata/roms/mame','```','',
-'先用 `blkid`、`lsblk` 核对实际设备并手工验证挂载，不要照抄设备名。其余小平台可按同样方式链接；存档和配置始终留在 `/userdata`。','',
-'- **街机按 ROM set 管理。** FBNeo 放 `/userdata/roms/fbneo`，MAME 放 `/userdata/roms/mame`；ZIP 不随意改名或解压，Neo Geo、PGM 等依赖文件随匹配 ROM set 配置。','- **BIOS 以本机检查为准。** 用 Batocera 的 BIOS 检查、`batocera-systems` 和当前版本文档确认，不用旧网络清单替代。','- **PS1／PCE CD 可用 CHD，多盘配 M3U；DC 按核心选 CHD 或 GDI。** 转换前保留原镜像。PSP 以 ISO 作兼容基线，CSO 是否合适按游戏测试。','- **家庭游玩先测操作。** 核对多手柄分配、存档、双人画面与热键；触控、陀螺仪、阳光传感器和专用外设作品会在备注中说明。','',
-'官方依据：[Batocera Arcade Guide](https://wiki.batocera.org/arcade)、[Advanced arcade emulation](https://wiki.batocera.org/advanced_arcade)、[Add games/BIOS files](https://wiki.batocera.org/add_games_bios)、[Xbox 系统说明](https://wiki.batocera.org/systems:xbox)。','',
+'| 位置 | 内容 | 原则 |','|---|---|---|','| eMMC 独立 ext4 分区 | DOS／Win3.x、MAME、FBNeo、NES、PCE HuCard、MD、GB、GG、SNES、N64、GBC、WS／WSC、GBA 游戏 | 小体积顺序读取，目录级软链接，不做 mergerfs |','| SSD `/userdata` | Win95／98、PS1、Dreamcast、NDS、PSP，以及全部存档、配置、缓存与刮削 | Windows 游戏、Wine prefix、大镜像和写入集中，避免挤占 eMMC |','',
+'```bash','mkdir -p /mnt/emmc/roms/{dos,mame,fbneo,nes,pcengine,megadrive,gb,gg,snes,n64,gbc,wswan,wswanc,gba}','# 先确认目标路径不存在；不要覆盖已有实体目录','ln -s /mnt/emmc/roms/dos /userdata/roms/dos','ln -s /mnt/emmc/roms/mame /userdata/roms/mame','ln -s /mnt/emmc/roms/fbneo /userdata/roms/fbneo','ln -s /mnt/emmc/roms/nes /userdata/roms/nes','ln -s /mnt/emmc/roms/pcengine /userdata/roms/pcengine','ln -s /mnt/emmc/roms/megadrive /userdata/roms/megadrive','ln -s /mnt/emmc/roms/gb /userdata/roms/gb','ln -s /mnt/emmc/roms/gg /userdata/roms/gg','ln -s /mnt/emmc/roms/snes /userdata/roms/snes','ln -s /mnt/emmc/roms/n64 /userdata/roms/n64','ln -s /mnt/emmc/roms/gbc /userdata/roms/gbc','ln -s /mnt/emmc/roms/wswan /userdata/roms/wswan','ln -s /mnt/emmc/roms/wswanc /userdata/roms/wswanc','ln -s /mnt/emmc/roms/gba /userdata/roms/gba','```','',
+'先用 `blkid`、`lsblk` 核对实际设备并手工验证挂载，不要照抄设备名。PCE CD 镜像虽属 PCE 平台，也放在 SSD；存档和配置始终留在 `/userdata`。','',
+'- **DOS／Win3.x 每作独立目录。** 实体文件放 eMMC `/mnt/emmc/roms/dos/<游戏名>.pc/`，经 `/userdata/roms/dos` 软链接访问；保留各自程序、音轨与启动配置，存档和模拟器配置仍由系统写入 `/userdata`。DOS 原版先用 DOSBox Pure，启动菜单或 Pad2Key 不顺时再试独立 DOSBox。DOS 游戏一般不需 BIOS。轻量 Win3.x 游戏则使用自己合法拥有的 Windows 3.x 和 Batocera 官方支持的 DOSBox‑X，共用已配置的环境，逐作核对 WinG、CD 与声音；Win95／98 游戏不走此路线。',
+'- **Win95／98 使用 Batocera 的 windows 系统。** 已安装游戏放 SSD `/userdata/roms/windows/`，安装介质放 `/userdata/roms/windows_installers/`；支持 `.pc`、`.exe`、`.wine`、`.wsquashfs`、`.wtgz`，无需 BIOS，也不需安装完整 Windows。每作独立 `.wine` prefix，`autorun.cmd` 用 LF 换行并明确 `DIR`、`CMD`，再用 `SAVEDIR`／`SAVEFILES` 把存档映射到 `/userdata/saves/windows/<游戏>/`。老安装器不能在 Wine 中完成时，先在另一台兼容机器安装，再复制完整安装目录。`/userdata` 用 ext4 或 btrfs，不把 Wine 库放在 FAT、NTFS 或 NAS。',
+'- **DirectDraw 优先使用 cnc-ddraw。** 将官方发布包中的 `ddraw.dll`、配置程序与所需文件放到游戏 EXE 同目录，游戏自身先设全屏并关闭自带窗口模式；在 Wine 中运行一次 `cnc-ddraw config.exe`，或把 `ddraw` 覆盖为 `native,builtin`。`autorun.cmd` 也可针对该作写 `ENV=WINEDLLOVERRIDES=ddraw=n,b`。N4100 先用 OpenGL 渲染，异常时试 GDI；速度过快再调 `maxgameticks=60`，不要默认开高成本缩放 shader。**它只处理 DirectDraw／软件渲染，不支持 Direct3D 或 Glide**，这三类不能靠替换 `ddraw.dll` 通用修复。',
+'- **Wine 配置按游戏隔离。** DirectDraw 和早期 Direct3D 默认关闭 DXVK，以 WineD3D／OpenGL 与原始低分辨率起步；只有确有收益的较新 DirectX 游戏才单独试 DXVK。老中文游戏按实际编码补字体并设置 `LANG`，不把整套字库覆盖到所有 prefix。Batocera 的高级选项通常只在首次启动生效；修改后先备份存档，再重建该作的可写层或 prefix。小型且写入多的游戏可用 `.wtgz`，大型且主要只写存档的游戏可用 `.wsquashfs`。',
+'- **街机按 ROM set 管理。** MAME 放 `/userdata/roms/mame`，FBNeo 放 `/userdata/roms/fbneo`；ZIP 不随意改名或解压，Neo Geo、PGM 等依赖文件随匹配 ROM set 配置。','- **BIOS 以本机检查为准。** 用 Batocera 的 BIOS 检查、`batocera-systems` 和当前版本文档确认，不用旧网络清单替代。','- **光盘与便携镜像。** PCE CD、PS1 可用 CHD，多盘配 M3U；Dreamcast 按核心选 CHD 或 GDI，转换前保留原镜像。PSP 以 ISO 作兼容基线，CSO 是否合适按游戏测试。','- **家庭游玩先测操作。** 核对多手柄分配、存档、双人画面与热键；触控、陀螺仪、阳光传感器和专用外设作品会在备注中说明。DOS／Windows 经营、RTS 与点击冒险优先实体鼠标，Pad2Key 只是可用性补偿。','',
+'官方依据：[Batocera Arcade Guide](https://wiki.batocera.org/arcade)、[Advanced arcade emulation](https://wiki.batocera.org/advanced_arcade)、[Add games/BIOS files](https://wiki.batocera.org/add_games_bios)、[Batocera DOS 系统说明](https://wiki.batocera.org/systems:dos)、[DOSBox‑X 的 Windows 3.1x 指南](https://dosbox-x.com/wiki/Guide%3AInstalling-Windows-3.1x)、[Batocera Windows（Wine）系统说明](https://wiki.batocera.org/systems:windows)、[cnc-ddraw 官方说明](https://github.com/FunkyFr3sh/cnc-ddraw)、[Xbox 系统说明](https://wiki.batocera.org/systems:xbox)。','',
 '---','','## 各平台精选清单','']
 for p in platforms:
     es=[e for e in entries if e.platform==p]
     out += [f'### {p}','',f'<a id="platform-{short[p].lower()}"></a>','',platform_intro[p],'',
-    '| 条目 | 完整商品名（英文／日文） | 中文译名 | 出版日期 | 出版商 | 预留空间 | 品类 | 内容·历史备注 |','|---|---|---|---:|---|---:|---|---|']
+    '| 条目 | 完整商品名（英文／日文／原文） | 中文译名 | 出版日期 | 出版商 | 预留空间 | 品类 | 内容·历史备注 |','|---|---|---|---:|---|---:|---|---|']
     for e in es:
         note=e.note
-        if e.series:note+=f' [系列专题](#{series_id[e.series]})。'
-        out.append(f'| <a id="{e.eid.lower()}"></a>{e.eid} | {e.en.replace("|","／")} | {e.zh.replace("|","／")} | {e.year} | {e.pub} | {e.size} | {e.category}／{e.subgenre} | {note} |')
+        if e.series in series_id:
+            note+=f' [系列专题](#{series_id[e.series]})。'
+        elif e.series:
+            background=rg.series_note.get(e.series,'').strip()
+            if background and background not in note:
+                note+=f' 系列背景：{background}'
+        out.append(f'| <a id="{e.eid.lower()}"></a>{e.eid} | {e.en.replace("|","／")} | {e.zh.replace("|","／")} | {e.year} | {e.pub} | {e.size} | {e.category}／{e.subgenre} | {note.strip()} |')
     out+=['','---','']
 
-# 九大品类，包含历史、细分与真实条目链接。
+# 十大品类，包含历史、细分与真实条目链接；STG 与动作射击并列。
 genre_defs=[
-('平台动作','从街机单屏《Donkey Kong》、FC 卷轴《Super Mario Bros.》到 16 位高速动作与 3D 收集，核心始终是移动手感、空间判断和关卡节奏。细分包括单屏动作、横版卷轴、跑跳解谜、3D 平台，以及靠能力回环打开地图的“银河城”。',['Super Mario Bros.','Sonic the Hedgehog 2','Super Metroid','Castlevania: Symphony of the Night','Shantae','Klonoa: Door to Phantomile']),
-('动作冒险','这一大类把动作操作放进探索、解谜或叙事空间。塞尔达的迷宫道具、生存恐怖的资源压力、潜行游戏的视锥与声音、视觉小说的调查指证都属于不同分支；它们共享“如何理解并穿过这个空间”，但不共享同一种战斗。',['The Legend of Zelda: A Link to the Past','Metal Gear Solid','Resident Evil','Ghost Trick: Phantom Detective','999: Nine Hours, Nine Persons, Nine Doors','Tomb Raider I / II / III']),
-('射击','从固定屏幕的《Space Invaders》到横纵卷轴、弹幕、跑射、轨道射击和第一人称射击，技术演进改变视野，也改变敌弹与空间的关系。高分系统常把风险路线叠加在通关之上，双人协作则是街机与家庭机的重要传统。',['Gradius','R-Type','Ikaruga','Gunstar Heroes','Metal Slug 1 / 2 / X / 3 / 4 / 5','GoldenEye 007']),
+('平台动作','从街机单屏《Donkey Kong》、FC 卷轴《Super Mario Bros.》到 16 位高速动作与 3D 收集，核心始终是移动手感、空间判断和关卡节奏。PC 的《Claw》《Jazz Jackrabbit 2》与主机传统并行，随后共同进入 3D 收集时代。细分包括单屏动作、横版卷轴、跑跳解谜、3D 平台，以及靠能力回环打开地图的“银河城”。',['Super Mario Bros.','Sonic the Hedgehog 2','Super Metroid','Castlevania: Symphony of the Night','Shantae','Klonoa: Door to Phantomile','Captain Claw','Jazz Jackrabbit 2','Rayman 2: The Great Escape']),
+('动作冒险','这一大类把动作操作放进探索、解谜或叙事空间。塞尔达的迷宫道具、生存恐怖的资源压力、点击冒险的物品逻辑、视觉小说的调查指证都属于不同分支；它们共享“如何理解并穿过这个空间”，但不共享同一种战斗。DOS／Windows 的 SCUMM 与手绘点击冒险是其中不可缺的一支。',['The Legend of Zelda: A Link to the Past','Metal Gear Solid','Resident Evil','Ghost Trick: Phantom Detective','The Secret of Monkey Island','The Curse of Monkey Island','Grim Fandango','Broken Sword: The Shadow of the Templars']),
+('射击（STG）','STG 是 Shoot ’em up 的常用缩写，中文通常称“射击游戏”；弹幕射击只是其中后来形成的细分，并不涵盖全部 STG。本章从《Space Invaders》《Galaxian》的固定屏幕，经《Gradius》《沙罗曼蛇》的横纵卷轴，到 Cave 的高密度弹幕梳理源流；《魂斗罗》这类以人物跑跳和射击并重的作品另列“动作射击”。',['Space Invaders','Galaxian','Life Force / Salamander','Gradius','R-Type','Ikaruga']),
+('动作射击','这一品类以角色直接移动、跑跳、载具或第一／第三人称视角为主，射击服务于动作空间，而不是单纯沿卷轴闪避敌弹。FC《魂斗罗》《Super C》是跑射代表，《GoldenEye 007》等则属于第一人称路线；它们与 STG 并列，避免把所有带枪的游戏混为一类。',['Contra','Super C','Metal Slug 1 / 2 / X / 3 / 4 / 5','Gunstar Heroes','GoldenEye 007']),
 ('格斗／清版动作','清版动作由《双截龙》《快打旋风》把街头推进、投技与多人合作定型；一对一格斗则由《Street Fighter II》确立帧数、距离和角色博弈。3D 场地格斗与派对乱斗进一步扩大分支，但本地对战始终是核心。',['Street Fighter II: The World Warrior','The King of Fighters 98','Streets of Rage 2 / Bare Knuckle II','Cadillacs and Dinosaurs','Soulcalibur','Power Stone 2']),
-('角色扮演','家用 JRPG 从《Dragon Quest》《Final Fantasy》的清晰回合制出发，逐渐分化出 ATB、职业构筑、动作战斗、怪物养成、迷宫绘制与高文本叙事。此处把战棋单列；塞尔达等没有数值成长主轴的作品归动作冒险。',['Dragon Quest III: The Seeds of Salvation','Final Fantasy VI','Chrono Trigger','Pokémon Emerald','Suikoden II','The Legend of Heroes: Trails in the Sky FC']),
-('战略／战棋','光荣历史模拟把内政、外交与战争连成宏观循环；火焰之纹章、皇家骑士团和最终幻想战略版则聚焦网格、单位与角色成长。机器人大战的授权群像、战场女武神的即时移动进一步证明“战棋”并不只有一种节奏。',['Fire Emblem: Genealogy of the Holy War','Tactics Ogre: Let Us Cling Together','Final Fantasy Tactics','Advance Wars','Romance of the Three Kingdoms II','Valkyria Chronicles II']),
-('竞速／体育','竞速从街机计时、伪 3D 路带发展到卡丁车道具、拟真调校与高速反重力；体育则在规则还原和电视节奏之间取舍。足球 RPG、马力欧体育和滑板目标模式说明这一大类的乐趣并不只来自模拟真实赛事。',['Super Mario Kart','R4: Ridge Racer Type 4','F-ZERO X','Tony Hawk’s Pro Skater 2','Captain Tsubasa','Neo Turf Masters']),
-('益智／休闲','俄罗斯方块、泡泡龙解谜、噗哟噗哟与宝石方块证明经典休闲并非附属：短规则能产生长期精通，本地对战又能直接服务家庭场景。细分包括落块消除、物理解谜、路线规划、绘图逻辑与短局动作益智。',['Tetris','Puzzle Bobble / Puzzle Bobble 2 / 3 / 4','Puyo Puyo Tsu','Columns','Gunpey','Lemmings']),
-('模拟／音乐／派对','生活模拟重视日程与关系，经营模拟重视资源循环，音乐游戏把输入映射到节拍，派对和微游戏则降低旁观与轮换门槛。专用控制器会改变体验，因此本指南优先保留普通手柄仍能成立的作品。',['Harvest Moon','Animal Crossing: Wild World','Rhythm Heaven / Rhythm Tengoku Gold','Mario Party 1 / 2 / 3','PaRappa the Rapper','WarioWare, Inc.: Mega Microgame$!'])]
-out+=['## 游戏品类：源流与代表作','','本章按每个条目的主要玩法归类，细分方向写在平台表的“品类”列。代表系列链接回专题，代表条目链接回平台；跨类型作品只设一个主品类，避免重复计数。','']
+('角色扮演','家用 JRPG 从《Dragon Quest》《Final Fantasy》的清晰回合制出发，逐渐分化出 ATB、职业构筑、动作战斗与怪物养成；PC 的《Ultima》《Fallout》《Baldur’s Gate》则突出世界模拟、选择后果和小队构筑，中文 DOS／Windows 又形成仙侠武侠与历史叙事传统。此处把战棋单列；塞尔达等没有数值成长主轴的作品归动作冒险。',['Dragon Quest III: The Seeds of Salvation','Final Fantasy VI','Chrono Trigger','Pokémon Emerald','Fallout','Planescape: Torment',"Baldur's Gate II: Shadows of Amn",'Diablo II','軒轅劍參外傳：天之痕']),
+('战略／战棋','光荣历史模拟把内政、外交与战争连成宏观循环；火焰之纹章、皇家骑士团和曹操传聚焦网格、单位与角色成长。PC 还发展出文明式 4X、英雄无敌的探索＋六角格战斗，以及 C&C、帝国时代式即时战略；不同节奏共享资源与决策，却不应混成同一种“战棋”。',['Fire Emblem: Genealogy of the Holy War','Tactics Ogre: Let Us Cling Together','Advance Wars','三國志曹操伝 / Sangokushi Sousouden','Sangokushi VII / 三國志VII','Heroes of Might and Magic III: The Restoration of Erathia','Age of Empires II: The Age of Kings',"Sid Meier's Civilization III",'Jagged Alliance 2']),
+('竞速／体育','竞速从街机计时、伪 3D 路带发展到卡丁车道具、拟真调校与高速反重力；体育则在规则还原和电视节奏之间取舍。PC《Need for Speed III》把警匪追逐变成核心，足球 RPG、马力欧体育和滑板目标模式进一步说明这一大类不只模拟真实赛事。',['Super Mario Kart','R4: Ridge Racer Type 4','F-ZERO X','Tony Hawk’s Pro Skater 2','Captain Tsubasa','Neo Turf Masters','Need for Speed III: Hot Pursuit']),
+('益智／休闲','俄罗斯方块、泡泡龙解谜、噗哟噗哟与宝石方块证明经典休闲并非附属：短规则能产生长期精通，本地对战又能直接服务家庭场景。PC《Lemmings》以鼠标分配技能，扩展了路线规划与逻辑解谜。细分包括落块消除、物理解谜、路线规划、绘图逻辑与短局动作益智。',['Tetris','Puzzle Bobble / Puzzle Bobble 2 / 3 / 4','Puyo Puyo Tsu','Columns','Gunpey','Lemmings']),
+('模拟／音乐／派对','生活模拟重视日程与关系，经营模拟重视资源循环，音乐游戏把输入映射到节拍，派对和微游戏则降低旁观与轮换门槛。PC 从《SimCity》《Theme Hospital》到《The Sims》《大富翁》形成完整经营与家庭轮玩传统；专用控制器会改变体验，因此本指南优先保留普通手柄或鼠标仍能成立的作品。',['Harvest Moon','Animal Crossing: Wild World','Rhythm Heaven / Rhythm Tengoku Gold','Mario Party 1 / 2 / 3','SimCity 2000','Theme Hospital','The Sims','大富翁 4','明星志願 2'])]
+out+=['## 游戏方式专题：品类源流与代表作','','本章按每个条目的主要玩法归类，细分方向写在平台表的“品类”列。DOS／Windows 与主机作品采用同一分类；代表系列链接回游戏内容专题，代表条目链接回平台，跨类型作品只设一个主品类，避免重复计数。','']
 for gi,(g,history,reps) in enumerate(genre_defs,1):
     out += [f'### {g}','',history,'']
+    if g=='射击（STG）':out += stg_history(entries)+['']
     linked=[]
     for title in reps:
         e=next((x for x in entries if x.en==title),None)
@@ -506,20 +571,19 @@ for gi,(g,history,reps) in enumerate(genre_defs,1):
     sers=[]
     for e in entries:
         if e.category==g and e.series and e.series not in sers:sers.append(e.series)
-    slinks=[f'[{s}](#{series_id[s]})' for s in sers[:8]]
+    slinks=[f'[{s}](#{series_id[s]})' for s in sers[:8] if s in series_id]
     out+=['代表作：'+'、'.join(linked)+'。','相关系列：'+'、'.join(slinks)+'。','']
     subs=[]
     for e in entries:
         if e.category==g and e.subgenre not in subs:subs.append(e.subgenre)
     out+=['本库细分：'+'、'.join(subs)+'。','']
 out+=['---','']
-out += special_topics(entries)
 
-# 系列专题：只呈现真实系列成员，全部回链。
-series_intro={'最终幻想':'正传、重制与战略版分组。FFT／FFTA 属于本专题“战略版”，与皇家骑士团没有系列隶属关系。','皇家骑士团':'只收 Ogre Battle／Tactics Ogre 体系，军团制与网格战棋分开理解，不混入 FFT。','马力欧':'按平台动作、卡丁车、派对、体育、RPG、瓦力欧、咚奇刚与耀西拆分。','宝可梦':'按正统 RPG、不可思议迷宫、护林员及家用机衍生拆分；Metal Max／重装机兵不属于本专题。','三国志与三国题材':'光荣战略、Capcom《吞食天地》与 IGS《三国战纪》分栏，避免同题材混成同系列。','光明与梦幻模拟战':'光明与 Langrisser 拆为两个子系列；Saturn《光明力量 III》不属于本机清单。','女神转生与女神异闻录':'本传与 Persona 分列，保留关联但不混用序号。','洛克人':'元祖／世界、X、Zero、EXE、ZX 与流星分组。','逆转裁判':'正传、逆转检事与同作者的《幽灵诡计》分开识别。'}
-out+=['## 系列专题与平台回链','']
+# 系列专题：只呈现至少两个真实成员，全部回链。
+series_intro={'最终幻想':'正传、重制与战略版分组。FFT／FFTA 属于本专题“战略版”，与皇家骑士团没有系列隶属关系。','皇家骑士团':'只收 Ogre Battle／Tactics Ogre 体系，军团制与网格战棋分开理解，不混入 FFT。','圣剑传说':'Square 的 2D 黄金期脉络在这里按系列保留：GB《最终幻想外传》建立即时战斗与成长，SFC《圣剑传说 2》加入多人与环形菜单，《圣剑传说 3》扩展多主角和转职，PS1《玛娜传奇》转向地图放置与世界构筑；GBA《新约》则重新诠释 GB 初代。它虽从最终幻想外传起步，却不属于最终幻想正传。','沙加':'Square 的 2D 黄金期在沙加系列中体现为持续系统实验：GB 三部曲以种族、耐久和非常规成长起步，SFC《浪漫沙加》发展自由剧本、闪悟与世代传承，PS1《开拓者》两作分别探索多主角自由剧情和世代连携。GB 海外旧名含 Final Fantasy，但不属于最终幻想正传；NDS《沙加 2》重制另按平台识别。','马力欧':'按平台动作、卡丁车、派对、体育、RPG、瓦力欧、咚奇刚与耀西拆分。','宝可梦':'按正统 RPG、不可思议迷宫、护林员及家用机衍生拆分；Metal Max／重装机兵不属于本专题。','三国志与三国题材':'按发行体系与玩法拆分为 Namco《中原之霸者／霸王的大陆》、光荣《三国志》、英杰传／曹操传、Capcom《吞食天地》与 IGS《三国战纪》，避免同题材混成同系列。DOS《英杰传》《孔明传》与 Windows《曹操传》《三国志 VII／VIII》直接并列到 PC 条目，和 FC、主机、街机版本互相回链。','英雄无敌':'DOS《Heroes of Might and Magic》建立英雄探索、城镇建设与六角格战斗的循环，DOS 二代加入兵种升级与双路线战役，Windows 三代扩大阵营、魔法和地图事件。三款作品跨 DOS／Win95／98 连续收藏，但不能与只有名称相近的《魔法门》RPG 正传混成同一专题。','光明与梦幻模拟战':'光明与 Langrisser 拆为两个子系列；Saturn《光明力量 III》不属于本机清单。','女神转生与女神异闻录':'本传与 Persona 分列，保留关联但不混用序号。','洛克人':'元祖／世界、X、Zero、EXE、ZX 与流星分组。','逆转裁判':'正传、逆转检事与同作者的《幽灵诡计》分开识别。'}
+out+=['## 游戏内容专题：系列与平台回链','','按作品世界观、题材与真实系列组织；仅两个及以上真实成员设立专题，单款作品不单列“系列”。DOS、Windows、主机和掌机版本使用同一专题并互相回链，单款背景已经并回平台表备注。','']
 for s in series_order:
-    es=[e for e in entries if e.series==s]
+    es=sorted((e for e in entries if e.series==s),key=lambda e:platforms.index(e.platform))
     intro=series_intro.get(s,rg.series_note.get(s,f'围绕《{es[0].zh}》等真实同一系列作品整理，按平台回到对应版本。'))
     out += [f'### {s}','',f'<a id="{series_id[s]}"></a>','',intro+'','']
     groups=[]
@@ -532,7 +596,7 @@ for s in series_order:
             if e.subgroup==g:out.append(f'| {e.en} | {e.zh} | {short[e.platform]} | {e.year} | [{e.eid}](#{e.eid.lower()}) |')
         out+=['']
     out+=['---','']
-mod_out,hack_count=mod_sections(entries,short)
+mod_out,hack_count=mod_sections(entries,short,platforms)
 out += mod_out
 
 out+=['## 三层查漏补缺结果','',
@@ -550,27 +614,50 @@ def mb(size):
 game_counts={
 'Pokémon Red / Green / Blue / Yellow':4,'Pokémon Gold / Silver / Crystal':3,'Dragon Warrior Monsters 2: Cobi’s Journey / Tara’s Adventure':2,'Dragon Ball Z: Goku Hishouden / Goku Gekitouden':2,'Saint Seiya: The Sanctuary / Saint Paradise':2,'Game & Watch Gallery 1–3':3,'Shin Megami Tensei I / II':2,'Mario Party 1 / 2 / 3':3,"Bomberman '93 / '94":2,'Valis: The Fantasm Soldier / Valis II / III / IV':4,'Download / Download 2':2,
 'Pokémon FireRed / LeafGreen':2,'Mega Man Battle Network 3: Blue / White':2,'Pokémon Ruby / Sapphire':2,'Pokémon HeartGold / SoulSilver':2,'Pokémon Black / White':2,'Pokémon Black 2 / White 2':2,'Phoenix Wright: Ace Attorney / Justice for All / Trials and Tribulations (DS)':3,'Inazuma Eleven 2: Kyoui no Shinryakusha – Fire / Blizzard':2,'Digimon World Dawn / Dusk':2,'Mega Man Star Force: Pegasus / Leo / Dragon':3,'Osu! Tatakae! Ouendan / Elite Beat Agents':2,
-'Gradius / Gradius II / Gradius III / Gradius Gaiden':4,'Parodius Da! / Sexy Parodius / Gokujou Parodius!':3,'TwinBee / Detana!! TwinBee / Pop’n TwinBee':3,'Puzzle Bobble / Puzzle Bobble 2 / 3 / 4':4,'Golden Axe (Arcade) / Golden Axe: The Revenge of Death Adder':2,'Double Dragon 1 / 2 / 3 (Arcade)':3,'Metal Slug 1 / 2 / X / 3 / 4 / 5':6,'Bubble Bobble / Rainbow Islands':2,'Elevator Action / Elevator Action Returns':2,'Darius / Darius II / Darius Gaiden':3,'Pac-Man / Ms. Pac-Man':2,'Donkey Kong / Donkey Kong Jr.':2,'Galaga / Galaxian':2,
+'Gradius / Gradius II / Gradius III':3,'Parodius Da! / Sexy Parodius / Gokujou Parodius!':3,'TwinBee / Detana!! TwinBee':2,'Puzzle Bobble / Puzzle Bobble 2 / 3 / 4':4,'Golden Axe (Arcade)':1,'Double Dragon 1 / 2 / 3 (Arcade)':3,'Metal Slug 1 / 2 / X / 3 / 4 / 5':6,'Bubble Bobble / Rainbow Islands':2,'Elevator Action / Elevator Action Returns':2,'Darius / Darius II / Darius Gaiden':3,'Pac-Man / Ms. Pac-Man':2,'Donkey Kong / Donkey Kong Jr.':2,'Galaga / Galaxian':2,
 'Virtua Tennis / Virtua Tennis 2':2,'The Legend of Heroes II: Prophecy of the Moonlight Witch / III: White Witch / IV: A Tear of Vermillion / V: Cagesong of the Ocean':4,'DJMax Portable 1 / 2 / Clazziquai / Black Square':4,'Memories Off / Clannad / Steins;Gate / Higurashi / Fate/Extra':5,'Crash Bandicoot 1 / 2: Cortex Strikes Back / 3: Warped':3,'Spyro the Dragon 1 / 2: Ripto’s Rage! / 3: Year of the Dragon':3,'Tomb Raider I / II / III':3,'Tokimeki Memorial 1 / 2':2,'The Legend of Zelda: Oracle of Seasons / Oracle of Ages':2,'Final Fantasy I / II / IV':3,
+'Super Mario All-Stars':4,'Ys Book I & II':2,'Final Fantasy I & II: Dawn of Souls':2,'Three Wonders':3,'Street Fighter III: Double Impact':2,'Ys I & II Chronicles':2,'Castlevania: The Dracula X Chronicles':3,'Langrisser II / Der Langrisser':2,
 }
+game_counts.update(DOS_COUNTS)
+game_counts.update(WINDOWS_COUNTS)
 def gc(e):return game_counts.get(e.en,1)
 game_total=sum(gc(e) for e in entries)
-new_hack_count=13
+new_hack_count=15
 variant_mb=16*1024
-out+=['| 平台 | 条目数 | 游戏数（合集展开） | 表内预留空间 | 建议位置 |','|---|---:|---:|---:|---|']
+maker_columns=['Nintendo','Sega','Sony','NEC／Hudson','Bandai','多厂商／PC']
+def maker_cells(p):
+    cells=['']*len(maker_columns)
+    if p in {'NES / FC','GB','SNES / SFC','N64','GBC','GBA','NDS'}:cells[0]='Nintendo'
+    elif p in {'MD / Genesis','GG','Dreamcast'}:cells[1]='Sega'
+    elif p in {'PS1','PSP'}:cells[2]='Sony'
+    elif p=='PCE (PC Engine / TurboGrafx-16)':cells[3]='NEC／Hudson Soft'
+    elif p=='WS / WSC':cells[4]='Bandai'
+    else:cells[5]='IBM／Microsoft 等' if p in {'DOS','Win95 / Win98'} else '多厂商'
+    return cells
+out+=['平台章大体按首发年代排列；Win95／98 紧随 DOS 以区分两种运行环境，N64 与 PS1 依 eMMC／SSD 存储建议对调。出品方矩阵中，空白表示该平台不属于该厂家。','',
+'| 平台 | 条目数 | 游戏数（合集展开） | 表内预留空间 | Nintendo | Sega | Sony | NEC／Hudson | Bandai | 多厂商／PC | 建议位置 |','|---|---:|---:|---:|---|---|---|---|---|---|']
 total=0
 for p in platforms:
     es=[e for e in entries if e.platform==p];v=sum(mb(e.size) for e in es);total+=v
-    out.append(f'| {p} | {len(es)} | {sum(gc(e) for e in es)} | {v/1024:.2f} GB | {"SSD" if p in {"PS1","PSP","Dreamcast","NDS"} else "eMMC"} |')
-out+=[f'| **官方库合计** | **{len(entries)}** | **{game_total}** | **{total/1024:.2f} GB** | 另留系统、BIOS、刮削与存档 |','',
-'### 游戏总数与总容量','',
-f'- **官方游戏总数：{game_total} 个平台版本。** 合集已展开，地区别名不重复；同一游戏跨平台各算一个可玩版本。Game & Watch 等合集按独立商品计数，不把内含迷你游戏再拆成数十款。','- **原创改版内容：13 款。** 仅统计含全新战役、地区或主要地图的改版；纯汉化、平衡调整和便利增强不重复增加游戏数。','- **官方库预留：'+f'{total/1024:.2f} GB。** 中文化与精选改版若与原版全部并存，另建议预留 16 GB；**合计预算 {(total+variant_mb)/1024:.2f} GB**，系统、BIOS、刮削和存档另算。','',
+    makers=' | '.join(maker_cells(p))
+    out.append(f'| {p} | {len(es)} | {sum(gc(e) for e in es)} | {v/1024:.2f} GB | {makers} | {"SSD" if p in {"Win95 / Win98","PS1","PSP","Dreamcast","NDS"} else "eMMC"} |')
+out+=[f'| **官方库合计** | **{len(entries)}** | **{game_total}** | **{total/1024:.2f} GB** |  |  |  |  |  |  | 另留系统、BIOS、刮削与存档 |','',
+'#### 游戏总数与总容量','',
+f'- **官方游戏总数：{game_total} 个平台版本。** 合集已展开，地区别名不重复；同一游戏跨平台各算一个可玩版本。Game & Watch 等合集按独立商品计数，不把内含迷你游戏再拆成数十款。',f'- **原创改版内容：{new_hack_count} 款。** 仅统计含全新战役、地区或主要地图的改版；纯汉化、平衡调整和便利增强不重复增加游戏数。','- **官方库预留：'+f'{total/1024:.2f} GB。** 中文化与精选改版若与原版全部并存，另建议预留 16 GB；**合计预算 {(total+variant_mb)/1024:.2f} GB**，系统、BIOS、刮削和存档另算。','',
 '> 容量是安装预算，不是实测文件总量；合集拆分、CHD／CSO、多盘与保留多个地区版都会改变占用。','',
 '### 实机核对顺序','',
-'1. NES、GB／GBC、GBA、GG、WS／WSC、MD、SNES：先开存档与特殊芯片游戏，检查 RTC、传感器和地区刷新率。','2. FBNeo／MAME：先验证 ROM set、BIOS、双人手柄，再检查高分采样与声音；不要跨核心随意搬 ZIP。','3. NDS、PS1：NDS 看双屏与触控，PS1 看记忆卡和多盘；默认原生分辨率。','4. N64、Dreamcast、PSP：按游戏选择插件与 1× 渲染，测最繁忙的战斗／竞速场景，而非只看菜单；本指南不声称这些重型平台全库稳定。','',
-'### 本文已直接修正的典型错误','',
-'- 海外《Super Mario Bros. 2》与日本《Super Mario USA》是同一游戏的不同地区发行；日版高难度 2 代写为《The Lost Levels》。','- SFC《恶魔城 XX》不等于 PCE《血之轮回》；MD 有《Raiden Trad》《R-Type》正式移植；DC《Street Fighter III: Double Impact》不含 3rd Strike。','- 宝可梦赤救助队在 GBA、青救助队在 NDS；白金是神奥，绿宝石主线是固拉多／盖欧卡／烈空坐。','- 《重装机兵》只属于 Metal Max／Metal Saga；《Final Fantasy Tactics》只属于最终幻想战略版；GB《Final Fantasy Legend》属于沙加，均不再串入其他专题。','- 《番茄酱王国大冒险》与《传说的斯塔菲》是不同作品；Panzer General／Allied General 没有街机原版，Brigandine: Grand Edition 是官方扩展版。','- 《Puyo Puyo Sun》街机原版是 ST-V；MD《VS Puyo Puyo SUN》是 2022 年 Mini 2 的双人新移植，不倒填成 1996 年旧卡带。','- GBA 没有 DQV／DQVI 原生移植；PSP 歌姬计划首作是《Project DIVA》，不是家用机《Project DIVA F》。','']
+'1. DOS：逐作检查可执行文件、声音、鼠标、存档与退出方式；中文游戏保留字库和安装目录，CD 游戏连音轨一起验证，不能只确认进入标题画面。','2. Win95／98：逐作验证安装目录、Wine prefix、字体、过场、鼠标与存档；DirectDraw 黑屏／花屏优先核对 cnc-ddraw 的 DLL 覆盖和全屏设置，Direct3D 则保持低分辨率并单独选渲染路径。','3. MAME、FBNeo：先验证 ROM set、BIOS、双人手柄，再检查高分采样与声音；不要跨核心随意搬 ZIP。','4. NES、PCE、MD、GB、GG、SNES：先开存档与特殊芯片游戏，检查 RTC、传感器和地区刷新率。','5. N64：按游戏选择插件与 1× 渲染，核对 Expansion Pak，并测试最繁忙的战斗／竞速场景。','6. PS1、GBC、Dreamcast、WS／WSC、GBA、NDS、PSP：依次检查多盘与记忆卡、GBC 存档、Dreamcast 重负载场景、WS 横竖持机、GBA 的 RTC／传感器、NDS 双屏触控、PSP 原生设置下的繁忙场景；不只看标题画面。','',
+'']
 out += hardware_input_appendix()
+# 当前版直接合并硬件与容量内容，不保留旧章节或历史修订入口。
+cap_start=out.index('## 容量汇总与运行核对')
+cap_end=out.index('## 摄像头与麦克风验证附录')
+capacity=out[cap_start:cap_end]
+del out[cap_start:cap_end]
+capacity[0]='### 容量、出品方与存储汇总'
+capacity+=['---','']
+insert_at=out.index('## 存储、目录与镜像管理')
+out[insert_at:insert_at]=capacity
 (ROOT/'batocera_rom_guide.md').write_text('\n'.join(out)+'\n')
 print('entries',len(entries),'lines',len(out),'bytes',(ROOT/'batocera_rom_guide.md').stat().st_size)
 for p in platforms:print(short[p],sum(e.platform==p for e in entries))
