@@ -7,7 +7,7 @@ rg=importlib.util.module_from_spec(spec); spec.loader.exec_module(rg)
 Entry=rg.Entry
 entries=rg.entries
 from guide_dos import DOS_GAMES, DOS_GENRES, DOS_SERIES, DOS_COUNTS
-from guide_windows import WINDOWS_GAMES, WINDOWS_GENRES, WINDOWS_SERIES, WINDOWS_COUNTS, WINDOWS_RUNTIME
+from guide_windows import WINDOWS_GAMES, WINDOWS_GENRES, WINDOWS_SERIES, WINDOWS_COUNTS, WINDOWS_RUNTIME, WINDOWS_CNC_SUPPORT
 from guide_versions import VERSION_CHOICES, VERSION_DROP, VERSION_REASON
 
 # 只保留适合家庭电视与 N4100 保守性能范围的正式作品。
@@ -512,6 +512,7 @@ for e in entries:
     if e.platform=='Win95 / Win98':
         level,runtime_note=WINDOWS_RUNTIME[e.en]
         e.note+=f' 【Wine 安装判断：{level}】{runtime_note}'
+        if e.en in WINDOWS_CNC_SUPPORT:e.note+=' 【cnc-ddraw 官方支持：按本指南约定视为 N4100 实机认证】'
     if id(e) not in custom_notes and (e.old in old_names or e.en in Y or e.platform in {'GG','WS / WSC'}):
         if e.note.startswith('本作保留了该平台') or e.note==rg.series_note.get(e.series,''):e.note=''
 
@@ -593,7 +594,7 @@ for e in entries:
     elif e.series=='马力欧':
         e.subgroup='卡丁车' if 'Kart' in e.en else ('派对' if 'Party' in e.en else ('体育' if re.search(r'Golf|Tennis',e.en) else ('瓦力欧' if 'Wario' in e.en else ('咚奇刚' if 'Donkey Kong' in e.en else ('耀西' if 'Yoshi' in e.en else ('角色扮演' if re.search(r'Paper Mario|Mario & Luigi|Super Mario RPG',e.en) else '平台动作'))))))
     elif e.series=='宝可梦':e.subgroup='不可思议迷宫' if 'Mystery Dungeon' in e.en else ('护林员' if 'Ranger' in e.en else ('家用机与益智衍生' if re.search(r'Stadium|Snap|Puzzle|Trading Card|Hey You',e.en) else '正统角色扮演'))
-    elif e.series=='三国志与三国题材':e.subgroup='英杰传与曹操传' if re.search(r'Eiketsuden|Sousouden|英傑傳|孔明傳|曹操伝|曹操傳',e.en) else ('Namco《三国志》' if re.search(r'Nakahara no Hasha|Haou no Tairiku|^Sangokushi$',e.en) else ('光荣《三国志》' if re.search(r'Romance|Sangokushi',e.en) else ('吞食天地' if re.search(r'Tenchi wo Kurau|Destiny of an Emperor',e.en) else ('三国战纪' if 'Knights of Valour' in e.en else '其他三国题材'))))
+    elif e.series=='三国志与三国题材':e.subgroup='英杰传与曹操传' if re.search(r'Eiketsuden|Sousouden|英傑傳|孔明傳|曹操伝|曹操傳',e.en) else ('三国群英传' if re.search(r'三國群英傳',e.en) else ('傲世三国' if re.search(r'Fate of the Dragon|Dragon Throne',e.en) else ('Namco《三国志》' if re.search(r'Nakahara no Hasha|Haou no Tairiku|^Sangokushi$',e.en) else ('光荣《三国志》' if re.search(r'Romance|Sangokushi',e.en) else ('吞食天地' if re.search(r'Tenchi wo Kurau|Destiny of an Emperor',e.en) else ('三国战纪' if 'Knights of Valour' in e.en else '其他三国题材'))))))
     elif e.series=='洛克人':e.subgroup='EXE／网络对战' if 'Battle Network' in e.en else ('Zero' if 'Zero' in e.en else ('ZX 与流星' if re.search(r'ZX|Star Force',e.en) else ('X' if 'Mega Man X' in e.en else '元祖与世界')))
     elif e.series=='光明与梦幻模拟战':e.subgroup='梦幻模拟战' if 'Langrisser' in e.en else '光明系列'
     elif e.series=='女神转生与女神异闻录':e.subgroup='Persona' if 'Persona' in e.en else '真·女神转生'
@@ -617,7 +618,7 @@ platform_intro={
 'Dreamcast':'以 Flycast 原生分辨率、较成熟 2D 移植与 DC 特色游戏为主；重型 3D 只保留高代表作，不把“可启动”写成“全程稳定”。',
 'NDS':'以双屏、触控、RPG、文字冒险和本地家庭短局为主，注意触控与麦克风在游戏中的必要性。',
 'DOS':'IBM PC 兼容环境的 DOS 精品，并保留《文明 II》这类可在 DOSBox‑X＋Windows 3.x 运行的轻量作品。中文战棋、国产三剑、经营、点击冒险与即时战略均有覆盖；射击作优先采用主机／街机版本，Win95／98 专用作品转由下一平台的 Wine 管理。鼠标、键盘和手柄映射逐作写明。',
-'Win95 / Win98':'Windows 95／98 时代的低配置精品经 Batocera 官方 windows 系统与内置 Wine runner 运行，并不虚拟完整 Win95。本库以 2D／预渲染画面、回合制、鼠标策略、经营和点击冒险为主，不收第一／第三人称射击、FPS、STG，也不以早期实时 3D 游戏填充清单。每作独立 Wine prefix，DirectDraw 优先试 cnc-ddraw，默认不开 DXVK。备注中的“优先安装／固定版本后安装”是公开资料形成的安装优先级，不是本机实测认证：N4100 的四核低功耗 CPU、12 EU 的 UHD 600 与 4 GB 共享内存决定了老游戏的主要风险是兼容、视频、安装器和字库，而非仅看当年最低配置。'}
+'Win95 / Win98':'Windows 95／98 时代的低配置精品经 Batocera 官方 windows 系统与内置 Wine runner 运行，并不虚拟完整 Win95。本库以 2D／预渲染画面、回合制、鼠标策略、经营和点击冒险为主，不收第一／第三人称射击、FPS、STG 或高速飞车，也不以早期实时 3D 游戏填充清单。每作独立 Wine prefix，DirectDraw 优先试 cnc-ddraw，默认不开 DXVK。cnc-ddraw 官方列名的对应版本按本指南约定视为通过 N4100 实机验收，标为“优先安装”；未列名或仅支持其他版本的作品仍须固定发行版与 runner 后验收。N4100 的四核低功耗 CPU、12 EU 的 UHD 600 与 4 GB 共享内存决定了老游戏的主要风险是兼容、视频、安装器和字库，而非仅看当年最低配置。'}
 
 # 输出。
 out=['# Batocera 家庭游戏机精选指南','',
@@ -641,9 +642,14 @@ out += ['## 存储、目录与镜像管理','',
 '- **Win95／98 使用 Batocera 的 windows 系统。** 已安装游戏放 SSD `/userdata/roms/windows/`，安装介质放 `/userdata/roms/windows_installers/`；支持 `.pc`、`.exe`、`.wine`、`.wsquashfs`、`.wtgz`，无需 BIOS，也不需安装完整 Windows。每作独立 `.wine` prefix，`autorun.cmd` 用 LF 换行并明确 `DIR`、`CMD`，再用 `SAVEDIR`／`SAVEFILES` 把存档映射到 `/userdata/saves/windows/<游戏>/`。老安装器不能在 Wine 中完成时，先在另一台兼容机器安装，再复制完整安装目录。`/userdata` 用 ext4 或 btrfs，不把 Wine 库放在 FAT、NTFS 或 NAS。',
 '- **Runner 以本机 Batocera 版本为准。** Batocera 41 起已由停止维护的旧 Wine-GE 8-26 转向 Wine-TKG，后续版本仍会继续更新，因此不把某个 runner 名称写成永久前提。先查系统信息与 `/usr/wine/` 下实际安装版本；确有单作版本需求时，把兼容 runner 放到 `/userdata/system/wine/custom/` 的独立目录并为该作单独选择。4 GB 内存同时供 Batocera、Wine 与共享显存使用，不并行安装多个大型组件，也不把他人的高配测试当本机性能证明。',
 '- **DirectDraw 优先使用 cnc-ddraw。** 将官方发布包中的 `ddraw.dll`、配置程序与所需文件放到游戏 EXE 同目录，游戏自身先设全屏并关闭自带窗口模式；在 Wine 中运行一次 `cnc-ddraw config.exe`，或把 `ddraw` 覆盖为 `native,builtin`。`autorun.cmd` 也可针对该作写 `ENV=WINEDLLOVERRIDES=ddraw=n,b`。N4100 先用 OpenGL 渲染，异常时试 GDI；速度过快再调 `maxgameticks=60`，不要默认开高成本缩放 shader。**它只处理 DirectDraw／软件渲染，不支持 Direct3D 或 Glide**，这三类不能靠替换 `ddraw.dll` 通用修复。DDrawCompat 官方不支持 Wine，不作为 Batocera 方案；cnc-ddraw、GOG 自带渲染器和其他 wrapper 不叠加。',
-'- **Wine 配置按游戏隔离。** 本库以 DirectDraw 与 2D／预渲染作品为主，默认关闭 DXVK；确有单独渲染需求时才在该作 prefix 中调整，不把高配机器的 Direct3D 方案当成通用前提。老中文游戏按实际编码补字体并设置 `LANG`，日区旧作还需检查 `LC_ALL` 与 Shift-JIS 文件名，不把整套字库覆盖到所有 prefix。Batocera 的高级选项通常只在首次启动生效；修改后先备份存档，再重建该作的可写层或 prefix。小型且写入多的游戏可用 `.wtgz`，大型且主要只写存档的游戏可用 `.wsquashfs`。《文明 III》的黑色地形问题在 Wine 10.13 上游有修复记录，但不代表外交界面、声音和后续兼容层回归都已解决，须固定 runner 后验收。',
+'- **Wine 配置按游戏隔离。** 本库以 DirectDraw 与 2D／预渲染作品为主，默认关闭 DXVK；确有单独渲染需求时才在该作 prefix 中调整，不把高配机器的 Direct3D 方案当成通用前提。老中文游戏按下节的统一字体基线处理，并按实际发行地区设置 `LANG`。Batocera 的高级选项通常只在首次启动生效；修改后先备份存档，再重建该作的可写层或 prefix。小型且写入多的游戏可用 `.wtgz`，大型且主要只写存档的游戏可用 `.wsquashfs`。《文明 III》的黑色地形问题在 Wine 10.13 上游有修复记录，但不代表外交界面、声音和后续兼容层回归都已解决，须固定 runner 后验收。','',
+'### 日文、繁体中文与字体统一配置','',
+'统一方案是“开源 CJK 字体基线＋逐作语言环境＋必要时匹配原版字库”，不是用一个字体包承诺修复全部老游戏。先在 Batocera 本机执行 `/usr/wine/winetricks list-all`，确认当前版本确实提供相应 trick；再给需要字体的游戏 prefix 安装 `cjkfonts`。只有缺 MS Gothic／MS Mincho、PMingLiU／MingLiU 等字体别名时，才分别尝试 `fakejapanese` 或 `fakechinese`，不必给所有游戏重复安装。','',
+'```bash','export DISPLAY=:0.0','/usr/wine/winetricks list-all','# 将下面路径换成该游戏实际 .wine prefix 的绝对路径','batocera-wine windows tricks \'/实际路径/游戏.wine\' cjkfonts','# 仅在该作仍有日文字体别名问题时使用','batocera-wine windows tricks \'/实际路径/游戏.wine\' fakejapanese','# 仅在该作仍有繁中字体别名问题时使用','batocera-wine windows tricks \'/实际路径/游戏.wine\' fakechinese','```','',
+'Batocera 也可集中导入 `.ttf`／`.ttc`：把自己合法 Windows 安装中的 `simsun.ttc`、`mingliu.ttc`、`msgothic.ttc`、`msmincho.ttc` 按需复制到 `/userdata/system/wine/fonts/`，启动游戏时由系统导入，已导入文件转入 `/userdata/system/wine/installed.fonts/`。开源替代字体重排或别名仍不匹配时再用这条路线，不混放来源不明的“全网字库包”。','',
+'日文旧作在该作 `autorun.cmd` 写 `LANG=ja_JP.UTF-8`；繁体中文旧作可试 `LANG=zh_TW.UTF-8`，并同时核对 `LC_ALL`。它们只解决语言环境的一部分：Shift-JIS 文件名、旧安装器、光盘检测、内嵌点阵字库、字宽和特定字体度量仍须逐作验收，中文汉化版也应使用与补丁对应的字库。','',
 '- **街机按 ROM set 管理。** MAME 放 `/userdata/roms/mame`，FBNeo 放 `/userdata/roms/fbneo`；ZIP 不随意改名或解压，Neo Geo、PGM 等依赖文件随匹配 ROM set 配置。','- **BIOS 以本机检查为准。** 用 Batocera 的 BIOS 检查、`batocera-systems` 和当前版本文档确认，不用旧网络清单替代。','- **光盘与便携镜像。** PCE CD、PS1 可用 CHD，多盘配 M3U；Dreamcast 按核心选 CHD 或 GDI，转换前保留原镜像。PSP 以 ISO 作兼容基线，CSO 是否合适按游戏测试。','- **家庭游玩先测操作。** 核对多手柄分配、存档、双人画面与热键；触控、陀螺仪、阳光传感器和专用外设作品会在备注中说明。DOS／Windows 经营、RTS 与点击冒险优先实体鼠标，Pad2Key 只是可用性补偿。','',
-'官方依据：[Batocera Arcade Guide](https://wiki.batocera.org/arcade)、[Advanced arcade emulation](https://wiki.batocera.org/advanced_arcade)、[Add games/BIOS files](https://wiki.batocera.org/add_games_bios)、[Batocera DOS 系统说明](https://wiki.batocera.org/systems:dos)、[DOSBox‑X 的 Windows 3.1x 指南](https://dosbox-x.com/wiki/Guide%3AInstalling-Windows-3.1x)、[Batocera Windows（Wine）系统说明](https://wiki.batocera.org/systems:windows)、[Batocera Changelog](https://batocera.org/changelog)、[cnc-ddraw 官方说明](https://github.com/FunkyFr3sh/cnc-ddraw)、[DDrawCompat 官方说明](https://github.com/narzoul/DDrawCompat)、[《文明 III》Wine／Proton 问题记录](https://github.com/ValveSoftware/Proton/issues/315)、[Intel N4100 官方规格](https://www.intel.com/content/www/us/en/products/sku/128983/intel-celeron-processor-n4100-4m-cache-up-to-2-40-ghz/specifications.html)、[Xbox 系统说明](https://wiki.batocera.org/systems:xbox)。','',
+'官方依据：[Batocera Arcade Guide](https://wiki.batocera.org/arcade)、[Advanced arcade emulation](https://wiki.batocera.org/advanced_arcade)、[Add games/BIOS files](https://wiki.batocera.org/add_games_bios)、[Batocera DOS 系统说明](https://wiki.batocera.org/systems:dos)、[DOSBox‑X 的 Windows 3.1x 指南](https://dosbox-x.com/wiki/Guide%3AInstalling-Windows-3.1x)、[Batocera Windows（Wine）系统说明](https://wiki.batocera.org/systems:windows)、[Batocera Winetricks 说明](https://wiki.batocera.org/systems:windows#winetricks)、[Batocera Changelog](https://batocera.org/changelog)、[cnc-ddraw 官方说明](https://github.com/FunkyFr3sh/cnc-ddraw)、[DDrawCompat 官方说明](https://github.com/narzoul/DDrawCompat)、[《文明 III》Wine／Proton 问题记录](https://github.com/ValveSoftware/Proton/issues/315)、[Intel N4100 官方规格](https://www.intel.com/content/www/us/en/products/sku/128983/intel-celeron-processor-n4100-4m-cache-up-to-2-40-ghz/specifications.html)、[Xbox 系统说明](https://wiki.batocera.org/systems:xbox)。','',
 '---','','## 各平台精选清单','']
 for p in platforms:
     es=[e for e in entries if e.platform==p]
@@ -667,11 +673,11 @@ genre_defs=[
 ('射击（STG）','STG 是 Shoot ’em up 的常用缩写，中文通常称“射击游戏”；弹幕射击只是其中后来形成的细分，并不涵盖全部 STG。本章从《Space Invaders》《Galaxian》的固定屏幕，经《Gradius》《沙罗曼蛇》的横纵卷轴，到 Cave 的高密度弹幕梳理源流；《魂斗罗》这类以人物跑跳和射击并重的作品另列“动作射击”。',['Space Invaders','Galaga / Galaxian','Life Force / Salamander','Gradius / Gradius II / Gradius III','R-Type','Ikaruga']),
 ('动作射击','这一品类以角色直接移动、跑跳、载具或第一／第三人称视角为主，射击服务于动作空间，而不是单纯沿卷轴闪避敌弹。FC《魂斗罗》《Super C》是跑射代表，《GoldenEye 007》等则属于第一人称路线；它们与 STG 并列，避免把所有带枪的游戏混为一类。',['Contra','Super C','Metal Slug 1 / 2 / X / 3 / 4 / 5','Gunstar Heroes','GoldenEye 007']),
 ('格斗／清版动作','清版动作由《双截龙》《快打旋风》把街头推进、投技与多人合作定型；一对一格斗则由《Street Fighter II》确立帧数、距离和角色博弈。3D 场地格斗与派对乱斗进一步扩大分支，但本地对战始终是核心。',['Super Street Fighter II Turbo','The King of Fighters 98','Streets of Rage 2 / Bare Knuckle II','Cadillacs and Dinosaurs','Soulcalibur','Power Stone 2']),
-('角色扮演','家用 JRPG 从《Dragon Quest》《Final Fantasy》的清晰回合制出发，逐渐分化出 ATB、职业构筑、动作战斗与怪物养成；PC 的《Ultima》《Fallout》《Baldur’s Gate》则突出世界模拟、选择后果和小队构筑，中文 DOS／Windows 又形成仙侠武侠与历史叙事传统。此处把战棋单列；塞尔达等没有数值成长主轴的作品归动作冒险。',['Dragon Quest III: The Seeds of Salvation','Final Fantasy VI','Chrono Trigger','Pokémon Emerald','Fallout','Icewind Dale',"Baldur's Gate II: Shadows of Amn",'Diablo II','軒轅劍參外傳：天之痕']),
-('战略／战棋','光荣历史模拟把内政、外交与战争连成宏观循环；火焰之纹章、皇家骑士团和曹操传聚焦网格、单位与角色成长。PC 还发展出文明式 4X、英雄无敌的探索＋六角格战斗，以及 C&C、帝国时代式即时战略；不同节奏共享资源与决策，却不应混成同一种“战棋”。',['Fire Emblem: Genealogy of the Holy War','Tactics Ogre: Let Us Cling Together','Advance Wars','三國志曹操伝 / Sangokushi Sousouden','Romance of the Three Kingdoms VII','Heroes of Might and Magic III: The Restoration of Erathia','Age of Empires II: The Age of Kings',"Sid Meier's Civilization II","Sid Meier's Civilization III",'Jagged Alliance 2','Command & Conquer: Red Alert 2 / Yuri’s Revenge','TearRing Saga: Yutona Eiyuu Senki']),
+('角色扮演','家用 JRPG 从《Dragon Quest》《Final Fantasy》的清晰回合制出发，逐渐分化出 ATB、职业构筑、动作战斗与怪物养成；PC 的《Ultima》《Fallout》《Baldur’s Gate》则突出世界模拟、选择后果和小队构筑，中文 DOS／Windows 又形成仙侠武侠与历史叙事传统。此处把战棋单列；塞尔达等没有数值成长主轴的作品归动作冒险。',['Dragon Quest III: The Seeds of Salvation','Final Fantasy VI','Chrono Trigger','Pokémon Emerald','Fallout','Planescape: Torment','Icewind Dale',"Baldur's Gate II: Shadows of Amn",'Diablo II','軒轅劍參外傳：天之痕','新絕代雙驕']),
+('战略／战棋','光荣历史模拟把内政、外交与战争连成宏观循环；火焰之纹章、皇家骑士团和曹操传聚焦网格、单位与角色成长。PC 还发展出文明式 4X、英雄无敌的探索＋六角格战斗，以及 C&C、帝国时代式即时战略；不同节奏共享资源与决策，却不应混成同一种“战棋”。',['Fire Emblem: Genealogy of the Holy War','Tactics Ogre: Let Us Cling Together','Advance Wars','三國志曹操伝 / Sangokushi Sousouden','Romance of the Three Kingdoms VII','Heroes of Might and Magic III: The Restoration of Erathia','Age of Empires II: The Age of Kings','Age of Wonders','三國群英傳 II',"Sid Meier's Civilization II","Sid Meier's Civilization III",'Jagged Alliance 2','Command & Conquer: Red Alert 2 / Yuri’s Revenge','TearRing Saga: Yutona Eiyuu Senki']),
 ('竞速／体育','竞速从街机计时、伪 3D 路带发展到卡丁车道具、拟真调校与高速反重力；体育则在规则还原和电视节奏之间取舍。足球 RPG、马力欧体育和滑板目标模式进一步说明这一大类不只模拟真实赛事。',['Super Mario Kart','R4: Ridge Racer Type 4','F-ZERO X','Tony Hawk’s Pro Skater 2','Captain Tsubasa','Neo Turf Masters']),
 ('益智／休闲','俄罗斯方块、泡泡龙解谜、噗哟噗哟与宝石方块证明经典休闲并非附属：短规则能产生长期精通，本地对战又能直接服务家庭场景。PC《Lemmings》以鼠标分配技能，扩展了路线规划与逻辑解谜。细分包括落块消除、物理解谜、路线规划、绘图逻辑与短局动作益智。',['Tetris','Puzzle Bobble / Puzzle Bobble 2 / 3 / 4','Puyo Puyo Tsu','Columns','Gunpey','Lemmings']),
-('模拟／音乐／派对','生活模拟重视日程与关系，经营模拟重视资源循环，音乐游戏把输入映射到节拍，派对和微游戏则降低旁观与轮换门槛。PC 从《SimCity》《Theme Hospital》到《RollerCoaster Tycoon》《大富翁》形成完整经营与家庭轮玩传统；专用控制器会改变体验，因此本指南优先保留普通手柄或鼠标仍能成立的作品。',['Harvest Moon','Animal Crossing: Wild World','Rhythm Heaven / Rhythm Tengoku Gold','Mario Party 1 / 2 / 3','SimCity 2000','Theme Hospital','RollerCoaster Tycoon','Emperor: Rise of the Middle Kingdom','大富翁 4','明星志願 2'])]
+('模拟／音乐／派对','生活模拟重视日程与关系，经营模拟重视资源循环，音乐游戏把输入映射到节拍，派对和微游戏则降低旁观与轮换门槛。PC 从《SimCity》《Theme Hospital》到《RollerCoaster Tycoon》《大富翁》形成完整经营与家庭轮玩传统；专用控制器会改变体验，因此本指南优先保留普通手柄或鼠标仍能成立的作品。',['Harvest Moon','Animal Crossing: Wild World','Rhythm Heaven / Rhythm Tengoku Gold','Mario Party 1 / 2 / 3','SimCity 2000','Theme Hospital','RollerCoaster Tycoon','Dungeon Keeper II','Emperor: Rise of the Middle Kingdom','大富翁 4','明星志願 2','仙劍客棧'])]
 out+=['## 游戏方式专题：品类源流与代表作','','本章按每个条目的主要玩法归类，细分方向写在平台表的“品类”列。DOS／Windows 与主机作品采用同一分类；代表系列链接回游戏内容专题，代表条目链接回平台，跨类型作品只设一个主品类，避免重复计数。','']
 for gi,(g,history,reps) in enumerate(genre_defs,1):
     out += [f'### {g}','',history,'']
@@ -702,10 +708,18 @@ series_intro={
 '沙加':'Square 的 2D 黄金期在沙加系列中体现为持续系统实验：GB《魔界塔士》《时空之霸者》保留早期非常规成长，NDS《沙加 2》采用完整重制，SFC《浪漫沙加》发展自由剧本、闪悟与世代传承，PS1《开拓者》两作分别探索多主角自由剧情和世代连携。GB 海外旧名含 Final Fantasy，但不属于最终幻想正传。',
 '马力欧':'按平台动作、卡丁车、派对、体育、RPG、瓦力欧、咚奇刚与耀西拆分。',
 '宝可梦':'按正统 RPG、不可思议迷宫、护林员及家用机衍生拆分；Metal Max／重装机兵不属于本专题。',
-'三国志与三国题材':'按发行体系与玩法拆分为 Namco《中原之霸者／霸王的大陆》、光荣《三国志》、英杰传／曹操传、Capcom《吞食天地》与 IGS《三国战纪》，避免同题材混成同系列。DOS《英杰传》《孔明传》与 Windows《曹操传》《三国志 VIII》保留 PC 独占内容；V／VI／VII 统一采用 PS1 版，与 FC、街机及其他主机作品一起回链。',
+'三国志与三国题材':'按发行体系与玩法拆分为 Namco《中原之霸者／霸王的大陆》、光荣《三国志》、英杰传／曹操传、奥汀《三国群英传》、目标软件《傲世三国》、Capcom《吞食天地》与 IGS《三国战纪》，避免同题材混成同系列。DOS《英杰传》《孔明传》与 Windows《曹操传》《三国志 VIII／IX PK／X PK》保留 PC 独占内容；V／VI／VII 统一采用 PS1 版。群英传的武将技会战、傲世三国的粮草与城镇 RTS 又和光荣式回合战略不同，全部按各自平台条目回链。',
 '英雄无敌':'DOS《Heroes of Might and Magic》建立英雄探索、城镇建设与六角格战斗的循环，DOS 二代加入兵种升级与双路线战役，Windows 三代扩大阵营、魔法和地图事件。三款作品跨 DOS／Win95／98 连续收藏，但不能与只有名称相近的《魔法门》RPG 正传混成同一专题。',
-'古大陆物语':'TGL 的 Farland Story 以短关卡、职业成长和易读网格战斗形成轻量战棋传统。这里收 DOS 中文一、二、四、五作；Windows《四个封印》重制的正是前两作，不再与 DOS 版本重复收藏。',
+'古大陆物语':'TGL 的 Farland Story 以短关卡、职业成长和易读网格战斗形成轻量战棋传统。这里收 DOS 中文一、二、四、五作；三、六、七及前传没有对应 PC 移植，不为凑齐编号虚列。Windows《四个封印》重制的正是前两作，不再与 DOS 版本重复收藏。',
+'神奇传说':'Farland Saga 是与 Farland Story 相连但独立编号的 TGL 战棋支线，不与《古大陆物语》混排续作序号。这里收 Windows《神奇传说》与《时空道标》，两作保留斜视角战场、职业成长和语音演出；后续《新神奇传说 3》与远征奥德赛等没有因同目录出现就自动纳入。',
 '战国美少女':'TGL 的战国题材忍者 RPG 以动画式角色演出、日语语音、回合战斗和换装事件见长。Windows 首作《斩断云空》建立百地天心一行人的冒险，续作《春风之章》改以日奈为主角并保留前作人物，两作分开安装和存档。',
+'新绝代双骄':'宇峻的三款 Windows 作品以古龙双骄故事及其后日谈为骨架，逐步扩大双主角切换、队友、武功与多结局选择。这里保留二代官方加强版和三代主程序；《明月孤星》是三代资料片，不与主商品名混写。',
+'太阁立志传':'光荣把战国史从大名经营转为个人生涯模拟：III 强调剧情与仕官，IV 用卡片和修行扩展多职业，V 再汇合武士、忍者、商人、海贼与技艺路线。三作都是 Windows 独立作品，不能和《信长之野望》的势力战略混成同一玩法。',
+'信长之野望':'这里保留 IX《岚世记》与 X《苍天录》的官方威力加强版。前者把诸势力行动放到统一地图的连续时间中，后者允许大名、城主与军团长等不同身份；它们与《太阁立志传》共享战国题材，却分别以势力经营和身份战略为重点。',
+'天使帝国':'大宇从 DOS 初代、二代到 Windows 三代保持女性战士群像、转职和网格战役。初代与二代用于理解系列源流，三代讲述新故事并回归 2D 美术；《新天使帝国》的全 3D 重制路线不并入这里。',
+'光荣英杰传':'《毛利元就：三箭之誓》与《织田信长传》把英杰传式人物培养和网格战役移到日本战国，各自有独立历史主角与 IF 事件。它们是武将传体系，不属于三国题材，也不与《信长之野望》的君主经营混并。',
+'Dungeon Keeper':'Bullfrog 把城市经营、即时战术和“扮演反派”的黑色幽默结合：DOS 初代建立挖掘、房间、怪物与恶魔之手，Windows 二代改为实时 3D 并扩大设施和攻防。两作都优先鼠标，二代仍须验收怪物密集场景。',
+'超时空英雄传说':'宇峻从 DOS 初代、二代《复仇魔神》、外传《北方密使》到 Windows《狂神降世》，持续以多角色、转职、路线分歧和大型网格战役为核心。四作不是同一镜像的升级包，分别保留剧情与系统演进。',
 '光明与梦幻模拟战':'光明与 Langrisser 拆为两个子系列；Saturn《光明力量 III》不属于本机清单。',
 '女神转生与女神异闻录':'本传与 Persona 分列，保留关联但不混用序号。',
 '洛克人':'元祖／世界、X、Zero、EXE、ZX 与流星分组。',
@@ -791,7 +805,7 @@ out+=[f'| **官方库合计** | **{len(entries)}** | **{game_total}** | **{total
 f'- **官方游戏总数：{game_total} 款。** 合集已展开，地区别名不重复；同一基础作品只计算最终保留的一个平台版本，独立续作与改编仍分别计数。Game & Watch 等合集按独立商品计数，不把内含迷你游戏再拆成数十款。',f'- **原创改版内容：{new_hack_count} 款。** 仅统计含全新战役、地区或主要地图的改版；纯汉化、平衡调整和便利增强不重复增加游戏数。','- **官方库预留：'+f'{total/1024:.2f} GB。** 中文化与精选改版若与原版全部并存，另建议预留 16 GB；**合计预算 {full_budget/1024:.2f} GB**，系统、BIOS、刮削和存档另算。','',
 '> 容量是安装预算，不是实测文件总量；合集拆分、CHD／CSO、多盘与保留多个地区版都会改变占用。表内按 1024 MiB 汇总，严格说是 GiB；下面用 GiB 与硬盘厂商的十进制 GB 区分。','',
 '#### 256＋64 GB 双盘容量结论','',
-f'**精简后，256＋64 GB 可以尝试全量安装，但仍不算宽裕。** 两块盘的标称合计是 320 GB，换算约 {nominal_total_gib:.2f} GiB；游戏与改版已占 {full_budget/1024:.2f} GiB，只剩 {nominal_total_gib-full_budget/1024:.2f} GiB 给系统、Wine、存档、刮削、缓存和空闲余量。全量无视频预算约 {full_budget/1024+65:.0f}–{full_budget/1024+97:.0f} GiB，范围横跨现有总容量，视频刮削还要再加 10–25 GiB。因此，现有双盘应从首装库逐批验收；若希望全量、视频刮削和充足升级余量同时成立，仍建议 512 GB SSD。','',
+f'**按当前精选库，不建议在 256＋64 GB 双盘上全量硬塞。** 两块盘的标称合计是 320 GB，换算约 {nominal_total_gib:.2f} GiB；游戏与改版已占 {full_budget/1024:.2f} GiB，只剩 {nominal_total_gib-full_budget/1024:.2f} GiB 给系统、Wine、存档、刮削、缓存和空闲余量。全量无视频预算约 {full_budget/1024+65:.0f}–{full_budget/1024+97:.0f} GiB，即使按低值也已超过现有总容量，视频刮削还要再加 10–25 GiB。因此，现有双盘采用首装库、外部备份和逐批验收；若希望全量、视频刮削和充足升级余量同时成立，建议 512 GB SSD。','',
 '| 项目 | 规划预留 | 位置与说明 |','|---|---:|---|',
 '| Batocera 系统、启动与升级周转 | 8 GiB | eMMC；是规划预算，不是当前镜像的实测占用 |',
 f'| Wine prefix、字体与自定义 runner | 12–25 GiB | SSD；{windows_count} 作独立 prefix 的额外环境开销，游戏本体已计入 {windows_total/1024:.2f} GiB，不重复计算 |',

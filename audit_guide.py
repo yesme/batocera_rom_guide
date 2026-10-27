@@ -106,6 +106,8 @@ check(ns['first_install_budget']==ns['full_budget']-ns['windows_deferred'],'首�
 check(ns['first_ssd_rom']==ns['ssd_total']-ns['windows_deferred'],'SSD 首装容量计算错误')
 for snippet in ['#### 256＋64 GB 双盘容量结论',f"{ns['full_budget']/1024:.2f} GiB",f"{ns['windows_total']/1024:.2f} GiB",f"{ns['full_budget']/1024+65:.0f}–{ns['full_budget']/1024+97:.0f} GiB",'512 GB SSD＋64 GB eMMC','NDS 固定放 eMMC','不要直接执行 `ln -s`']:
     check(snippet in text,f'双盘容量规划缺失：{snippet}')
+if ns['full_budget']/1024+65>ns['nominal_total_gib']:
+    check('不建议在 256＋64 GB 双盘上全量硬塞' in text and '可以尝试全量安装' not in text,'全量低值已超双盘容量，结论却仍称可以尝试全量')
 expected_counts={'Three Wonders':3,'Ys Book I & II':2,'Final Fantasy I & II: Dawn of Souls':2,'Gradius / Gradius II / Gradius III':3,'TwinBee / Detana!! TwinBee':2,'Commander Keen in Goodbye, Galaxy!':2,'Galaga / Galaxian':2}
 for name,n in expected_counts.items():
     es=[e for e in entries if e.en==name]
@@ -126,7 +128,7 @@ for note,products in dup_notes.items():
         errors.append('不同商品复用整段备注：'+str(products))
 
 # 用户点名补漏、三国、射击、改版和 PC 边界。
-required=['Chrono Cross','Tengai Makyou II: Manji Maru','Kingdom Hearts: Birth by Sleep','Dragon Ball: Advanced Adventure','Tony Hawk’s Pro Skater 2','Lumines: Puzzle Fusion','Theme Hospital','Tomato Adventure','Puyo Puyo Sun',"Sid Meier's Civilization II",'三國志英傑傳','三國志孔明傳','Life Force / Salamander','Contra','Super C','Galaga / Galaxian','Nakahara no Hasha: Sangoku Shouseiden','あっぱれ伝 ‐伏龍の章‐ / Appare-den: Fukuryuu no Shou','Farland Story: Tooi Kuni no Monogatari / ファーランドストーリー 遠い国の物語','Farland Story Denki: Arc Ou no Ensei / ファーランドストーリー 伝記 アーク王の遠征','Farland Story: Shirogane no Tsubasa / ファーランドストーリー 白銀の翼','Farland Story: Daichi no Kizuna / ファーランドストーリー 大地の絆','Guerrilla War','Road Fighter','Antarctic Adventure','Hook','Ninja Baseball Bat Man','Super Bomberman 3','Super Bomberman 5','World of Illusion Starring Mickey Mouse and Donald Duck','Professor Layton and the Diabolical Box','Metal Max 2: Reloaded','Etrian Odyssey III: The Drowned City','Tetris DS','Summon Night: Swordcraft Story','Summon Night: Swordcraft Story 2','TearRing Saga: Yutona Eiyuu Senki','Steins;Gate','Fate/EXTRA','Command & Conquer: Red Alert 2 / Yuri’s Revenge','Emperor: Rise of the Middle Kingdom']
+required=['Chrono Cross','Tengai Makyou II: Manji Maru','Kingdom Hearts: Birth by Sleep','Dragon Ball: Advanced Adventure','Tony Hawk’s Pro Skater 2','Lumines: Puzzle Fusion','Theme Hospital','Tomato Adventure','Puyo Puyo Sun',"Sid Meier's Civilization II",'三國志英傑傳','三國志孔明傳','Life Force / Salamander','Contra','Super C','Galaga / Galaxian','Nakahara no Hasha: Sangoku Shouseiden','あっぱれ伝 ‐伏龍の章‐ / Appare-den: Fukuryuu no Shou','Farland Story: Tooi Kuni no Monogatari / ファーランドストーリー 遠い国の物語','Farland Story Denki: Arc Ou no Ensei / ファーランドストーリー 伝記 アーク王の遠征','Farland Story: Shirogane no Tsubasa / ファーランドストーリー 白銀の翼','Farland Story: Daichi no Kizuna / ファーランドストーリー 大地の絆','Guerrilla War','Road Fighter','Antarctic Adventure','Hook','Ninja Baseball Bat Man','Super Bomberman 3','Super Bomberman 5','World of Illusion Starring Mickey Mouse and Donald Duck','Professor Layton and the Diabolical Box','Metal Max 2: Reloaded','Etrian Odyssey III: The Drowned City','Tetris DS','Summon Night: Swordcraft Story','Summon Night: Swordcraft Story 2','TearRing Saga: Yutona Eiyuu Senki','Steins;Gate','Fate/EXTRA','Command & Conquer: Red Alert 2 / Yuri’s Revenge','Emperor: Rise of the Middle Kingdom','Planescape: Torment','Dungeon Keeper II','Age of Wonders','Three Kingdoms: Fate of the Dragon / 傲世三國','Dragon Throne: Battle of Red Cliffs / 傲世三國：三分天下','太閤立志伝 III / Taikou Risshiden III','太閤立志伝 V / Taikou Risshiden V','信長の野望・嵐世記 with パワーアップキット / Nobunaga no Yabou: Ranseiki with Power-Up Kit','信長の野望・蒼天録 with パワーアップキット / Nobunaga no Yabou: Soutenroku with Power-Up Kit','天使帝國','天使帝國 III','ファーランドサーガ / Farland Saga','ファーランドサーガ 時の道標 / Farland Saga: Toki no Michishirube','新絕代雙驕','新絕代雙驕 II 加強版','新絕代雙驕 III','楚留香新傳','幻想三國誌','劍俠情緣外傳：月影傳說','超時空英雄傳說','超時空英雄傳說 III：狂神降世','三國群英傳','三國群英傳 II','三國志IX with パワーアップキット / Romance of the Three Kingdoms IX with Power Up Kit','三國志X with パワーアップキット / Romance of the Three Kingdoms X with Power Up Kit','毛利元就 三箭の誓い / Mouri Motonari: Sanya no Chikai','織田信長伝 / Oda Nobunaga Den','仙劍客棧','天外劍聖錄']
 for name in required:check(name in ens,f'点名作品缺失：{name}')
 check(any(e.platform=='PSP' and e.en=='Tactics Ogre: Let Us Cling Together (PSP)' and e.year=='2010' for e in entries),'PSP 命运之轮缺失或年份错误')
 check(not any(e.platform=='FBNeo' and e.en=='Kizuna Encounter' for e in entries),'风云默示录 2 仍有短名重复条目')
@@ -227,10 +229,10 @@ check(civ2 and 'DOSBox‑X' in civ2.note and 'Windows 3.x' in civ2.note,'文明 
 win_entries=[e for e in entries if e.platform=='Win95 / Win98']
 win_ens={e.en for e in win_entries}
 check(platforms.index('Win95 / Win98')==platforms.index('DOS')+1,'Win95／98 未紧随 DOS')
-check(len(win_entries)==41==len(ns['WINDOWS_GAMES']),f'Windows 条目数应为 41：{len(win_entries)}')
+check(len(win_entries)==67==len(ns['WINDOWS_GAMES']),f'Windows 条目数应为 67：{len(win_entries)}')
 check(set(win_ens)==set(ns['WINDOWS_RUNTIME']),'Windows 商品与运行判断映射不一致')
 check('Rayman 2: The Great Escape' not in win_ens,'高风险 Windows Rayman 2 不应收录；其他平台版本不受影响')
-for removed in ['Dungeon Keeper II','Need for Speed III: Hot Pursuit','Planescape: Torment','The Sims','Tropico','Grim Fandango','The Longest Journey','Toonstruck','Captain Claw','Jazz Jackrabbit 2','天地劫序傳：幽城幻劍錄']:
+for removed in ['Need for Speed III: Hot Pursuit','The Sims','Tropico','Grim Fandango','The Longest Journey','Toonstruck','Captain Claw','Jazz Jackrabbit 2','天地劫序傳：幽城幻劍錄']:
     check(removed not in text,f'已移除 Windows 作品仍在正文残留：{removed}')
 check('Heroes of Might and Magic III: The Restoration of Erathia' in win_ens,'英雄无敌 III 不应被精简掉')
 for en,zh,pub,size,year,note,series,category,subgenre in ns['WINDOWS_GAMES']:
@@ -242,8 +244,12 @@ for e in win_entries:
         level,runtime_note=ns['WINDOWS_RUNTIME'][e.en]
         check(level in {'优先安装','固定版本后安装'},f'Windows 运行级别异常：{e.en}')
         check(f'【Wine 安装判断：{level}】{runtime_note}' in e.note,f'Windows 具体验收备注未落入正文：{e.en}')
+        certified='【cnc-ddraw 官方支持：按本指南约定视为 N4100 实机认证】' in e.note
+        check(certified==(e.en in ns['WINDOWS_CNC_SUPPORT']),f'cnc-ddraw 认证标记与官方列名集合不一致：{e.en}')
 for snippet in ['/userdata/roms/windows/','cnc-ddraw','ddraw.dll','native,builtin','WINEDLLOVERRIDES=ddraw=n,b','不支持 Direct3D 或 Glide','DDrawCompat 官方不支持 Wine','DXVK','SAVEDIR','SAVEFILES','Wine-TKG','/usr/wine/','/userdata/system/wine/custom/']:
     check(snippet in text,f'Windows／cnc-ddraw 配置缺失：{snippet}')
+for snippet in ['### 日文、繁体中文与字体统一配置','/userdata/system/wine/fonts/','cjkfonts','fakejapanese','fakechinese','ja_JP.UTF-8','zh_TW.UTF-8','https://wiki.batocera.org/systems:windows#winetricks']:
+    check(snippet in text,f'CJK 字体统一方案缺失：{snippet}')
 check('与 Wine-GE 运行' not in text,'仍把旧 Wine-GE 写成固定运行前提')
 check(next(e for e in win_entries if e.en=='Diablo').year=='1996–1997','Diablo 应保留 1996 首发出货／1997 广泛上市的跨年标注')
 check(next(e for e in win_entries if e.en=="Sid Meier's Alpha Centauri").year=='1999','Alpha Centauri 年份应为 1999')
@@ -254,11 +260,32 @@ check(gc(next(e for e in win_entries if e.en=='StarCraft / StarCraft: Brood War'
 homm=[e for e in entries if e.series=='英雄无敌']
 check({e.platform for e in homm}=={'DOS','Win95 / Win98'} and len(homm)==3,'英雄无敌未形成 DOS＋Windows 三作专题')
 check('### 英雄无敌\n' in text,'英雄无敌专题未生成')
+series_expectations={
+    '天使帝国':({'DOS','Win95 / Win98'},3),
+    '太阁立志传':({'Win95 / Win98'},3),
+    'Dungeon Keeper':({'DOS','Win95 / Win98'},2),
+    '新绝代双骄':({'Win95 / Win98'},3),
+    '神奇传说':({'Win95 / Win98'},2),
+    '光荣英杰传':({'Win95 / Win98'},2),
+    '超时空英雄传说':({'DOS','Win95 / Win98'},4),
+}
+for series,(expected_platforms,count) in series_expectations.items():
+    matches=[e for e in entries if e.series==series]
+    check({e.platform for e in matches}==expected_platforms and len(matches)==count,f'系列平台或成员数异常：{series}')
+    check(f'### {series}\n' in text,f'系列专题未生成：{series}')
+check(any(e.platform=='DOS' and e.en=='天外劍聖錄' and e.series=='天地劫' for e in entries),'天外剑圣录未进入天地劫系列')
+check(any(e.platform=='DOS' and e.en=='超時空英雄傳說 2：復仇魔神' and e.year=='1997' for e in entries),'超时空英雄传说 II 年份未修正为 1997')
 pc_sanguo_groups={
     '三國志英傑傳':'英杰传与曹操传',
     '三國志孔明傳':'英杰传与曹操传',
     '三國志曹操伝 / Sangokushi Sousouden':'英杰传与曹操传',
     'Sangokushi VIII / 三國志VIII':'光荣《三国志》',
+    '三國志IX with パワーアップキット / Romance of the Three Kingdoms IX with Power Up Kit':'光荣《三国志》',
+    '三國志X with パワーアップキット / Romance of the Three Kingdoms X with Power Up Kit':'光荣《三国志》',
+    '三國群英傳':'三国群英传',
+    '三國群英傳 II':'三国群英传',
+    'Three Kingdoms: Fate of the Dragon / 傲世三國':'傲世三国',
+    'Dragon Throne: Battle of Red Cliffs / 傲世三國：三分天下':'傲世三国',
 }
 for name,subgroup in pc_sanguo_groups.items():
     e=next((x for x in entries if x.en==name),None)
@@ -269,6 +296,9 @@ for name,subgroup in pc_sanguo_groups.items():
 for name in ['Romance of the Three Kingdoms V','Romance of the Three Kingdoms VI','Romance of the Three Kingdoms VII']:
     matches=[e for e in entries if e.en==name]
     check(len(matches)==1 and matches[0].platform=='PS1',f'三国志 V／VI／VII 应仅保留 PS1：{name}')
+for name in ['三國志IX with パワーアップキット / Romance of the Three Kingdoms IX with Power Up Kit','三國志X with パワーアップキット / Romance of the Three Kingdoms X with Power Up Kit']:
+    matches=[e for e in entries if e.en==name]
+    check(len(matches)==1 and matches[0].platform=='Win95 / Win98',f'三国志 IX／X 应仅保留 Windows 官方 PK：{name}')
 check(not any(e.platform=='Win95 / Win98' and re.fullmatch(r'Sangokushi (V|VI|VII) / .*',e.en) for e in entries),'Windows 三国志 V／VI／VII 仍重复保留')
 
 # 跨平台版本规则逐项闭合：删除项不得出现，保留项恰好一个且写明取舍。
