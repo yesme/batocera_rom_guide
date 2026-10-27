@@ -128,7 +128,7 @@ for note,products in dup_notes.items():
         errors.append('不同商品复用整段备注：'+str(products))
 
 # 用户点名补漏、三国、射击、改版和 PC 边界。
-required=['Chrono Cross','Tengai Makyou II: Manji Maru','Kingdom Hearts: Birth by Sleep','Dragon Ball: Advanced Adventure','Tony Hawk’s Pro Skater 2','Lumines: Puzzle Fusion','Theme Hospital','Tomato Adventure','Puyo Puyo Sun',"Sid Meier's Civilization II",'三國志英傑傳','三國志孔明傳','Life Force / Salamander','Contra','Super C','Galaga / Galaxian','Nakahara no Hasha: Sangoku Shouseiden','あっぱれ伝 ‐伏龍の章‐ / Appare-den: Fukuryuu no Shou','Farland Story: Tooi Kuni no Monogatari / ファーランドストーリー 遠い国の物語','Farland Story Denki: Arc Ou no Ensei / ファーランドストーリー 伝記 アーク王の遠征','Farland Story: Shirogane no Tsubasa / ファーランドストーリー 白銀の翼','Farland Story: Daichi no Kizuna / ファーランドストーリー 大地の絆','Guerrilla War','Road Fighter','Antarctic Adventure','Hook','Ninja Baseball Bat Man','Super Bomberman 3','Super Bomberman 5','World of Illusion Starring Mickey Mouse and Donald Duck','Professor Layton and the Diabolical Box','Metal Max 2: Reloaded','Etrian Odyssey III: The Drowned City','Tetris DS','Summon Night: Swordcraft Story','Summon Night: Swordcraft Story 2','TearRing Saga: Yutona Eiyuu Senki','Steins;Gate','Fate/EXTRA','Command & Conquer: Red Alert 2 / Yuri’s Revenge','Emperor: Rise of the Middle Kingdom','Planescape: Torment','Dungeon Keeper II','Age of Wonders','Three Kingdoms: Fate of the Dragon / 傲世三國','Dragon Throne: Battle of Red Cliffs / 傲世三國：三分天下','太閤立志伝 III / Taikou Risshiden III','太閤立志伝 V / Taikou Risshiden V','信長の野望・嵐世記 with パワーアップキット / Nobunaga no Yabou: Ranseiki with Power-Up Kit','信長の野望・蒼天録 with パワーアップキット / Nobunaga no Yabou: Soutenroku with Power-Up Kit','天使帝國','天使帝國 III','ファーランドサーガ / Farland Saga','ファーランドサーガ 時の道標 / Farland Saga: Toki no Michishirube','新絕代雙驕','新絕代雙驕 II 加強版','新絕代雙驕 III','楚留香新傳','幻想三國誌','劍俠情緣外傳：月影傳說','超時空英雄傳說','超時空英雄傳說 III：狂神降世','三國群英傳','三國群英傳 II','三國志IX with パワーアップキット / Romance of the Three Kingdoms IX with Power Up Kit','三國志X with パワーアップキット / Romance of the Three Kingdoms X with Power Up Kit','毛利元就 三箭の誓い / Mouri Motonari: Sanya no Chikai','織田信長伝 / Oda Nobunaga Den','仙劍客棧','天外劍聖錄']
+required=['Chrono Cross','Tengai Makyou II: Manji Maru','Kingdom Hearts: Birth by Sleep','Dragon Ball: Advanced Adventure','Tony Hawk’s Pro Skater 2','Lumines: Puzzle Fusion','Theme Hospital','Tomato Adventure','Puyo Puyo Sun',"Sid Meier's Civilization II",'三國志英傑傳','三國志孔明傳','Life Force / Salamander','Contra','Super C','Galaga / Galaxian','Nakahara no Hasha: Sangoku Shouseiden','あっぱれ伝 ‐伏龍の章‐ / Appare-den: Fukuryuu no Shou','Farland Story: Tooi Kuni no Monogatari / ファーランドストーリー 遠い国の物語','Farland Story Denki: Arc Ou no Ensei / ファーランドストーリー 伝記 アーク王の遠征','Farland Story: Shirogane no Tsubasa / ファーランドストーリー 白銀の翼','Farland Story: Daichi no Kizuna / ファーランドストーリー 大地の絆','Guerrilla War','Road Fighter','Antarctic Adventure','Hook','Ninja Baseball Bat Man','Super Bomberman 3','Super Bomberman 5','World of Illusion Starring Mickey Mouse and Donald Duck','Professor Layton and the Diabolical Box','Metal Max 2: Reloaded','Etrian Odyssey III: The Drowned City','Tetris DS','Summon Night: Swordcraft Story','Summon Night: Swordcraft Story 2','TearRing Saga: Yutona Eiyuu Senki','Steins;Gate','Fate/EXTRA','Command & Conquer: Red Alert 2 / Yuri’s Revenge','Emperor: Rise of the Middle Kingdom','Planescape: Torment','天地劫序傳：幽城幻劍錄','Dungeon Keeper II','Age of Wonders','Three Kingdoms: Fate of the Dragon / 傲世三國','Dragon Throne: Battle of Red Cliffs / 傲世三國：三分天下','太閤立志伝 III / Taikou Risshiden III','太閤立志伝 V / Taikou Risshiden V','信長の野望・嵐世記 with パワーアップキット / Nobunaga no Yabou: Ranseiki with Power-Up Kit','信長の野望・蒼天録 with パワーアップキット / Nobunaga no Yabou: Soutenroku with Power-Up Kit','天使帝國','天使帝國 III','ファーランドサーガ / Farland Saga','ファーランドサーガ 時の道標 / Farland Saga: Toki no Michishirube','新絕代雙驕','新絕代雙驕 II 加強版','新絕代雙驕 III','楚留香新傳','幻想三國誌','劍俠情緣外傳：月影傳說','超時空英雄傳說','超時空英雄傳說 III：狂神降世','三國群英傳','三國群英傳 II','三國志IX with パワーアップキット / Romance of the Three Kingdoms IX with Power Up Kit','三國志X with パワーアップキット / Romance of the Three Kingdoms X with Power Up Kit','毛利元就 三箭の誓い / Mouri Motonari: Sanya no Chikai','織田信長伝 / Oda Nobunaga Den','仙劍客棧','天外劍聖錄']
 for name in required:check(name in ens,f'点名作品缺失：{name}')
 check(any(e.platform=='PSP' and e.en=='Tactics Ogre: Let Us Cling Together (PSP)' and e.year=='2010' for e in entries),'PSP 命运之轮缺失或年份错误')
 check(not any(e.platform=='FBNeo' and e.en=='Kizuna Encounter' for e in entries),'风云默示录 2 仍有短名重复条目')
@@ -229,10 +229,10 @@ check(civ2 and 'DOSBox‑X' in civ2.note and 'Windows 3.x' in civ2.note,'文明 
 win_entries=[e for e in entries if e.platform=='Win95 / Win98']
 win_ens={e.en for e in win_entries}
 check(platforms.index('Win95 / Win98')==platforms.index('DOS')+1,'Win95／98 未紧随 DOS')
-check(len(win_entries)==67==len(ns['WINDOWS_GAMES']),f'Windows 条目数应为 67：{len(win_entries)}')
+check(len(win_entries)==68==len(ns['WINDOWS_GAMES']),f'Windows 条目数应为 68：{len(win_entries)}')
 check(set(win_ens)==set(ns['WINDOWS_RUNTIME']),'Windows 商品与运行判断映射不一致')
 check('Rayman 2: The Great Escape' not in win_ens,'高风险 Windows Rayman 2 不应收录；其他平台版本不受影响')
-for removed in ['Need for Speed III: Hot Pursuit','The Sims','Tropico','Grim Fandango','The Longest Journey','Toonstruck','Captain Claw','Jazz Jackrabbit 2','天地劫序傳：幽城幻劍錄']:
+for removed in ['Need for Speed III: Hot Pursuit','The Sims','Tropico','Grim Fandango','The Longest Journey','Toonstruck','Captain Claw','Jazz Jackrabbit 2']:
     check(removed not in text,f'已移除 Windows 作品仍在正文残留：{removed}')
 check('Heroes of Might and Magic III: The Restoration of Erathia' in win_ens,'英雄无敌 III 不应被精简掉')
 for en,zh,pub,size,year,note,series,category,subgenre in ns['WINDOWS_GAMES']:
@@ -250,12 +250,21 @@ for snippet in ['/userdata/roms/windows/','cnc-ddraw','ddraw.dll','native,builti
     check(snippet in text,f'Windows／cnc-ddraw 配置缺失：{snippet}')
 for snippet in ['### 日文、繁体中文与字体统一配置','/userdata/system/wine/fonts/','cjkfonts','fakejapanese','fakechinese','ja_JP.UTF-8','zh_TW.UTF-8','https://wiki.batocera.org/systems:windows#winetricks']:
     check(snippet in text,f'CJK 字体统一方案缺失：{snippet}')
+for snippet in ['https://github.com/Kanadeforever/castlereforge','https://www.playonlinux.com/en/app-1253-GOGcom__Planescape_Torment.html','https://www.neant.ro/gaming/planescapetorment-on-linux.html']:
+    check(snippet in text,f'本轮 Wine 调研来源未落入正文：{snippet}')
 check('与 Wine-GE 运行' not in text,'仍把旧 Wine-GE 写成固定运行前提')
 check(next(e for e in win_entries if e.en=='Diablo').year=='1996–1997','Diablo 应保留 1996 首发出货／1997 广泛上市的跨年标注')
 check(next(e for e in win_entries if e.en=="Sid Meier's Alpha Centauri").year=='1999','Alpha Centauri 年份应为 1999')
 civ3=next(e for e in win_entries if e.en=="Sid Meier's Civilization III")
 check('Wine ≥10.13' in civ3.note and '回归' in civ3.note,'文明 III 缺 Wine 10.13 门槛与回归风险')
 check('【Wine 安装判断：固定版本后安装】' in civ3.note,'文明 III 未归入固定版本后安装')
+castle=next(e for e in win_entries if e.en=='天地劫序傳：幽城幻劍錄')
+check('【Wine 安装判断：固定版本后安装】' in castle.note,'幽城幻剑录应标为固定版本后安装')
+check(all(s in castle.note for s in ['Kalpa2_200S','200etc','cnc-ddraw 7.1','CastleReforge']),'幽城幻剑录缺版本补丁或社区路线说明')
+planescape=next(e for e in win_entries if e.en=='Planescape: Torment')
+check('不在 cnc-ddraw 官方支持清单' in planescape.note and 'Software Mirroring' in planescape.note,'异域镇魂曲缺真实 Wine 路线边界')
+for e in [castle,planescape]:
+    check('【cnc-ddraw 官方支持：按本指南约定视为 N4100 实机认证】' not in e.note,f'非官方列名作品不得标 N4100 认证：{e.en}')
 check(gc(next(e for e in win_entries if e.en=='StarCraft / StarCraft: Brood War'))==2,'星际争霸合集展开计数不是 2')
 homm=[e for e in entries if e.series=='英雄无敌']
 check({e.platform for e in homm}=={'DOS','Win95 / Win98'} and len(homm)==3,'英雄无敌未形成 DOS＋Windows 三作专题')
@@ -268,6 +277,7 @@ series_expectations={
     '神奇传说':({'Win95 / Win98'},2),
     '光荣英杰传':({'Win95 / Win98'},2),
     '超时空英雄传说':({'DOS','Win95 / Win98'},4),
+    '天地劫':({'DOS','Win95 / Win98'},3),
 }
 for series,(expected_platforms,count) in series_expectations.items():
     matches=[e for e in entries if e.series==series]
